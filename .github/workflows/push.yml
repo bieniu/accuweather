@@ -24,18 +24,18 @@ jobs:
     - name: Check with isort
       run: |
         pip install isort
-        isort gios/*.py --check-only
+        isort accuweather/*.py --check-only
     - name: Check with Black Code Formatter
       run: |
         pip install black
-        black gios -t py38 --check
+        black accuweather -t py38 --check
     - name: Lint with flake8
       run: |
         pip install flake8
         # stop the build if there are Python syntax errors, unused imports or undefined names
-        flake8 gios --count --select=E9,F63,F7,F82,F401 --show-source --statistics
+        flake8 accuweather --count --select=E9,F63,F7,F82,F401 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 89 chars wide
-        flake8 gios --count --exit-zero --max-complexity=16 --max-line-length=89 --statistics
+        flake8accuweather --count --exit-zero --max-complexity=16 --max-line-length=89 --statistics
     # - name: Test with pytest
     #   run: |
     #     pip install pytest
