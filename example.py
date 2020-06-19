@@ -1,15 +1,22 @@
 import asyncio
 import logging
 
+from accuweather import (
+    AccuWeather,
+    ApiError,
+    InvalidApiKeyError,
+    InvalidCoordinatesError,
+    RequestsExceededError,
+)
 from aiohttp import ClientError, ClientSession
-from accuweather import AccuWeather, ApiError, InvalidApiKeyError, InvalidCoordinatesError
 
 LATITUDE = 52.1201
 LONGITUDE = 19.9203
 LOCATION_KEY = 264349
-API_KEY = "xxxx"
+API_KEY = "xxxxx"
 
 logging.basicConfig(level=logging.DEBUG)
+
 
 async def main():
     async with ClientSession() as websession:
@@ -22,8 +29,14 @@ async def main():
             print(f"Requests remaining: {accuweather.requests_remaining}")
             print(f"Current: {current_conditions}")
             print(f"Forecast: {forecasts}")
-        except (ApiError, InvalidApiKeyError, InvalidCoordinatesError) as error:
+        except (
+            ApiError,
+            InvalidApiKeyError,
+            InvalidCoordinatesError,
+            RequestsExceededError,
+        ) as error:
             print(error)
+
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())

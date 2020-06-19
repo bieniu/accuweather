@@ -35,7 +35,7 @@ class AccuWeather:
             assert len(api_key) == 32
         except AssertionError:
             raise InvalidApiKeyError(
-                "Invalid API Key: your API Key must be a 32-character hexadecimal string"
+                "Your API Key must be a 32-character hexadecimal string"
             )
 
         if not location_key:
@@ -43,11 +43,11 @@ class AccuWeather:
                 assert isinstance(latitude, (int, float)) and isinstance(
                     longitude, (int, float)
                 )
-            except:
+            except AssertionError:
                 raise ValueError
             try:
                 assert abs(latitude) <= 90 and abs(longitude) <= 180
-            except:
+            except AssertionError:
                 raise InvalidCoordinatesError("Your coordinates are invalid")
 
         self.latitude = latitude
@@ -58,7 +58,8 @@ class AccuWeather:
         self._location_name = None
         self._requests_remaining = None
 
-    def _construct_url(self, arg: str, **kwargs) -> str:
+    @staticmethod
+    def _construct_url(arg: str, **kwargs) -> str:
         """Construct AccuWeather API URL."""
         url = ENDPOINT + URLS[arg].format(**kwargs)
         return url
@@ -66,16 +67,18 @@ class AccuWeather:
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
-            if resp.status == HTTP_OK:
-                _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
-                data = await resp.json()
-                self._requests_remaining = resp.headers["RateLimit-Remaining"]
-                return data
-            else:
+            if resp.status == 503:
+                _LOGGER.error("The allowed number of requests has been exceeded.")
+                raise RequestsExceededError(resp.status)
+            if resp.status != HTTP_OK:
                 _LOGGER.warning(
                     "Invalid response from AccuWeather API: %s", resp.status
                 )
                 raise ApiError(resp.status)
+            _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
+            data = await resp.json()
+        self._requests_remaining = resp.headers["RateLimit-Remaining"]
+        return data
 
     async def async_get_location(self):
         """Retreive location data from AccuWeather."""
@@ -113,14 +116,17 @@ class AccuWeather:
 
     @property
     def location_name(self):
+        """Return location name."""
         return self._location_name
 
     @property
     def location_key(self):
+        """Return location key."""
         return self._location_key
 
     @property
     def requests_remaining(self):
+        """Return number of remaining allowed requests."""
         return self._requests_remaining
 
 
@@ -130,6 +136,15 @@ class ApiError(Exception):
     def __init__(self, status):
         """Initialize."""
         super(ApiError, self).__init__(status)
+        self.status = status
+
+
+class RequestsExceededError(Exception):
+    """Raised when AccuWeather API request ended in error."""
+
+    def __init__(self, status):
+        """Initialize."""
+        super(RequestsExceededError, self).__init__(status)
         self.status = status
 
 
