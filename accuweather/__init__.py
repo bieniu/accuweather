@@ -7,7 +7,7 @@ from aiohttp import ClientSession
 
 from .const import (
     ATTR_CURRENT_CONDITIONS,
-    ATTR_FORECASTS,
+    ATTR_FORECAST,
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
@@ -67,9 +67,6 @@ class AccuWeather:
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
-            if resp.status == 503:
-                _LOGGER.error("The allowed number of requests has been exceeded.")
-                raise RequestsExceededError(resp.status)
             if resp.status != HTTP_OK:
                 _LOGGER.warning(
                     "Invalid response from AccuWeather API: %s", resp.status
@@ -104,12 +101,12 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return data[0]
 
-    async def async_get_forecasts(self):
-        """Retreive forecasts data from AccuWeather."""
+    async def async_get_forecast(self):
+        """Retreive forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
         url = self._construct_url(
-            ATTR_FORECASTS, api_key=self._api_key, location_key=self._location_key,
+            ATTR_FORECAST, api_key=self._api_key, location_key=self._location_key,
         )
         data = await self._async_get_data(url)
         return data
@@ -136,15 +133,6 @@ class ApiError(Exception):
     def __init__(self, status):
         """Initialize."""
         super(ApiError, self).__init__(status)
-        self.status = status
-
-
-class RequestsExceededError(Exception):
-    """Raised when AccuWeather API request ended in error."""
-
-    def __init__(self, status):
-        """Initialize."""
-        super(RequestsExceededError, self).__init__(status)
         self.status = status
 
 

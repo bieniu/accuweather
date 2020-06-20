@@ -6,14 +6,13 @@ from accuweather import (
     ApiError,
     InvalidApiKeyError,
     InvalidCoordinatesError,
-    RequestsExceededError,
 )
 from aiohttp import ClientError, ClientSession
 
 LATITUDE = 52.1201
 LONGITUDE = 19.9203
 LOCATION_KEY = 264349
-API_KEY = "xxxxx"
+API_KEY = "2CjBL0300zNR9Ow5cGwYptWpzXpgdNuq"
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -24,17 +23,12 @@ async def main():
             # accuweather = AccuWeather(API_KEY, websession, latitude=LATITUDE, longitude=LONGITUDE)
             accuweather = AccuWeather(API_KEY, websession, location_key=LOCATION_KEY)
             current_conditions = await accuweather.async_get_current_conditions()
-            forecasts = await accuweather.async_get_current_conditions()
+            forecast = await accuweather.async_get_forecast()
             print(f"Location: {accuweather.location_name} ({accuweather.location_key})")
             print(f"Requests remaining: {accuweather.requests_remaining}")
             print(f"Current: {current_conditions}")
-            print(f"Forecast: {forecasts}")
-        except (
-            ApiError,
-            InvalidApiKeyError,
-            InvalidCoordinatesError,
-            RequestsExceededError,
-        ) as error:
+            print(f"Forecast: {forecast}")
+        except (ApiError, InvalidApiKeyError, InvalidCoordinatesError, ClientError) as error:
             print(error)
 
 
