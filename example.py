@@ -12,7 +12,7 @@ from aiohttp import ClientError, ClientSession
 LATITUDE = 52.1201
 LONGITUDE = 19.9203
 LOCATION_KEY = 264349
-API_KEY = "2CjBL0300zNR9Ow5cGwYptWpzXpgdNuq"
+API_KEY = "xxxxx"
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -28,7 +28,12 @@ async def main():
             print(f"Requests remaining: {accuweather.requests_remaining}")
             print(f"Current: {current_conditions}")
             print(f"Forecast: {forecast}")
-        except (ApiError, InvalidApiKeyError, InvalidCoordinatesError, ClientError) as error:
+        except (
+            ApiError,
+            InvalidApiKeyError,
+            InvalidCoordinatesError,
+            ClientError,
+        ) as error:
             print(error)
 
 

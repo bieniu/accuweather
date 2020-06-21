@@ -12,6 +12,7 @@ from .const import (
     ENDPOINT,
     HTTP_HEADERS,
     HTTP_OK,
+    HTTP_UNAUTHORIZED,
     URLS,
 )
 
@@ -21,7 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 class AccuWeather:
     """Main class to perform AccuWeather API requests"""
 
-    def __init__(
+    def __init__(  # pylint:disable=too-many-arguments
         self,
         api_key,
         session: ClientSession,
@@ -67,6 +68,11 @@ class AccuWeather:
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
+            if resp.status == HTTP_UNAUTHORIZED:
+                _LOGGER.error(
+                    "Invalid API key, response from AccuWeather API: %s", resp.status
+                )
+                raise InvalidApiKeyError(resp.status)
             if resp.status != HTTP_OK:
                 _LOGGER.warning(
                     "Invalid response from AccuWeather API: %s", resp.status

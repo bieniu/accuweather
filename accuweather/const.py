@@ -4,8 +4,8 @@ ATTR_FORECAST = "forecasts"
 ATTR_GEOPOSITION = "geoposition"
 
 ENDPOINT = "https://dataservice.accuweather.com/"
-
 HTTP_OK = 200
+HTTP_UNAUTHORIZED = 401
 HTTP_HEADERS = {"Content-Encoding": "gzip"}
 
 URLS = {

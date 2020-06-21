@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="accuweather",
-    version="0.0.2",
+    version="0.0.3",
     author="Maciej Bieniek",
     author_email="maciej.bieniek@gmail.com",
     description="Python wrapper for getting weather data from AccuWeather servers.",
