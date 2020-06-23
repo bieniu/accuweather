@@ -14,6 +14,7 @@ from .const import (
     HTTP_OK,
     HTTP_UNAUTHORIZED,
     REMOVE_FROM_CURRENT_CONDITION,
+    REMOVE_FROM_FORECAST,
     URLS,
 )
 
@@ -72,6 +73,13 @@ class AccuWeather:
         [data.pop(key) for key in to_remove]
         return data
 
+    @staticmethod
+    def _clean_forecast(data: list, to_remove: tuple) -> list:
+        """Clean API response."""
+        for item in data:
+            [item.pop(key) for key in to_remove]
+        return data
+
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
@@ -122,7 +130,7 @@ class AccuWeather:
             ATTR_FORECAST, api_key=self._api_key, location_key=self._location_key,
         )
         data = await self._async_get_data(url)
-        return data
+        return self._clean_forecast(data["DailyForecasts"], REMOVE_FROM_FORECAST)
 
     @property
     def location_name(self):
