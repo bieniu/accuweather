@@ -13,6 +13,7 @@ from .const import (
     HTTP_HEADERS,
     HTTP_OK,
     HTTP_UNAUTHORIZED,
+    REMOVE_FROM_CURRENT_CONDITION,
     URLS,
 )
 
@@ -65,6 +66,12 @@ class AccuWeather:
         url = ENDPOINT + URLS[arg].format(**kwargs)
         return url
 
+    @staticmethod
+    def _clean_current_condition(data: dict, to_remove: tuple) -> dict:
+        """Clean API response."""
+        [data.pop(key) for key in to_remove]
+        return data
+
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
@@ -105,7 +112,7 @@ class AccuWeather:
             location_key=self._location_key,
         )
         data = await self._async_get_data(url)
-        return data[0]
+        return self._clean_current_condition(data[0], REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_forecast(self):
         """Retreive forecast data from AccuWeather."""

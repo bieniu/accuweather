@@ -8,6 +8,8 @@ HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
 HTTP_HEADERS = {"Content-Encoding": "gzip"}
 
+REMOVE_FROM_CURRENT_CONDITION = ("LocalObservationDateTime", "EpochTime", "WeatherText", "IsDayTime", "TemperatureSummary", "MobileLink", "Link")
+
 URLS = {
     ATTR_GEOPOSITION: "locations/v1/cities/geoposition/search?apikey={api_key}&q={lat}%2C{lon}",
     ATTR_CURRENT_CONDITIONS: "currentconditions/v1/{location_key}?apikey={api_key}&details=true",
