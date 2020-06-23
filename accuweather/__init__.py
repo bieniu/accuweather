@@ -70,15 +70,15 @@ class AccuWeather:
     @staticmethod
     def _clean_current_condition(data: dict, to_remove: tuple) -> dict:
         """Clean API response."""
-        [data.pop(key) for key in to_remove]
-        return data
+        return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
     def _clean_forecast(data: list, to_remove: tuple) -> list:
         """Clean API response."""
-        for item in data:
-            [item.pop(key) for key in to_remove]
-        return data
+        return [
+            {key: value for key, value in item.items() if key not in to_remove}
+            for item in data
+        ]
 
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
@@ -122,12 +122,15 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return self._clean_current_condition(data[0], REMOVE_FROM_CURRENT_CONDITION)
 
-    async def async_get_forecast(self):
+    async def async_get_forecast(self, metric=True):
         """Retreive forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
         url = self._construct_url(
-            ATTR_FORECAST, api_key=self._api_key, location_key=self._location_key,
+            ATTR_FORECAST,
+            api_key=self._api_key,
+            location_key=self._location_key,
+            metric=str(metric),
         )
         data = await self._async_get_data(url)
         return self._clean_forecast(data["DailyForecasts"], REMOVE_FROM_FORECAST)
