@@ -95,9 +95,7 @@ class AccuWeather:
                     raise RequestsExceededError(
                         "The allowed number of requests has been exceeded"
                     )
-                raise ApiError(
-                    f"Invalid response from AccuWeather API: {resp.status}"
-                )
+                raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
             _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
             data = await resp.json()
         self._requests_remaining = resp.headers["RateLimit-Remaining"]
