@@ -71,29 +71,33 @@ class AccuWeather:
 
     @staticmethod
     def _clean_current_condition(data: dict, to_remove: tuple) -> dict:
-        """Clean API response."""
+        """Clean current condition API response."""
         return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
     def _clean_forecast(data: list, to_remove: tuple) -> list:
-        """Clean API response."""
-        return [
-            {key: value for key, value in item.items() if key not in to_remove}
-            for item in data
-        ]
+        """Clean forecast API response."""
+        return {
+            "DailyForecasts": [
+                {key: value for key, value in item.items() if key not in to_remove}
+                for item in data["DailyForecasts"]
+            ]
+        }
 
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
                 raise InvalidApiKeyError("Invalid API key")
-            error_text = json.loads(await resp.text())
-            if error_text["Message"] == REQUESTS_EXCEEDED:
-                raise RequestsExceededError(
-                    "The allowed number of requests has been exceeded"
-                )
             if resp.status != HTTP_OK:
-                raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
+                error_text = json.loads(await resp.text())
+                if error_text["Message"] == REQUESTS_EXCEEDED:
+                    raise RequestsExceededError(
+                        "The allowed number of requests has been exceeded"
+                    )
+                raise ApiError(
+                    f"Invalid response from AccuWeather API: {resp.status}"
+                )
             _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
             data = await resp.json()
         self._requests_remaining = resp.headers["RateLimit-Remaining"]
@@ -134,7 +138,7 @@ class AccuWeather:
             metric=str(metric),
         )
         data = await self._async_get_data(url)
-        return self._clean_forecast(data["DailyForecasts"], REMOVE_FROM_FORECAST)
+        return self._clean_forecast(data, REMOVE_FROM_FORECAST)
 
     @property
     def location_name(self):
