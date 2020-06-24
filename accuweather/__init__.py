@@ -1,6 +1,7 @@
 """
 Python wrapper for getting weather data from AccueWeather.
 """
+import json
 import logging
 
 from aiohttp import ClientSession
@@ -15,6 +16,7 @@ from .const import (
     HTTP_UNAUTHORIZED,
     REMOVE_FROM_CURRENT_CONDITION,
     REMOVE_FROM_FORECAST,
+    REQUESTS_EXCEEDED,
     URLS,
 )
 
@@ -84,15 +86,14 @@ class AccuWeather:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
-                _LOGGER.error(
-                    "Invalid API key, response from AccuWeather API: %s", resp.status
+                raise InvalidApiKeyError("Invalid API key")
+            error_text = json.loads(await resp.text())
+            if error_text["Message"] == REQUESTS_EXCEEDED:
+                raise RequestsExceededError(
+                    "The allowed number of requests has been exceeded"
                 )
-                raise InvalidApiKeyError(resp.status)
             if resp.status != HTTP_OK:
-                _LOGGER.warning(
-                    "Invalid response from AccuWeather API: %s", resp.status
-                )
-                raise ApiError(resp.status)
+                raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
             _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
             data = await resp.json()
         self._requests_remaining = resp.headers["RateLimit-Remaining"]
@@ -175,4 +176,13 @@ class InvalidCoordinatesError(Exception):
     def __init__(self, status):
         """Initialize."""
         super(InvalidCoordinatesError, self).__init__(status)
+        self.status = status
+
+
+class RequestsExceededError(Exception):
+    """Raised when allowed number of requests has been exceeded."""
+
+    def __init__(self, status):
+        """Initialize."""
+        super(RequestsExceededError, self).__init__(status)
         self.status = status

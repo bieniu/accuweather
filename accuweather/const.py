@@ -7,6 +7,7 @@ ENDPOINT = "https://dataservice.accuweather.com/"
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
 HTTP_HEADERS = {"Content-Encoding": "gzip"}
+REQUESTS_EXCEEDED = "The allowed number of requests has been exceeded."
 
 REMOVE_FROM_CURRENT_CONDITION = (
     "LocalObservationDateTime",
