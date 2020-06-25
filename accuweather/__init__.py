@@ -35,24 +35,13 @@ class AccuWeather:
         location_key=None,
     ):
         """Initialize."""
-        try:
-            assert isinstance(api_key, str)
-            assert len(api_key) == 32
-        except AssertionError:
+        if not self._valid_api_key(api_key):
             raise InvalidApiKeyError(
                 "Your API Key must be a 32-character hexadecimal string"
             )
 
         if not location_key:
-            try:
-                assert isinstance(latitude, (int, float)) and isinstance(
-                    longitude, (int, float)
-                )
-            except AssertionError:
-                raise ValueError
-            try:
-                assert abs(latitude) <= 90 and abs(longitude) <= 180
-            except AssertionError:
+            if not self._valid_coordinates(latitude, longitude):
                 raise InvalidCoordinatesError("Your coordinates are invalid")
 
         self.latitude = latitude
@@ -62,6 +51,26 @@ class AccuWeather:
         self._location_key = location_key
         self._location_name = None
         self._requests_remaining = None
+
+    @staticmethod
+    def _valid_coordinates(latitude: float, longitude: float) -> bool:
+        """Return True if coordinates are valid."""
+        try:
+            assert isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))
+            assert abs(latitude) <= 90 and abs(longitude) <= 180
+        except (AssertionError, TypeError):
+            return False
+        return True
+
+    @staticmethod
+    def _valid_api_key(api_key: str) -> bool:
+        """Return True if API key is valid."""
+        try:
+            assert isinstance(api_key, str)
+            assert len(api_key) == 32
+        except AssertionError:
+            return False
+        return True
 
     @staticmethod
     def _construct_url(arg: str, **kwargs) -> str:
