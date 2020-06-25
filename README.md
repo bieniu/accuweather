@@ -9,7 +9,7 @@
 Python wrapper for getting weather data from AccuWeather servers.
 
 
-# API key
+## API key
 
 To generate API key go to https://developer.accuweather.com/user/register and after registration create an app.
 
