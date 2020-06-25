@@ -1,3 +1,9 @@
+[![GitHub Release][releases-shield]][releases]
+[![PyPI][pypi-releases-shield]][pypi-releases]
+[![PyPI - Downloads][pypi-downloads]][pypi-statistics]
+[![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
+[![PayPal_Me][paypal-me-shield]][paypal-me]
+
 # accuweather
 
 Python wrapper for getting weather data from AccuWeather servers.
@@ -58,3 +64,14 @@ loop.run_until_complete(main())
 loop.close()
 
 ```
+
+[releases]: https://github.com/bieniu/accuweather/releases
+[releases-shield]: https://img.shields.io/github/release/bieniu/accuweather.svg?style=popout
+[pypi-releases]: https://pypi.org/project/accuweather/
+[pypi-statistics]: https://pypistats.org/packages/accuweather
+[pypi-releases-shield]: https://img.shields.io/pypi/v/accuweather
+[pypi-downloads]: https://img.shields.io/pypi/dm/accuweather
+[buy-me-a-coffee-shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
+[buy-me-a-coffee]: https://www.buymeacoffee.com/QnLdxeaqO
+[paypal-me-shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
+[paypal-me]: https://www.paypal.me/bieniu79
