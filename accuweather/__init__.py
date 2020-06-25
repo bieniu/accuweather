@@ -56,7 +56,9 @@ class AccuWeather:
     def _valid_coordinates(latitude: float, longitude: float) -> bool:
         """Return True if coordinates are valid."""
         try:
-            assert isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))
+            assert isinstance(latitude, (int, float)) and isinstance(
+                longitude, (int, float)
+            )
             assert abs(latitude) <= 90 and abs(longitude) <= 180
         except (AssertionError, TypeError):
             return False
