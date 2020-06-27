@@ -34,11 +34,11 @@ async def main():
             RequestsExceededError,
         ) as error:
             print(f"Error: {error}")
-
-        print(f"Location: {accuweather.location_name} ({accuweather.location_key})")
-        print(f"Requests remaining: {accuweather.requests_remaining}")
-        print(f"Current: {current_conditions}")
-        print(f"Forecast: {forecast}")
+        else:
+            print(f"Location: {accuweather.location_name} ({accuweather.location_key})")
+            print(f"Requests remaining: {accuweather.requests_remaining}")
+            print(f"Current: {current_conditions}")
+            print(f"Forecast: {forecast}")
 
 
 loop = asyncio.get_event_loop()
