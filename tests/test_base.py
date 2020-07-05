@@ -74,11 +74,13 @@ async def test_get_forecast():
             )
             forecast = await accuweather.async_get_forecast()
 
-        assert forecast["DailyForecasts"][0]["Day"]["Icon"] == 15
-        assert forecast["DailyForecasts"][0]["Day"]["PrecipitationProbability"] == 57
-        assert forecast["DailyForecasts"][0]["Day"]["Wind"]["Speed"]["Value"] == 13.0
-        assert forecast["DailyForecasts"][0]["Temperature"]["Maximum"]["Value"] == 24.8
-        assert forecast["DailyForecasts"][0]["Temperature"]["Maximum"]["Unit"] == "C"
+        assert forecast["DailyForecasts"][0]["IconDay"] == 15
+        assert forecast["DailyForecasts"][0]["PrecipitationProbabilityDay"] == 57
+        assert forecast["DailyForecasts"][0]["WindDay"]["Speed"]["Value"] == 13.0
+        assert forecast["DailyForecasts"][0]["TemperatureMax"]["Value"] == 24.8
+        assert forecast["DailyForecasts"][0]["TemperatureMax"]["Unit"] == "C"
+        assert forecast["DailyForecasts"][0]["AirQuality"]["Value"] == 23
+        assert forecast["DailyForecasts"][0]["AirQuality"]["Type"] == "Ozone"
 
 
 @pytest.mark.asyncio

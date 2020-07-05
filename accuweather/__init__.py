@@ -17,6 +17,7 @@ from .const import (
     REMOVE_FROM_CURRENT_CONDITION,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
+    TEMPERATURES,
     URLS,
 )
 
@@ -86,14 +87,35 @@ class AccuWeather:
         return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
-    def _clean_forecast(data: list, to_remove: tuple) -> list:
-        """Clean forecast API response."""
-        return {
+    def _parse_forecast(data: list, to_remove: tuple) -> list:
+        """Parse and clean forecast API response."""
+        data = {
             "DailyForecasts": [
                 {key: value for key, value in item.items() if key not in to_remove}
                 for item in data["DailyForecasts"]
             ]
         }
+
+        for day in data["DailyForecasts"]:
+            for item in day["AirAndPollen"]:
+                day[item["Name"]] = item
+                day[item["Name"]].pop("Name")
+            day.pop("AirAndPollen")
+
+            for temp in TEMPERATURES:
+                day[f"{temp}Min"] = day[temp]["Minimum"]
+                day[f"{temp}Max"] = day[temp]["Maximum"]
+                day.pop(temp)
+
+            for key, value in day["Day"].items():
+                day[f"{key}Day"] = value
+            day.pop("Day")
+
+            for key, value in day["Night"].items():
+                day[f"{key}Night"] = value
+            day.pop("Night")
+
+        return data
 
     async def _async_get_data(self, url: str) -> str:
         """Retreive data from AccuWeather API."""
@@ -147,7 +169,7 @@ class AccuWeather:
             metric=str(metric),
         )
         data = await self._async_get_data(url)
-        return self._clean_forecast(data, REMOVE_FROM_FORECAST)
+        return self._parse_forecast(data, REMOVE_FROM_FORECAST)
 
     @property
     def location_name(self):
