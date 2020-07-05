@@ -23,7 +23,7 @@ jobs:
         pip install aiohttp
     - name: Check with isort
       run: |
-        pip install isort
+        pip install isort==4.3.21
         isort accuweather/*.py --check-only
     - name: Check with Black Code Formatter
       run: |
