@@ -89,14 +89,12 @@ class AccuWeather:
     @staticmethod
     def _parse_forecast(data: list, to_remove: tuple) -> list:
         """Parse and clean forecast API response."""
-        data = {
-            "DailyForecasts": [
-                {key: value for key, value in item.items() if key not in to_remove}
-                for item in data["DailyForecasts"]
-            ]
-        }
+        data = [
+            {key: value for key, value in item.items() if key not in to_remove}
+            for item in data["DailyForecasts"]
+        ]
 
-        for day in data["DailyForecasts"]:
+        for day in data:
             for item in day["AirAndPollen"]:
                 day[item["Name"]] = item
                 day[item["Name"]].pop("Name")
