@@ -15,7 +15,7 @@ setup(
     include_package_data=True,
     url="https://github.com/bieniu/accuweather",
     license="Apache 2",
-    packages=setuptools.find_packages()
+    packages=setuptools.find_packages(),
     python_requires=">=3.6",
     install_requires=["aiohttp"],
     classifiers=[
