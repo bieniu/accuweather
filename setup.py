@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open("README.md", "r") as file:
     long_description = file.read()
@@ -15,7 +15,7 @@ setup(
     include_package_data=True,
     url="https://github.com/bieniu/accuweather",
     license="Apache 2",
-    packages=setuptools.find_packages(),
+    packages=find_packages(),
     python_requires=">=3.6",
     install_requires=["aiohttp"],
     classifiers=[
