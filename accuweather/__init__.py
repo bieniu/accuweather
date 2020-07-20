@@ -1,5 +1,5 @@
 """
-Python wrapper for getting weather data from AccueWeather.
+Python wrapper for getting weather data from AccueWeather for Limited Trial package.
 """
 import json
 import logging
@@ -96,8 +96,13 @@ class AccuWeather:
 
         for day in data:
             for item in day["AirAndPollen"]:
-                day[item["Name"]] = item
-                day[item["Name"]].pop("Name")
+                if item["Name"] == "AirQuality":
+                    day[item["Type"]] = item
+                    day[item["Type"]].pop("Name")
+                    day[item["Type"]].pop("Type")
+                else:
+                    day[item["Name"]] = item
+                    day[item["Name"]].pop("Name")
             day.pop("AirAndPollen")
 
             for temp in TEMPERATURES:

@@ -6,7 +6,7 @@
 
 # accuweather
 
-Python wrapper for getting weather data from AccuWeather servers.
+Python wrapper for getting weather data from AccuWeather servers for Limited Trial package.
 
 
 ## API key
