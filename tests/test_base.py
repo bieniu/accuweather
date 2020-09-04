@@ -1,5 +1,6 @@
 """Tests for accuweather package."""
 import json
+from unittest.mock import patch
 
 from accuweather import (
     AccuWeather,
@@ -9,7 +10,6 @@ from accuweather import (
     RequestsExceededError,
 )
 from aiohttp import ClientSession
-from asynctest import patch
 import pytest
 
 VALID_API_KEY = "32-character-string-1234567890qw"
