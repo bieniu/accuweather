@@ -209,7 +209,7 @@ class InvalidApiKeyError(Exception):
 
     def __init__(self, status):
         """Initialize."""
-        super(InvalidApiKeyError, self).__init__(status)
+        super().__init__(status)
         self.status = status
 
 
@@ -218,7 +218,7 @@ class InvalidCoordinatesError(Exception):
 
     def __init__(self, status):
         """Initialize."""
-        super(InvalidCoordinatesError, self).__init__(status)
+        super().__init__(status)
         self.status = status
 
 
@@ -227,5 +227,5 @@ class RequestsExceededError(Exception):
 
     def __init__(self, status):
         """Initialize."""
-        super(RequestsExceededError, self).__init__(status)
+        super().__init__(status)
         self.status = status
