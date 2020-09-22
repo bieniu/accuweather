@@ -2,6 +2,9 @@
 import json
 from unittest.mock import patch
 
+import pytest
+from aiohttp import ClientSession
+
 from accuweather import (
     AccuWeather,
     ApiError,
@@ -9,8 +12,6 @@ from accuweather import (
     InvalidCoordinatesError,
     RequestsExceededError,
 )
-from aiohttp import ClientSession
-import pytest
 
 VALID_API_KEY = "32-character-string-1234567890qw"
 INVALID_API_KEY = "abcdef"
