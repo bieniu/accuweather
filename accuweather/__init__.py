@@ -200,7 +200,7 @@ class ApiError(Exception):
 
     def __init__(self, status):
         """Initialize."""
-        super(ApiError, self).__init__(status)
+        super().__init__(status)
         self.status = status
 
 
