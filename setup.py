@@ -24,7 +24,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     setup_requires=("pytest-runner"),
-    tests_require=(
-        "pytest-cov",
-    ),
+    tests_require=("pytest-cov", "pytest-asyncio", "pytest-error-for-skips"),
 )
