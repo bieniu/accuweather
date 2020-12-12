@@ -70,7 +70,7 @@ loop.close()
 [pypi-releases]: https://pypi.org/project/accuweather/
 [pypi-statistics]: https://pepy.tech/project/accuweather
 [pypi-releases-shield]: https://img.shields.io/pypi/v/accuweather
-[pypi-downloads]: https://pepy.tech/badge/accuweather
+[pypi-downloads]: https://pepy.tech/badge/accuweather/month
 [buy-me-a-coffee-shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
 [buy-me-a-coffee]: https://www.buymeacoffee.com/QnLdxeaqO
 [paypal-me-shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
