@@ -24,19 +24,19 @@ jobs:
     - name: Check with isort
       run: |
         pip install isort
-        isort accuweather/*.py --check-only
+        isort accuweather tests --check-only
     - name: Check with Black Code Formatter
       run: |
         pip install black
-        black accuweather --check
+        black accuweather tests --check
     - name: Lint with flake8
       run: |
         pip install flake8
-        flake8 accuweather
+        flake8 accuweather tests
     - name: Lint with pylint
       run: |
         pip install pylint
-        pylint accuweather
+        pylint accuweather tests
     - name: Test with pytest
       run: |
         pip install pytest
