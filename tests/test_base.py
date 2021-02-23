@@ -167,18 +167,27 @@ async def test_invalid_coordinates_2():
 @pytest.mark.asyncio
 async def test_api_error():
     """Test with API error"""
-    with patch(
-        "accuweather.AccuWeather._async_get_data",
-        side_effect=ApiError("Invalid response from AccuWeather API: 404"),
-    ):
-        async with ClientSession() as websession:
-            try:
-                accuweather = AccuWeather(
-                    VALID_API_KEY, websession, latitude=LATITUDE, longitude=LONGITUDE
-                )
-                await accuweather.async_get_location()
-            except ApiError as error:
-                assert str(error.status) == "Invalid response from AccuWeather API: 404"
+    payload = {
+        "Code": "ServiceError",
+        "Message": "API error.",
+    }
+
+    session = aiohttp.ClientSession()
+
+    with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            payload=payload,
+            status=404,
+        )
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
+        )
+        try:
+            await accuweather.async_get_location()
+        except ApiError as error:
+            assert str(error.status) == "Invalid response from AccuWeather API: 404"
 
 
 @pytest.mark.asyncio
