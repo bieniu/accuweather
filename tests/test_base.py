@@ -112,7 +112,9 @@ async def test_get_forecast():
             headers=HEADERS,
         )
 
-        accuweather = AccuWeather(VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE)
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
+        )
         forecast = await accuweather.async_get_forecast()
 
     await session.close()
@@ -203,7 +205,7 @@ async def test_api_error():
             await accuweather.async_get_location()
         except ApiError as error:
             assert str(error.status) == "Invalid response from AccuWeather API: 404"
-    
+
     await session.close()
 
 
