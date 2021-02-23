@@ -109,7 +109,7 @@ async def test_get_forecast():
 
 
 @pytest.mark.asyncio
-async def test_invalid_api_key():
+async def test_invalid_api_key_1():
     """Test with invalid API key."""
     async with ClientSession() as session:
         try:
@@ -121,6 +121,23 @@ async def test_invalid_api_key():
                 str(error.status)
                 == "Your API Key must be a 32-character hexadecimal string"
             )
+
+
+@pytest.mark.asyncio
+async def test_invalid_api_key_2():
+    """Test with invalid API key."""
+    session = aiohttp.ClientSession()
+
+    with aioresponses() as session_mock:
+        session_mock.get(
+            "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
+            status=401,
+        )
+        accuweather = AccuWeather(VALID_API_KEY, session, location_key=LOCATION_KEY)
+        try:
+            await accuweather.async_get_current_conditions()
+        except InvalidApiKeyError as error:
+            assert str(error.status) == "Invalid API key"
 
 
 @pytest.mark.asyncio
