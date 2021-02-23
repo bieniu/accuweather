@@ -182,17 +182,17 @@ class AccuWeather:
         return self._parse_forecast(data, REMOVE_FROM_FORECAST)
 
     @property
-    def location_name(self):
+    def location_name(self) -> str:
         """Return location name."""
         return self._location_name
 
     @property
-    def location_key(self):
+    def location_key(self) -> str:
         """Return location key."""
         return self._location_key
 
     @property
-    def requests_remaining(self):
+    def requests_remaining(self) -> int:
         """Return number of remaining allowed requests."""
         return self._requests_remaining
 
