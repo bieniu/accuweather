@@ -32,6 +32,7 @@ async def test_get_location():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
             payload=location_data,
@@ -58,6 +59,7 @@ async def test_get_current_conditions():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
             payload=current_condition_data,
@@ -88,6 +90,7 @@ async def test_get_forecast():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
             payload=forecast_data,
@@ -129,6 +132,7 @@ async def test_invalid_api_key_2():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
             status=401,
