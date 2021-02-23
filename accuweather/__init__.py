@@ -139,7 +139,8 @@ class AccuWeather:
                 raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
             _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
             data = await resp.json()
-        self._requests_remaining = resp.headers["RateLimit-Remaining"]
+        if resp.headers["RateLimit-Remaining"].isdigit():
+            self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
         return data
 
     async def async_get_location(self):

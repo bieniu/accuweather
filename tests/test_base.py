@@ -47,7 +47,7 @@ async def test_get_location():
 
     assert accuweather.location_name == "Piątek"
     assert accuweather.location_key == "268068"
-    assert accuweather.requests_remaining == "23"
+    assert accuweather.requests_remaining == 23
 
 
 @pytest.mark.asyncio
@@ -78,7 +78,7 @@ async def test_get_current_conditions():
     assert current_conditions["Temperature"]["Metric"]["Unit"] == "C"
     assert current_conditions["Temperature"]["Imperial"]["Value"] == 74
     assert current_conditions["Temperature"]["Imperial"]["Unit"] == "F"
-    assert accuweather.requests_remaining == "23"
+    assert accuweather.requests_remaining == 23
 
 
 @pytest.mark.asyncio
@@ -108,7 +108,7 @@ async def test_get_forecast():
     assert forecast[0]["TemperatureMax"]["Value"] == 24.8
     assert forecast[0]["TemperatureMax"]["Unit"] == "C"
     assert forecast[0]["Ozone"]["Value"] == 23
-    assert accuweather.requests_remaining == "23"
+    assert accuweather.requests_remaining == 23
 
 
 @pytest.mark.asyncio
