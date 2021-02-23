@@ -3,6 +3,7 @@ Python wrapper for getting weather data from AccueWeather for Limited Trial pack
 """
 import json
 import logging
+from typing import Optional
 
 from aiohttp import ClientSession
 
@@ -29,11 +30,11 @@ class AccuWeather:
 
     def __init__(  # pylint:disable=too-many-arguments
         self,
-        api_key,
+        api_key: str,
         session: ClientSession,
-        latitude=None,
-        longitude=None,
-        location_key=None,
+        latitude: Optional[float] = None,  # pylint:disable=unsubscriptable-object
+        longitude: Optional[float] = None,  # pylint:disable=unsubscriptable-object
+        location_key: Optional[str] = None,  # pylint:disable=unsubscriptable-object
     ):
         """Initialize."""
         if not self._valid_api_key(api_key):
@@ -50,8 +51,8 @@ class AccuWeather:
         self._api_key = api_key
         self._session = session
         self._location_key = location_key
-        self._location_name = None
-        self._requests_remaining = None
+        self._location_name: str = None
+        self._requests_remaining: int = None
 
     @staticmethod
     def _valid_coordinates(latitude: float, longitude: float) -> bool:
@@ -167,7 +168,7 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return self._clean_current_condition(data[0], REMOVE_FROM_CURRENT_CONDITION)
 
-    async def async_get_forecast(self, metric=True):
+    async def async_get_forecast(self, metric: bool = True):
         """Retreive forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
@@ -199,7 +200,7 @@ class AccuWeather:
 class ApiError(Exception):
     """Raised when AccuWeather API request ended in error."""
 
-    def __init__(self, status):
+    def __init__(self, status: str):
         """Initialize."""
         super().__init__(status)
         self.status = status
@@ -208,7 +209,7 @@ class ApiError(Exception):
 class InvalidApiKeyError(Exception):
     """Raised when API Key format is invalid."""
 
-    def __init__(self, status):
+    def __init__(self, status: str):
         """Initialize."""
         super().__init__(status)
         self.status = status
@@ -217,7 +218,7 @@ class InvalidApiKeyError(Exception):
 class InvalidCoordinatesError(Exception):
     """Raised when coordinates are invalid."""
 
-    def __init__(self, status):
+    def __init__(self, status: str):
         """Initialize."""
         super().__init__(status)
         self.status = status
@@ -226,7 +227,7 @@ class InvalidCoordinatesError(Exception):
 class RequestsExceededError(Exception):
     """Raised when allowed number of requests has been exceeded."""
 
-    def __init__(self, status):
+    def __init__(self, status: str):
         """Initialize."""
         super().__init__(status)
         self.status = status
