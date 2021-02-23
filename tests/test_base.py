@@ -1,6 +1,5 @@
 """Tests for accuweather package."""
 import json
-from unittest.mock import patch
 
 import aiohttp
 import pytest
@@ -55,6 +54,8 @@ async def test_get_current_conditions():
     """Test with valid current condition data."""
     with open("tests/data/current_condition_data.json") as file:
         current_condition_data = json.load(file)
+    with open("tests/data/location_data.json") as file:
+        location_data = json.load(file)
 
     session = aiohttp.ClientSession()
 
@@ -65,7 +66,14 @@ async def test_get_current_conditions():
             payload=current_condition_data,
             headers=HEADERS,
         )
-        accuweather = AccuWeather(VALID_API_KEY, session, location_key=LOCATION_KEY)
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            payload=location_data,
+            headers=HEADERS,
+        )
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
+        )
         current_conditions = await accuweather.async_get_current_conditions()
 
     await session.close()
@@ -86,6 +94,8 @@ async def test_get_forecast():
     """Test with valid forecast data."""
     with open("tests/data/forecast_data.json") as file:
         forecast_data = json.load(file)
+    with open("tests/data/location_data.json") as file:
+        location_data = json.load(file)
 
     session = aiohttp.ClientSession()
 
@@ -96,8 +106,13 @@ async def test_get_forecast():
             payload=forecast_data,
             headers=HEADERS,
         )
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            payload=location_data,
+            headers=HEADERS,
+        )
 
-        accuweather = AccuWeather(VALID_API_KEY, session, location_key=LOCATION_KEY)
+        accuweather = AccuWeather(VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE)
         forecast = await accuweather.async_get_forecast()
 
     await session.close()
@@ -188,6 +203,8 @@ async def test_api_error():
             await accuweather.async_get_location()
         except ApiError as error:
             assert str(error.status) == "Invalid response from AccuWeather API: 404"
+    
+    await session.close()
 
 
 @pytest.mark.asyncio
@@ -216,3 +233,5 @@ async def test_requests_exceeded_error():
             assert (
                 str(error.status) == "The allowed number of requests has been exceeded"
             )
+
+    await session.close()
