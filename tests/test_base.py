@@ -184,20 +184,26 @@ async def test_api_error():
 @pytest.mark.asyncio
 async def test_requests_exceeded_error():
     """Test with requests exceeded error"""
-    with patch(
-        "accuweather.AccuWeather._async_get_data",
-        side_effect=RequestsExceededError(
-            "The allowed number of requests has been exceeded"
-        ),
-    ):
-        async with ClientSession() as websession:
-            try:
-                accuweather = AccuWeather(
-                    VALID_API_KEY, websession, latitude=LATITUDE, longitude=LONGITUDE
-                )
-                await accuweather.async_get_location()
-            except RequestsExceededError as error:
-                assert (
-                    str(error.status)
-                    == "The allowed number of requests has been exceeded"
-                )
+    payload = {
+        "Code": "ServiceUnavailable",
+        "Message": "The allowed number of requests has been exceeded.",
+    }
+
+    session = aiohttp.ClientSession()
+
+    with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            payload=payload,
+            status=503,
+        )
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
+        )
+        try:
+            await accuweather.async_get_location()
+        except RequestsExceededError as error:
+            assert (
+                str(error.status) == "The allowed number of requests has been exceeded"
+            )
