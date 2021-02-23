@@ -35,7 +35,7 @@ jobs:
         flake8 accuweather tests
     - name: Lint with pylint
       run: |
-        pip install pylint pytest aioresponse
+        pip install pylint pytest aioresponses
         pylint accuweather tests
     - name: Test with pytest
       run: |
