@@ -3,7 +3,7 @@ Python wrapper for getting weather data from AccueWeather for Limited Trial pack
 """
 import json
 import logging
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from aiohttp import ClientSession
 
@@ -90,7 +90,7 @@ class AccuWeather:
         return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
-    def _parse_forecast(data: list, to_remove: tuple) -> list:
+    def _parse_forecast(data: dict, to_remove: tuple) -> list:
         """Parse and clean forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
@@ -128,7 +128,7 @@ class AccuWeather:
 
         return parsed_data
 
-    async def _async_get_data(self, url: str) -> list:
+    async def _async_get_data(self, url: str) -> dict:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -144,7 +144,7 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
-        return data
+        return data if type(data) == dict else data[0]
 
     async def async_get_location(self):
         """Retreive location data from AccuWeather."""
@@ -168,7 +168,7 @@ class AccuWeather:
             location_key=self._location_key,
         )
         data = await self._async_get_data(url)
-        return self._clean_current_condition(data[0], REMOVE_FROM_CURRENT_CONDITION)
+        return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_forecast(self, metric: bool = True):
         """Retreive forecast data from AccuWeather."""
