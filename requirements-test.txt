@@ -1,4 +1,10 @@
-pytest-cov
-pytest-asyncio
-pytest-error-for-skips
 aioresponses
+black
+flake8
+isort
+mypy
+pylint
+pytest
+pytest-asyncio
+pytest-cov
+pytest-error-for-skips
