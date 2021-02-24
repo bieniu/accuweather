@@ -144,7 +144,7 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
-        return data if type(data) == dict else data[0]
+        return data if isinstance(data, dict) else data[0]
 
     async def async_get_location(self):
         """Retreive location data from AccuWeather."""
