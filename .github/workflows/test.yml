@@ -20,7 +20,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install aiohttp
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
     - name: Check with isort
       run: |
         pip install isort
@@ -35,7 +36,7 @@ jobs:
         flake8 accuweather tests
     - name: Lint with pylint
       run: |
-        pip install pylint pytest aioresponses
+        pip install pylint
         pylint accuweather tests
     - name: Test with pytest
       run: |
