@@ -55,7 +55,9 @@ class AccuWeather:
         self._requests_remaining: Optional[int] = None
 
     @staticmethod
-    def _valid_coordinates(latitude: Union[float, int, None], longitude: Union[float, int, None]) -> bool:
+    def _valid_coordinates(
+        latitude: Union[float, int, None], longitude: Union[float, int, None]
+    ) -> bool:
         """Return True if coordinates are valid."""
         try:
             assert isinstance(latitude, (int, float)) and isinstance(
