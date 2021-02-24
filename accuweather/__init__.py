@@ -32,9 +32,9 @@ class AccuWeather:
         self,
         api_key: str,
         session: ClientSession,
-        latitude: Union[float, int] = None,  # pylint:disable=unsubscriptable-object
-        longitude: Union[float, int] = None,  # pylint:disable=unsubscriptable-object
-        location_key: Optional[str] = None,  # pylint:disable=unsubscriptable-object
+        latitude: Union[float, int] = None,
+        longitude: Union[float, int] = None,
+        location_key: Optional[str] = None,
     ):
         """Initialize."""
         if not self._valid_api_key(api_key):
