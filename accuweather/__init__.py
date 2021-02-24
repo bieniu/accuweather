@@ -3,7 +3,7 @@ Python wrapper for getting weather data from AccueWeather for Limited Trial pack
 """
 import json
 import logging
-from typing import Optional
+from typing import Optional, Union
 
 from aiohttp import ClientSession
 
@@ -32,8 +32,8 @@ class AccuWeather:
         self,
         api_key: str,
         session: ClientSession,
-        latitude: Optional[float] = None,  # pylint:disable=unsubscriptable-object
-        longitude: Optional[float] = None,  # pylint:disable=unsubscriptable-object
+        latitude: Union[float, int] = None,  # pylint:disable=unsubscriptable-object
+        longitude: Union[float, int] = None,  # pylint:disable=unsubscriptable-object
         location_key: Optional[str] = None,  # pylint:disable=unsubscriptable-object
     ):
         """Initialize."""
@@ -51,11 +51,11 @@ class AccuWeather:
         self._api_key = api_key
         self._session = session
         self._location_key = location_key
-        self._location_name: str = None
-        self._requests_remaining: int = None
+        self._location_name: Optional[str] = None
+        self._requests_remaining: Optional[int] = None
 
     @staticmethod
-    def _valid_coordinates(latitude: float, longitude: float) -> bool:
+    def _valid_coordinates(latitude: Union[float, int, None], longitude: Union[float, int, None]) -> bool:
         """Return True if coordinates are valid."""
         try:
             assert isinstance(latitude, (int, float)) and isinstance(
@@ -90,12 +90,12 @@ class AccuWeather:
     @staticmethod
     def _parse_forecast(data: list, to_remove: tuple) -> list:
         """Parse and clean forecast API response."""
-        data = [
+        parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
             for item in data["DailyForecasts"]
         ]
 
-        for day in data:
+        for day in parsed_data:
             # For some forecast days, the AccuWeather API does not provide an Ozone value.
             day.setdefault("Ozone", {})
             day["Ozone"].setdefault("Value")
@@ -124,9 +124,9 @@ class AccuWeather:
                 day[f"{key}Night"] = value
             day.pop("Night")
 
-        return data
+        return parsed_data
 
-    async def _async_get_data(self, url: str) -> str:
+    async def _async_get_data(self, url: str) -> list:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -182,17 +182,17 @@ class AccuWeather:
         return self._parse_forecast(data, REMOVE_FROM_FORECAST)
 
     @property
-    def location_name(self) -> str:
+    def location_name(self) -> Optional[str]:
         """Return location name."""
         return self._location_name
 
     @property
-    def location_key(self) -> str:
+    def location_key(self) -> Optional[str]:
         """Return location key."""
         return self._location_key
 
     @property
-    def requests_remaining(self) -> int:
+    def requests_remaining(self) -> Optional[int]:
         """Return number of remaining allowed requests."""
         return self._requests_remaining
 
