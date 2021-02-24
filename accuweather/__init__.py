@@ -3,7 +3,7 @@ Python wrapper for getting weather data from AccueWeather for Limited Trial pack
 """
 import json
 import logging
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 from aiohttp import ClientSession
 
