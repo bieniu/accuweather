@@ -160,6 +160,8 @@ async def test_invalid_api_key_2():
         except InvalidApiKeyError as error:
             assert str(error.status) == "Invalid API key"
 
+    await session.close()
+    
 
 @pytest.mark.asyncio
 async def test_invalid_coordinates_1():
