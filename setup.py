@@ -15,7 +15,7 @@ setup(
     include_package_data=True,
     url="https://github.com/bieniu/accuweather",
     license="Apache License 2.0",
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests"]),
     python_requires=">=3.6",
     install_requires=list(val.strip() for val in open("requirements.txt")),
     classifiers=[
