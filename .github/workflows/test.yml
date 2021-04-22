@@ -34,9 +34,9 @@ jobs:
     - name: Lint with pylint
       run: |
         pylint accuweather tests
-    - name: Test with pytest
-      run: |
-        python setup.py test
     - name: Test with mypy
       run: |
         mypy accuweather
+    - name: Test with pytest
+      run: |
+        python setup.py test
