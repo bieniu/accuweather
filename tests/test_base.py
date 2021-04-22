@@ -25,7 +25,7 @@ VALID_API_KEY = "32-character-string-1234567890qw"
 @pytest.mark.asyncio
 async def test_get_location():
     """Test with valid location data."""
-    with open("tests/data/location_data.json") as file:
+    with open("tests/fixtures/location_data.json") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
@@ -52,9 +52,9 @@ async def test_get_location():
 @pytest.mark.asyncio
 async def test_get_current_conditions():
     """Test with valid current condition data."""
-    with open("tests/data/current_condition_data.json") as file:
+    with open("tests/fixtures/current_condition_data.json") as file:
         current_condition_data = json.load(file)
-    with open("tests/data/location_data.json") as file:
+    with open("tests/fixtures/location_data.json") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
@@ -92,9 +92,9 @@ async def test_get_current_conditions():
 @pytest.mark.asyncio
 async def test_get_forecast():
     """Test with valid forecast data."""
-    with open("tests/data/forecast_data.json") as file:
+    with open("tests/fixtures/forecast_data.json") as file:
         forecast_data = json.load(file)
-    with open("tests/data/location_data.json") as file:
+    with open("tests/fixtures/location_data.json") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
