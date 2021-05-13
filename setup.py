@@ -6,7 +6,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="accuweather",
-    version="0.1.1",
+    version="0.2.0",
     author="Maciej Bieniek",
     description="Python wrapper for getting weather data from AccuWeather servers.",
     long_description=long_description,
