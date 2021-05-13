@@ -3,7 +3,7 @@ Python wrapper for getting weather data from AccueWeather for Limited Trial pack
 """
 import json
 import logging
-from typing import Optional, Union
+from typing import Optional, Union, Tuple, Dict, Any, List, cast
 
 from aiohttp import ClientSession
 
@@ -32,8 +32,8 @@ class AccuWeather:
         self,
         api_key: str,
         session: ClientSession,
-        latitude: Union[float, int] = None,
-        longitude: Union[float, int] = None,
+        latitude: Optional[float] = None,
+        longitude: Optional[float] = None,
         location_key: Optional[str] = None,
     ):
         """Initialize."""
@@ -50,7 +50,7 @@ class AccuWeather:
         self.longitude = longitude
         self._api_key = api_key
         self._session = session
-        self._location_key = location_key
+        self._location_key: Optional[str] = location_key
         self._location_name: Optional[str] = None
         self._requests_remaining: Optional[int] = None
 
@@ -79,13 +79,13 @@ class AccuWeather:
         return True
 
     @staticmethod
-    def _construct_url(arg: str, **kwargs) -> str:
+    def _construct_url(arg: str, **kwargs: str) -> str:
         """Construct AccuWeather API URL."""
         url = ENDPOINT + URLS[arg].format(**kwargs)
         return url
 
     @staticmethod
-    def _clean_current_condition(data: dict, to_remove: tuple) -> dict:
+    def _clean_current_condition(data: Dict[str, Any], to_remove: Tuple[str, ...]) -> Dict[str, Any]:
         """Clean current condition API response."""
         return {key: data[key] for key in data if key not in to_remove}
 
@@ -128,7 +128,7 @@ class AccuWeather:
 
         return parsed_data
 
-    async def _async_get_data(self, url: str) -> dict:
+    async def _async_get_data(self, url: str) -> Dict[str, Any]:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -144,9 +144,9 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
-        return data if isinstance(data, dict) else data[0]
+        return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
 
-    async def async_get_location(self):
+    async def async_get_location(self) -> None:
         """Retreive location data from AccuWeather."""
         url = self._construct_url(
             ATTR_GEOPOSITION,
@@ -158,10 +158,11 @@ class AccuWeather:
         self._location_key = data["Key"]
         self._location_name = data["LocalizedName"]
 
-    async def async_get_current_conditions(self):
+    async def async_get_current_conditions(self) -> Dict[str, Any]:
         """Retreive current conditions data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
+        assert self._location_key is not None
         url = self._construct_url(
             ATTR_CURRENT_CONDITIONS,
             api_key=self._api_key,
@@ -170,10 +171,11 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
-    async def async_get_forecast(self, metric: bool = True):
+    async def async_get_forecast(self, metric: bool = True) -> List[Dict[str, Any]]:
         """Retreive forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
+        assert self._location_key is not None
         url = self._construct_url(
             ATTR_FORECAST,
             api_key=self._api_key,

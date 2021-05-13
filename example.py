@@ -13,7 +13,7 @@ from aiohttp import ClientError, ClientSession
 LATITUDE = 52.0677904
 LONGITUDE = 19.4795644
 LOCATION_KEY = "268068"
-API_KEY = "xxxxx"
+API_KEY = "xaCqkiID3UjOUY8WdHrZD8X9xT1kP94f"
 
 logging.basicConfig(level=logging.DEBUG)
 
