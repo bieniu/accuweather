@@ -3,7 +3,7 @@ Python wrapper for getting weather data from AccueWeather for Limited Trial pack
 """
 import json
 import logging
-from typing import Optional, Union, Tuple, Dict, Any, List, cast
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 from aiohttp import ClientSession
 
@@ -85,7 +85,9 @@ class AccuWeather:
         return url
 
     @staticmethod
-    def _clean_current_condition(data: Dict[str, Any], to_remove: Tuple[str, ...]) -> Dict[str, Any]:
+    def _clean_current_condition(
+        data: Dict[str, Any], to_remove: Tuple[str, ...]
+    ) -> Dict[str, Any]:
         """Clean current condition API response."""
         return {key: data[key] for key in data if key not in to_remove}
 
