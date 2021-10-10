@@ -21,6 +21,7 @@ setup(
     url="https://github.com/bieniu/accuweather",
     license="Apache-2.0 License",
     packages=find_packages(exclude=["tests"]),
+    package_data={"nettigo_air_monitor": ["py.typed"]},
     python_requires=">=3.8",
     install_requires=install_requires,
     classifiers=[
