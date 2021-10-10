@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 from setuptools import find_packages, setup
 
-with open("README.md", "r") as file:
+with open("README.md", "r", encoding="utf-8") as file:
     long_description = file.read()
+
+with open("requirements.txt", "r", encoding="utf-8") as file:
+    install_requires=list(val.strip() for val in file.readlines())
+
+with open("requirements-test.txt", "r", encoding="utf-8") as file:
+    tests_require=list(val.strip() for val in file.readlines())
 
 setup(
     name="accuweather",
@@ -15,13 +21,20 @@ setup(
     url="https://github.com/bieniu/accuweather",
     license="Apache-2.0 License",
     packages=find_packages(exclude=["tests"]),
-    python_requires=">=3.6",
-    install_requires=list(val.strip() for val in open("requirements.txt")),
+    python_requires=">=3.8",
+    install_requires=install_requires,
     classifiers=[
+        "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3 :: Only",
+        "Typing :: Typed",
     ],
     setup_requires=("pytest-runner"),
-    tests_require=list(val.strip() for val in open("requirements-test.txt")),
+    tests_require=tests_require,
 )
