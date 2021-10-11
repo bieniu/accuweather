@@ -12,7 +12,7 @@ with open("requirements-test.txt", "r", encoding="utf-8") as file:
 
 setup(
     name="accuweather",
-    version="0.2.0",
+    version="0.3.0",
     author="Maciej Bieniek",
     description="Python wrapper for getting weather data from AccuWeather servers.",
     long_description=long_description,
