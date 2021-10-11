@@ -148,6 +148,8 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
+
+        # pylint: disable=unsubscriptable-object
         return cast(dict[str, Any], data if isinstance(data, dict) else data[0])
 
     async def async_get_location(self) -> None:
