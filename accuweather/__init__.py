@@ -1,9 +1,11 @@
 """
 Python wrapper for getting weather data from AccueWeather for Limited Trial package.
 """
+from __future__ import annotations
+
 import json
 import logging
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
+from typing import Any, Dict, cast
 
 from aiohttp import ClientSession
 
@@ -28,13 +30,13 @@ _LOGGER = logging.getLogger(__name__)
 class AccuWeather:
     """Main class to perform AccuWeather API requests"""
 
-    def __init__(  # pylint:disable=too-many-arguments
+    def __init__(
         self,
         api_key: str,
         session: ClientSession,
-        latitude: Optional[float] = None,
-        longitude: Optional[float] = None,
-        location_key: Optional[str] = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
+        location_key: str | None = None,
     ):
         """Initialize."""
         if not self._valid_api_key(api_key):
@@ -50,13 +52,13 @@ class AccuWeather:
         self.longitude = longitude
         self._api_key = api_key
         self._session = session
-        self._location_key: Optional[str] = location_key
-        self._location_name: Optional[str] = None
-        self._requests_remaining: Optional[int] = None
+        self._location_key = location_key
+        self._location_name: str | None = None
+        self._requests_remaining: int | None = None
 
     @staticmethod
     def _valid_coordinates(
-        latitude: Union[float, int, None], longitude: Union[float, int, None]
+        latitude: float | int | None, longitude: float | int | None
     ) -> bool:
         """Return True if coordinates are valid."""
         try:
@@ -86,8 +88,8 @@ class AccuWeather:
 
     @staticmethod
     def _clean_current_condition(
-        data: Dict[str, Any], to_remove: Tuple[str, ...]
-    ) -> Dict[str, Any]:
+        data: dict[str, Any], to_remove: tuple[str, ...]
+    ) -> dict[str, Any]:
         """Clean current condition API response."""
         return {key: data[key] for key in data if key not in to_remove}
 
@@ -130,7 +132,7 @@ class AccuWeather:
 
         return parsed_data
 
-    async def _async_get_data(self, url: str) -> Dict[str, Any]:
+    async def _async_get_data(self, url: str) -> dict[str, Any]:
         """Retreive data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -146,6 +148,7 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
+        # pylint: disable=deprecated-typing-alias
         return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
 
     async def async_get_location(self) -> None:
@@ -160,7 +163,7 @@ class AccuWeather:
         self._location_key = data["Key"]
         self._location_name = data["LocalizedName"]
 
-    async def async_get_current_conditions(self) -> Dict[str, Any]:
+    async def async_get_current_conditions(self) -> dict[str, Any]:
         """Retreive current conditions data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
@@ -173,7 +176,7 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
-    async def async_get_forecast(self, metric: bool = True) -> List[Dict[str, Any]]:
+    async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
         """Retreive forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
@@ -188,17 +191,17 @@ class AccuWeather:
         return self._parse_forecast(data, REMOVE_FROM_FORECAST)
 
     @property
-    def location_name(self) -> Optional[str]:
+    def location_name(self) -> str | None:
         """Return location name."""
         return self._location_name
 
     @property
-    def location_key(self) -> Optional[str]:
+    def location_key(self) -> str | None:
         """Return location key."""
         return self._location_key
 
     @property
-    def requests_remaining(self) -> Optional[int]:
+    def requests_remaining(self) -> int | None:
         """Return number of remaining allowed requests."""
         return self._requests_remaining
 
