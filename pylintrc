@@ -9,6 +9,7 @@ good-names=id,i,j,k,ex,Run,_,fp,T,ev,ip
 [MESSAGES CONTROL]
 disable=
   too-many-instance-attributes,
+  too-many-arguments,
 
 [REPORTS]
 score=no

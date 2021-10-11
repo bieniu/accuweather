@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import Any, cast
+from typing import Any, Dict, cast
 
 from aiohttp import ClientSession
 
@@ -30,7 +30,7 @@ _LOGGER = logging.getLogger(__name__)
 class AccuWeather:
     """Main class to perform AccuWeather API requests"""
 
-    def __init__(  # pylint:disable=too-many-arguments
+    def __init__(
         self,
         api_key: str,
         session: ClientSession,
@@ -148,9 +148,8 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
-
-        # pylint: disable=unsubscriptable-object
-        return cast(dict[str, Any], data if isinstance(data, dict) else data[0])
+        # pylint: disable=deprecated-typing-alias
+        return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
 
     async def async_get_location(self) -> None:
         """Retreive location data from AccuWeather."""
