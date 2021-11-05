@@ -185,7 +185,7 @@ async def test_invalid_coordinates_2():
 
 @pytest.mark.asyncio
 async def test_api_error():
-    """Test with API error"""
+    """Test with API error."""
     payload = {
         "Code": "ServiceError",
         "Message": "API error.",
@@ -213,7 +213,7 @@ async def test_api_error():
 
 @pytest.mark.asyncio
 async def test_requests_exceeded_error():
-    """Test with requests exceeded error"""
+    """Test with requests exceeded error."""
     payload = {
         "Code": "ServiceUnavailable",
         "Message": "The allowed number of requests has been exceeded.",

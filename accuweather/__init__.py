@@ -1,6 +1,5 @@
-"""
-Python wrapper for getting weather data from AccueWeather for Limited Trial package.
-"""
+"""Python wrapper for getting weather data from AccueWeather for Limited Trial."""
+
 from __future__ import annotations
 
 import json
@@ -28,7 +27,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class AccuWeather:
-    """Main class to perform AccuWeather API requests"""
+    """Main class to perform AccuWeather API requests."""
 
     def __init__(
         self,
@@ -61,24 +60,23 @@ class AccuWeather:
         latitude: float | int | None, longitude: float | int | None
     ) -> bool:
         """Return True if coordinates are valid."""
-        try:
-            assert isinstance(latitude, (int, float)) and isinstance(
-                longitude, (int, float)
-            )
-            assert abs(latitude) <= 90 and abs(longitude) <= 180
-        except (AssertionError, TypeError):
-            return False
-        return True
+        if (
+            isinstance(latitude, (int, float))
+            and isinstance(longitude, (int, float))
+            and abs(latitude) <= 90
+            and abs(longitude) <= 180
+        ):
+            return True
+
+        return False
 
     @staticmethod
     def _valid_api_key(api_key: str) -> bool:
         """Return True if API key is valid."""
-        try:
-            assert isinstance(api_key, str)
-            assert len(api_key) == 32
-        except AssertionError:
-            return False
-        return True
+        if isinstance(api_key, str) and len(api_key) == 32:
+            return True
+
+        return False
 
     @staticmethod
     def _construct_url(arg: str, **kwargs: str) -> str:
@@ -133,7 +131,7 @@ class AccuWeather:
         return parsed_data
 
     async def _async_get_data(self, url: str) -> dict[str, Any]:
-        """Retreive data from AccuWeather API."""
+        """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
                 raise InvalidApiKeyError("Invalid API key")
@@ -152,7 +150,7 @@ class AccuWeather:
         return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
 
     async def async_get_location(self) -> None:
-        """Retreive location data from AccuWeather."""
+        """Retrieve location data from AccuWeather."""
         url = self._construct_url(
             ATTR_GEOPOSITION,
             api_key=self._api_key,
@@ -164,7 +162,7 @@ class AccuWeather:
         self._location_name = data["LocalizedName"]
 
     async def async_get_current_conditions(self) -> dict[str, Any]:
-        """Retreive current conditions data from AccuWeather."""
+        """Retrieve current conditions data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
         assert self._location_key is not None
@@ -177,7 +175,7 @@ class AccuWeather:
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
-        """Retreive forecast data from AccuWeather."""
+        """Retrieve forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
         assert self._location_key is not None

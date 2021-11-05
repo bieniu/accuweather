@@ -1,6 +1,8 @@
 import asyncio
 import logging
 
+from aiohttp import ClientError, ClientSession
+
 from accuweather import (
     AccuWeather,
     ApiError,
@@ -8,7 +10,6 @@ from accuweather import (
     InvalidCoordinatesError,
     RequestsExceededError,
 )
-from aiohttp import ClientError, ClientSession
 
 LATITUDE = 52.0677904
 LONGITUDE = 19.4795644
