@@ -42,7 +42,7 @@ repos:
         args:
           - --quiet
           - --configfile=bandit.yaml
-        files: ^(accuweather)/.+\.py$
+        files: ^(accuweather|tests)/.+\.py$
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.0
     hooks:
