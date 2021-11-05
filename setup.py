@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 from setuptools import find_packages, setup
 
-with open("README.md", "r", encoding="utf-8") as file:
+with open("README.md", encoding="utf-8") as file:
     long_description = file.read()
 
-with open("requirements.txt", "r", encoding="utf-8") as file:
-    install_requires=list(val.strip() for val in file.readlines())
+with open("requirements.txt", encoding="utf-8") as file:
+    install_requires = list(val.strip() for val in file.readlines())
 
-with open("requirements-test.txt", "r", encoding="utf-8") as file:
-    tests_require=list(val.strip() for val in file.readlines())
+with open("requirements-test.txt", encoding="utf-8") as file:
+    tests_require = list(val.strip() for val in file.readlines())
 
 setup(
     name="accuweather",
