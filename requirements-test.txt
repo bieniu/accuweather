@@ -1,4 +1,4 @@
-aioresponses==0.7.2
+aioresponses==0.7.3
 black==21.12b0
 flake8==4.0.1
 isort==5.10.1
