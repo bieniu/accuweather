@@ -10,7 +10,8 @@ from aiohttp import ClientSession
 
 from .const import (
     ATTR_CURRENT_CONDITIONS,
-    ATTR_FORECAST,
+    ATTR_FORECAST_DAILY_5,
+    ATTR_FORECAST_HOURLY_12,
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
@@ -92,8 +93,8 @@ class AccuWeather:
         return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
-    def _parse_forecast(data: dict, to_remove: tuple) -> list:
-        """Parse and clean forecast API response."""
+    def _parse_forecast_daily(data: dict, to_remove: tuple) -> list:
+        """Parse and clean daily forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
             for item in data["DailyForecasts"]
@@ -130,6 +131,15 @@ class AccuWeather:
 
         return parsed_data
 
+    @staticmethod
+    def _parse_forecast_hourly(data: dict, to_remove: tuple) -> list:
+        """Parse and clean hourly forecast API response."""
+        parsed_data = [
+            {key: value for key, value in item.items() if key not in to_remove}
+            for item in data
+        ]
+        return parsed_data
+
     async def _async_get_data(self, url: str) -> dict[str, Any]:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
@@ -147,7 +157,12 @@ class AccuWeather:
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
         # pylint: disable=deprecated-typing-alias
-        return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
+        if isinstance(data, dict):
+            return cast(Dict[str, Any], data)
+        elif "hourly" in url:
+            return data
+        else:
+            return data[0]
 
     async def async_get_location(self) -> None:
         """Retrieve location data from AccuWeather."""
@@ -175,18 +190,32 @@ class AccuWeather:
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
-        """Retrieve forecast data from AccuWeather."""
+        """Retrieve daily forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
         assert self._location_key is not None
         url = self._construct_url(
-            ATTR_FORECAST,
+            ATTR_FORECAST_DAILY_5,
             api_key=self._api_key,
             location_key=self._location_key,
             metric=str(metric),
         )
         data = await self._async_get_data(url)
-        return self._parse_forecast(data, REMOVE_FROM_FORECAST)
+        return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
+
+    async def async_get_forecast_hourly(self, metric: bool = True) -> list[dict[str, Any]]:
+        """Retrieve hourly forecast data from AccuWeather."""
+        if not self._location_key:
+            await self.async_get_location()
+        assert self._location_key is not None
+        url = self._construct_url(
+            ATTR_FORECAST_HOURLY_12,
+            api_key=self._api_key,
+            location_key=self._location_key,
+            metric=str(metric),
+        )
+        data = await self._async_get_data(url)
+        return self._parse_forecast_hourly(data, REMOVE_FROM_FORECAST)
 
     @property
     def location_name(self) -> str | None:

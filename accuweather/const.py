@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 ATTR_CURRENT_CONDITIONS: str = "currentconditions"
-ATTR_FORECAST: str = "forecasts"
+ATTR_FORECAST_DAILY_5: str = "forecasts"
+ATTR_FORECAST_HOURLY_12: str = "forecasts_hourly"
 ATTR_GEOPOSITION: str = "geoposition"
 
 ENDPOINT: str = "https://dataservice.accuweather.com/"
@@ -29,5 +30,6 @@ TEMPERATURES: tuple[str, ...] = (
 URLS: dict[str, str] = {
     ATTR_GEOPOSITION: "locations/v1/cities/geoposition/search?apikey={api_key}&q={lat}%2C{lon}",
     ATTR_CURRENT_CONDITIONS: "currentconditions/v1/{location_key}?apikey={api_key}&details=true",
-    ATTR_FORECAST: "forecasts/v1/daily/5day/{location_key}?apikey={api_key}&details=true&metric={metric}",  # pylint: disable=line-too-long
+    ATTR_FORECAST_DAILY_5: "forecasts/v1/daily/5day/{location_key}?apikey={api_key}&details=true&metric={metric}",  # pylint: disable=line-too-long
+    ATTR_FORECAST_HOURLY_12: "forecasts/v1/hourly/12hour/{location_key}?apikey={api_key}&details=true&metric={metric}",  # pylint: disable=line-too-long
 }
