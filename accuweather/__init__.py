@@ -130,7 +130,7 @@ class AccuWeather:
         """Parse and clean hourly forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
-            for item in data['HourlyForecast']
+            for item in data["HourlyForecast"]
         ]
         return parsed_data
 
@@ -155,7 +155,7 @@ class AccuWeather:
             return cast(Dict[str, Any], data)
         # nasty hack to account for different data structure returned by hourly forecast API call
         if "hourly" in url:
-            return {'HourlyForecast': data}
+            return {"HourlyForecast": data}
         return data[0]
 
     async def async_get_location(self) -> None:
