@@ -43,11 +43,9 @@ class AccuWeather:
             raise InvalidApiKeyError(
                 "Your API Key must be a 32-character hexadecimal string"
             )
-
         if not location_key:
             if not self._valid_coordinates(latitude, longitude):
                 raise InvalidCoordinatesError("Your coordinates are invalid")
-
         self.latitude = latitude
         self.longitude = longitude
         self._api_key = api_key
@@ -68,7 +66,6 @@ class AccuWeather:
             and abs(longitude) <= 180
         ):
             return True
-
         return False
 
     @staticmethod
@@ -76,7 +73,6 @@ class AccuWeather:
         """Return True if API key is valid."""
         if isinstance(api_key, str) and len(api_key) == 32:
             return True
-
         return False
 
     @staticmethod
@@ -120,7 +116,6 @@ class AccuWeather:
                 day[f"{temp}Min"] = day[temp]["Minimum"]
                 day[f"{temp}Max"] = day[temp]["Maximum"]
                 day.pop(temp)
-
             for key, value in day["Day"].items():
                 day[f"{key}Day"] = value
             day.pop("Day")
@@ -128,7 +123,6 @@ class AccuWeather:
             for key, value in day["Night"].items():
                 day[f"{key}Night"] = value
             day.pop("Night")
-
         return parsed_data
 
     @staticmethod
@@ -203,7 +197,9 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
 
-    async def async_get_forecast_hourly(self, metric: bool = True) -> list[dict[str, Any]]:
+    async def async_get_forecast_hourly(
+        self, metric: bool = True
+    ) -> list[dict[str, Any]]:
         """Retrieve hourly forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
