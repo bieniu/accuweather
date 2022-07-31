@@ -153,10 +153,9 @@ class AccuWeather:
         # pylint: disable=deprecated-typing-alias
         if isinstance(data, dict):
             return cast(Dict[str, Any], data)
-        elif "hourly" in url:
+        if "hourly" in url:
             return data
-        else:
-            return data[0]
+        return data[0]
 
     async def async_get_location(self) -> None:
         """Retrieve location data from AccuWeather."""
