@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import Any, Dict, cast
+from typing import Any, Dict, List, cast
 
 from aiohttp import ClientSession
 
@@ -130,7 +130,7 @@ class AccuWeather:
         """Parse and clean hourly forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
-            for item in data
+            for item in data['HourlyForecast']
         ]
         return parsed_data
 
@@ -153,8 +153,9 @@ class AccuWeather:
         # pylint: disable=deprecated-typing-alias
         if isinstance(data, dict):
             return cast(Dict[str, Any], data)
+        # nasty hack to account for different data structure returned by hourly forecast API call
         if "hourly" in url:
-            return data
+            return {'HourlyForecast': data}
         return data[0]
 
     async def async_get_location(self) -> None:
