@@ -150,13 +150,12 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
-        # pylint: disable=deprecated-typing-alias
-        if isinstance(data, dict):
-            return cast(Dict[str, Any], data)
+
         # nasty hack to account for different data structure returned by hourly forecast API call
         if "hourly" in url:
-            return {"HourlyForecast": data}
-        return data[0]
+            data = {"HourlyForecast": data}
+        # pylint: disable=deprecated-typing-alias
+        return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
 
     async def async_get_location(self) -> None:
         """Retrieve location data from AccuWeather."""
