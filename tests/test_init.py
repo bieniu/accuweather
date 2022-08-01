@@ -1,5 +1,6 @@
 """Tests for accuweather package."""
 import json
+from http import HTTPStatus
 
 import aiohttp
 import pytest
@@ -152,7 +153,7 @@ async def test_invalid_api_key_2():
         # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
-            status=401,
+            status=HTTPStatus.UNAUTHORIZED.value,
         )
         accuweather = AccuWeather(VALID_API_KEY, session, location_key=LOCATION_KEY)
         try:

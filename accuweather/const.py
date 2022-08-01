@@ -6,8 +6,6 @@ ATTR_FORECAST: str = "forecasts"
 ATTR_GEOPOSITION: str = "geoposition"
 
 ENDPOINT: str = "https://dataservice.accuweather.com/"
-HTTP_OK: int = 200
-HTTP_UNAUTHORIZED: int = 401
 HTTP_HEADERS: dict[str, str] = {"Content-Encoding": "gzip"}
 REQUESTS_EXCEEDED: str = "The allowed number of requests has been exceeded."
 
