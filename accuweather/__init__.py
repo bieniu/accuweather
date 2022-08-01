@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+from http import HTTPStatus
 from typing import Any, Dict, cast
 
 from aiohttp import ClientSession
@@ -14,8 +15,6 @@ from .const import (
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
-    HTTP_OK,
-    HTTP_UNAUTHORIZED,
     REMOVE_FROM_CURRENT_CONDITION,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
@@ -133,9 +132,9 @@ class AccuWeather:
     async def _async_get_data(self, url: str) -> dict[str, Any]:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
-            if resp.status == HTTP_UNAUTHORIZED:
+            if resp.status == HTTPStatus.UNAUTHORIZED.value:
                 raise InvalidApiKeyError("Invalid API key")
-            if resp.status != HTTP_OK:
+            if resp.status != HTTPStatus.OK.value:
                 error_text = json.loads(await resp.text())
                 if error_text["Message"] == REQUESTS_EXCEEDED:
                     raise RequestsExceededError(
