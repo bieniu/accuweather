@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import json
 import logging
 from http import HTTPStatus
 from typing import Any
 
+import orjson
 from aiohttp import ClientSession
 
 from .const import (
@@ -146,14 +146,15 @@ class AccuWeather:
             if resp.status == HTTPStatus.UNAUTHORIZED.value:
                 raise InvalidApiKeyError("Invalid API key")
             if resp.status != HTTPStatus.OK.value:
-                error_text = json.loads(await resp.text())
+                # pylint: disable=no-member
+                error_text = orjson.loads(await resp.text())
                 if error_text["Message"] == REQUESTS_EXCEEDED:
                     raise RequestsExceededError(
                         "The allowed number of requests has been exceeded"
                     )
                 raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
             _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
-            data = await resp.json()
+            data = await resp.json(loads=orjson.loads)  # pylint: disable=no-member
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 

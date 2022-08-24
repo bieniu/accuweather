@@ -65,4 +65,6 @@ repos:
     rev: "v0.971"
     hooks:
       - id: mypy
+        additional_dependencies:
+          - types-orjson
         files: ^(accuweather)/.+\.py$
