@@ -11,7 +11,8 @@ from aiohttp import ClientSession
 
 from .const import (
     ATTR_CURRENT_CONDITIONS,
-    ATTR_FORECAST,
+    ATTR_FORECAST_DAILY_5,
+    ATTR_FORECAST_HOURLY_12,
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
@@ -41,11 +42,9 @@ class AccuWeather:
             raise InvalidApiKeyError(
                 "Your API Key must be a 32-character hexadecimal string"
             )
-
         if not location_key:
             if not self._valid_coordinates(latitude, longitude):
                 raise InvalidCoordinatesError("Your coordinates are invalid")
-
         self.latitude = latitude
         self.longitude = longitude
         self._api_key = api_key
@@ -66,7 +65,6 @@ class AccuWeather:
             and abs(longitude) <= 180
         ):
             return True
-
         return False
 
     @staticmethod
@@ -74,7 +72,6 @@ class AccuWeather:
         """Return True if API key is valid."""
         if isinstance(api_key, str) and len(api_key) == 32:
             return True
-
         return False
 
     @staticmethod
@@ -91,8 +88,8 @@ class AccuWeather:
         return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
-    def _parse_forecast(data: dict, to_remove: tuple) -> list:
-        """Parse and clean forecast API response."""
+    def _parse_forecast_daily(data: dict, to_remove: tuple) -> list:
+        """Parse and clean daily forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
             for item in data["DailyForecasts"]
@@ -118,7 +115,6 @@ class AccuWeather:
                 day[f"{temp}Min"] = day[temp]["Minimum"]
                 day[f"{temp}Max"] = day[temp]["Maximum"]
                 day.pop(temp)
-
             for key, value in day["Day"].items():
                 day[f"{key}Day"] = value
             day.pop("Day")
@@ -126,7 +122,15 @@ class AccuWeather:
             for key, value in day["Night"].items():
                 day[f"{key}Night"] = value
             day.pop("Night")
+        return parsed_data
 
+    @staticmethod
+    def _parse_forecast_hourly(data: dict, to_remove: tuple) -> list:
+        """Parse and clean hourly forecast API response."""
+        parsed_data = [
+            {key: value for key, value in item.items() if key not in to_remove}
+            for item in data["HourlyForecast"]
+        ]
         return parsed_data
 
     async def _async_get_data(self, url: str) -> dict[str, Any]:
@@ -145,6 +149,10 @@ class AccuWeather:
             data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
+
+        # nasty hack to account for different data structure returned by hourly forecast API call
+        if "hourly" in url:
+            data = {"HourlyForecast": data}
         # pylint: disable=deprecated-typing-alias
         return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
 
@@ -174,18 +182,34 @@ class AccuWeather:
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
-        """Retrieve forecast data from AccuWeather."""
+        """Retrieve daily forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
         assert self._location_key is not None
         url = self._construct_url(
-            ATTR_FORECAST,
+            ATTR_FORECAST_DAILY_5,
             api_key=self._api_key,
             location_key=self._location_key,
             metric=str(metric),
         )
         data = await self._async_get_data(url)
-        return self._parse_forecast(data, REMOVE_FROM_FORECAST)
+        return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
+
+    async def async_get_forecast_hourly(
+        self, metric: bool = True
+    ) -> list[dict[str, Any]]:
+        """Retrieve hourly forecast data from AccuWeather."""
+        if not self._location_key:
+            await self.async_get_location()
+        assert self._location_key is not None
+        url = self._construct_url(
+            ATTR_FORECAST_HOURLY_12,
+            api_key=self._api_key,
+            location_key=self._location_key,
+            metric=str(metric),
+        )
+        data = await self._async_get_data(url)
+        return self._parse_forecast_hourly(data, REMOVE_FROM_FORECAST)
 
     @property
     def location_name(self) -> str | None:
