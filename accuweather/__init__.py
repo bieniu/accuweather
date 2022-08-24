@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import logging
 from http import HTTPStatus
-from typing import Any, Dict, cast
+from typing import Any
 
 from aiohttp import ClientSession
 
@@ -136,7 +136,7 @@ class AccuWeather:
         ]
         return parsed_data
 
-    async def _async_get_data(self, url: str) -> dict[str, Any]:
+    async def _async_get_data(self, url: str) -> Any:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTPStatus.UNAUTHORIZED.value:
@@ -153,11 +153,10 @@ class AccuWeather:
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 
-        # nasty hack to account for different data structure returned by hourly forecast API call
         if "hourly" in url:
-            data = {"HourlyForecast": data}
-        # pylint: disable=deprecated-typing-alias
-        return cast(Dict[str, Any], data if isinstance(data, dict) else data[0])
+            return data
+
+        return data if isinstance(data, dict) else data[0]
 
     async def async_get_location(self) -> None:
         """Retrieve location data from AccuWeather."""
