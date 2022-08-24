@@ -36,7 +36,7 @@ class AccuWeather:
         latitude: float | None = None,
         longitude: float | None = None,
         location_key: str | None = None,
-    ):
+    ) -> None:
         """Initialize."""
         if not self._valid_api_key(api_key):
             raise InvalidApiKeyError(
@@ -90,7 +90,9 @@ class AccuWeather:
         return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
-    def _parse_forecast_daily(data: dict, to_remove: tuple) -> list:
+    def _parse_forecast_daily(
+        data: dict[str, Any], to_remove: tuple[str, ...]
+    ) -> list[dict[str, Any]]:
         """Parse and clean daily forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
@@ -128,7 +130,9 @@ class AccuWeather:
         return parsed_data
 
     @staticmethod
-    def _parse_forecast_hourly(data: dict, to_remove: tuple) -> list:
+    def _parse_forecast_hourly(
+        data: list[dict[str, Any]], to_remove: tuple[str, ...]
+    ) -> list[dict[str, Any]]:
         """Parse and clean hourly forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
@@ -232,7 +236,7 @@ class AccuWeather:
 class ApiError(Exception):
     """Raised when AccuWeather API request ended in error."""
 
-    def __init__(self, status: str):
+    def __init__(self, status: str) -> None:
         """Initialize."""
         super().__init__(status)
         self.status = status
@@ -241,7 +245,7 @@ class ApiError(Exception):
 class InvalidApiKeyError(Exception):
     """Raised when API Key format is invalid."""
 
-    def __init__(self, status: str):
+    def __init__(self, status: str) -> None:
         """Initialize."""
         super().__init__(status)
         self.status = status
@@ -250,7 +254,7 @@ class InvalidApiKeyError(Exception):
 class InvalidCoordinatesError(Exception):
     """Raised when coordinates are invalid."""
 
-    def __init__(self, status: str):
+    def __init__(self, status: str) -> None:
         """Initialize."""
         super().__init__(status)
         self.status = status
@@ -259,7 +263,7 @@ class InvalidCoordinatesError(Exception):
 class RequestsExceededError(Exception):
     """Raised when allowed number of requests has been exceeded."""
 
-    def __init__(self, status: str):
+    def __init__(self, status: str) -> None:
         """Initialize."""
         super().__init__(status)
         self.status = status
