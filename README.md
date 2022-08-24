@@ -45,6 +45,7 @@ async def main():
             )
             current_conditions = await accuweather.async_get_current_conditions()
             forecast = await accuweather.async_get_forecast(metric=True)
+            forecast_hourly = await accuweather.async_get_forecast_hourly(metric=True)
         except (
             ApiError,
             InvalidApiKeyError,
@@ -58,6 +59,7 @@ async def main():
             print(f"Requests remaining: {accuweather.requests_remaining}")
             print(f"Current: {current_conditions}")
             print(f"Forecast: {forecast}")
+            print(f"Forecast hourly: {forecast_hourly}")
 
 
 loop = asyncio.new_event_loop()
