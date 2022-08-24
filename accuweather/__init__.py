@@ -132,7 +132,7 @@ class AccuWeather:
         """Parse and clean hourly forecast API response."""
         parsed_data = [
             {key: value for key, value in item.items() if key not in to_remove}
-            for item in data["HourlyForecast"]
+            for item in data
         ]
         return parsed_data
 
