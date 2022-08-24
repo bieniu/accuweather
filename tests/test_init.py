@@ -130,6 +130,44 @@ async def test_get_forecast():
 
 
 @pytest.mark.asyncio
+async def test_get_hourly_forecast():
+    """Test with valid hourly_forecast data."""
+    with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
+        hourly_forecast_data = json.load(file)
+    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
+        location_data = json.load(file)
+
+    session = aiohttp.ClientSession()
+
+    with aioresponses() as session_mock:
+        # pylint:disable=line-too-long
+        session_mock.get(
+            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
+            payload=hourly_forecast_data,
+            headers=HEADERS,
+        )
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            payload=location_data,
+            headers=HEADERS,
+        )
+
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
+        )
+        forecast = await accuweather.async_get_forecast_hourly()
+
+    await session.close()
+
+    assert forecast[0]["WeatherIcon"] == 4
+    assert forecast[0]["HasPrecipitation"] is False
+    assert forecast[0]["UVIndex"] == 2
+    assert forecast[0]["Temperature"]["Value"] == 26.3
+    assert forecast[0]["Temperature"]["Unit"] == "C"
+    assert accuweather.requests_remaining == 23
+
+
+@pytest.mark.asyncio
 async def test_invalid_api_key_1():
     """Test with invalid API key."""
     async with ClientSession() as session:
