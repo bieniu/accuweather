@@ -5,7 +5,7 @@ from setuptools import setup
 
 PROJECT_DIR = Path(__file__).parent.resolve()
 README_FILE = PROJECT_DIR / "README.md"
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 
 setup(
     name="accuweather",
@@ -19,7 +19,7 @@ setup(
     license="Apache-2.0 License",
     packages=["accuweather"],
     package_data={"accuweather": ["py.typed"]},
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     install_requires=list(
         val.strip() for val in open("requirements.txt", encoding="utf-8")
     ),
@@ -29,9 +29,9 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3 :: Only",
         "Typing :: Typed",
     ],
