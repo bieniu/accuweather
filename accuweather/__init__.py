@@ -22,6 +22,12 @@ from .const import (
     TEMPERATURES,
     URLS,
 )
+from .exceptions import (
+    ApiError,
+    InvalidApiKeyError,
+    InvalidCoordinatesError,
+    RequestsExceededError,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -232,39 +238,3 @@ class AccuWeather:
     def requests_remaining(self) -> int | None:
         """Return number of remaining allowed requests."""
         return self._requests_remaining
-
-
-class ApiError(Exception):
-    """Raised when AccuWeather API request ended in error."""
-
-    def __init__(self, status: str) -> None:
-        """Initialize."""
-        super().__init__(status)
-        self.status = status
-
-
-class InvalidApiKeyError(Exception):
-    """Raised when API Key format is invalid."""
-
-    def __init__(self, status: str) -> None:
-        """Initialize."""
-        super().__init__(status)
-        self.status = status
-
-
-class InvalidCoordinatesError(Exception):
-    """Raised when coordinates are invalid."""
-
-    def __init__(self, status: str) -> None:
-        """Initialize."""
-        super().__init__(status)
-        self.status = status
-
-
-class RequestsExceededError(Exception):
-    """Raised when allowed number of requests has been exceeded."""
-
-    def __init__(self, status: str) -> None:
-        """Initialize."""
-        super().__init__(status)
-        self.status = status
