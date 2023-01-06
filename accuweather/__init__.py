@@ -154,7 +154,7 @@ class AccuWeather:
                     )
                 raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
             _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
-            data = await resp.json(loads=orjson.loads)  # pylint: disable=no-member
+            data = await resp.json()
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 
