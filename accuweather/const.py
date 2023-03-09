@@ -35,3 +35,8 @@ URLS: dict[str, str] = {
     ATTR_FORECAST_DAILY_5: "forecasts/v1/daily/5day/{location_key}?apikey={api_key}&details=true&metric={metric}",
     ATTR_FORECAST_HOURLY_12: "forecasts/v1/hourly/12hour/{location_key}?apikey={api_key}&details=true&metric={metric}",
 }
+
+UNIT_MAP: dict[int, str] = {
+    17: "°C",
+    18: "°F",
+}

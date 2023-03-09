@@ -31,6 +31,7 @@ from .exceptions import (
     InvalidCoordinatesError,
     RequestsExceededError,
 )
+from .model import CurrentCondition, Temperature, Value
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -197,6 +198,23 @@ class AccuWeather:
             location_key=self._location_key,
         )
         data = await self._async_get_data(url)
+
+        CurrentCondition(
+            weather_text=data["WeatherText"].lower(),
+            weather_icon=data["WeatherIcon"],
+            is_day_time=data["IsDayTime"],
+            temperature=Temperature(
+                imperial=Value(
+                    unit_int=data["Temperature"]["Imperial"]["UnitType"],
+                    value=data["Temperature"]["Imperial"]["Value"],
+                ),
+                metric=Value(
+                    unit_int=data["Temperature"]["Metric"]["UnitType"],
+                    value=data["Temperature"]["Metric"]["Value"],
+                ),
+            ),
+        )
+
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
