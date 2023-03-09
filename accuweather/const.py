@@ -37,6 +37,17 @@ URLS: dict[str, str] = {
 }
 
 UNIT_MAP: dict[int, str] = {
+    0: "ft",
+    1: "m",
+    2: "mi",
+    3: "mm",
+    5: "m",
+    6: "km",
+    7: "km/h",
+    9: "mi/h",
+    12: "inHg",
+    14: "mb",
     17: "°C",
     18: "°F",
+    20: "%",
 }

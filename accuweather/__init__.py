@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime
 from http import HTTPStatus
 from typing import TYPE_CHECKING, Any
 
@@ -19,7 +20,6 @@ from .const import (
     MAX_API_KEY_LENGTH,
     MAX_LATITUDE,
     MAX_LONGITUDE,
-    REMOVE_FROM_CURRENT_CONDITION,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
     TEMPERATURES,
@@ -31,7 +31,7 @@ from .exceptions import (
     InvalidCoordinatesError,
     RequestsExceededError,
 )
-from .model import CurrentCondition, Temperature, Value
+from .model import CurrentCondition, Value
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,6 +46,7 @@ class AccuWeather:
         latitude: float | None = None,
         longitude: float | None = None,
         location_key: str | None = None,
+        metric: bool = True,
     ) -> None:
         """Initialize."""
         if not self._valid_api_key(api_key):
@@ -62,6 +63,7 @@ class AccuWeather:
         self._location_key = location_key
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
+        self.unit_system: str = "Metric" if metric else "Imperial"
 
     @staticmethod
     def _valid_coordinates(
@@ -89,13 +91,6 @@ class AccuWeather:
     def _construct_url(arg: str, **kwargs: str) -> str:
         """Construct AccuWeather API URL."""
         return ENDPOINT + URLS[arg].format(**kwargs)
-
-    @staticmethod
-    def _clean_current_condition(
-        data: dict[str, Any], to_remove: tuple[str, ...]
-    ) -> dict[str, Any]:
-        """Clean current condition API response."""
-        return {key: data[key] for key in data if key not in to_remove}
 
     @staticmethod
     def _parse_forecast_daily(
@@ -184,7 +179,7 @@ class AccuWeather:
         self._location_key = data["Key"]
         self._location_name = data["LocalizedName"]
 
-    async def async_get_current_conditions(self) -> dict[str, Any]:
+    async def async_get_current_conditions(self) -> CurrentCondition:
         """Retrieve current conditions data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
@@ -199,23 +194,76 @@ class AccuWeather:
         )
         data = await self._async_get_data(url)
 
-        CurrentCondition(
+        return CurrentCondition(
+            local_observation=datetime.fromisoformat(data["LocalObservationDateTime"]),
             weather_text=data["WeatherText"].lower(),
             weather_icon=data["WeatherIcon"],
+            relative_humidity=Value(20, data["RelativeHumidity"]),
+            indoor_relative_humidity=Value(20, data["IndoorRelativeHumidity"]),
+            cloud_cover=Value(20, data["CloudCover"]),
+            uv_index=data["UVIndex"],
+            uv_index_text=data["UVIndexText"].lower(),
+            wind_direction=data["Wind"]["Direction"]["Degrees"],
             is_day_time=data["IsDayTime"],
-            temperature=Temperature(
-                imperial=Value(
-                    unit_int=data["Temperature"]["Imperial"]["UnitType"],
-                    value=data["Temperature"]["Imperial"]["Value"],
-                ),
-                metric=Value(
-                    unit_int=data["Temperature"]["Metric"]["UnitType"],
-                    value=data["Temperature"]["Metric"]["Value"],
-                ),
+            visibility=Value(
+                data["Visibility"][self.unit_system]["UnitType"],
+                data["Visibility"][self.unit_system]["Value"],
             ),
+            wind_speed=Value(
+                data["Wind"]["Speed"][self.unit_system]["UnitType"],
+                data["Wind"]["Speed"][self.unit_system]["Value"],
+            ),
+            wind_gust=Value(
+                data["WindGust"]["Speed"][self.unit_system]["UnitType"],
+                data["WindGust"]["Speed"][self.unit_system]["Value"],
+            ),
+            temperature=Value(
+                data["Temperature"][self.unit_system]["UnitType"],
+                data["Temperature"][self.unit_system]["Value"],
+            ),
+            apparent_temperature=Value(
+                data["ApparentTemperature"][self.unit_system]["UnitType"],
+                data["ApparentTemperature"][self.unit_system]["Value"],
+            ),
+            wind_chill_temperature=Value(
+                data["WindChillTemperature"][self.unit_system]["UnitType"],
+                data["WindChillTemperature"][self.unit_system]["Value"],
+            ),
+            wet_bulb_temperature=Value(
+                data["WetBulbTemperature"][self.unit_system]["UnitType"],
+                data["WetBulbTemperature"][self.unit_system]["Value"],
+            ),
+            real_feel_temperature=Value(
+                data["RealFeelTemperature"][self.unit_system]["UnitType"],
+                data["RealFeelTemperature"][self.unit_system]["Value"],
+                data["RealFeelTemperature"][self.unit_system]["Phrase"].lower(),
+            ),
+            real_feel_temperature_shade=Value(
+                data["RealFeelTemperatureShade"][self.unit_system]["UnitType"],
+                data["RealFeelTemperatureShade"][self.unit_system]["Value"],
+                data["RealFeelTemperatureShade"][self.unit_system]["Phrase"].lower(),
+            ),
+            dew_point=Value(
+                data["DewPoint"][self.unit_system]["UnitType"],
+                data["DewPoint"][self.unit_system]["Value"],
+            ),
+            ceiling=Value(
+                data["Ceiling"][self.unit_system]["UnitType"],
+                data["Ceiling"][self.unit_system]["Value"],
+            ),
+            pressure=Value(
+                data["Pressure"][self.unit_system]["UnitType"],
+                data["RealFeelTemperatureShade"][self.unit_system]["Value"],
+                data["PressureTendency"]["LocalizedText"].lower(),
+            ),
+            precipitation_past_hour=Value(
+                data["PrecipitationSummary"]["PastHour"][self.unit_system]["UnitType"],
+                data["PrecipitationSummary"]["PastHour"][self.unit_system]["Value"],
+            ),
+            precipitation_type=data["PrecipitationType"].lower()
+            if data["HasPrecipitation"]
+            else None,
         )
-
-        return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
         """Retrieve daily forecast data from AccuWeather."""
