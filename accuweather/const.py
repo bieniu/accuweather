@@ -14,15 +14,6 @@ ENDPOINT: str = "https://dataservice.accuweather.com/"
 HTTP_HEADERS: dict[str, str] = {"Content-Encoding": "gzip"}
 REQUESTS_EXCEEDED: str = "The allowed number of requests has been exceeded."
 
-REMOVE_FROM_CURRENT_CONDITION: tuple[str, ...] = (
-    "LocalObservationDateTime",
-    "EpochTime",
-    "WeatherText",
-    "IsDayTime",
-    "TemperatureSummary",
-    "MobileLink",
-    "Link",
-)
 REMOVE_FROM_FORECAST: tuple[str, ...] = ("Sun", "Moon", "Sources", "MobileLink", "Link")
 TEMPERATURES: tuple[str, ...] = (
     "Temperature",
