@@ -16,6 +16,7 @@ To generate API key go to https://developer.accuweather.com/user/register and af
 
 ## How to use package
 ```python
+"""Example of usage."""
 import asyncio
 import logging
 
@@ -38,6 +39,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 async def main():
+    """Run main function."""
     async with ClientSession() as websession:
         try:
             accuweather = AccuWeather(
@@ -65,7 +67,6 @@ async def main():
 loop = asyncio.new_event_loop()
 loop.run_until_complete(main())
 loop.close()
-
 ```
 
 [releases]: https://github.com/bieniu/accuweather/releases

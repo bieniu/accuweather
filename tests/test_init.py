@@ -32,7 +32,6 @@ async def test_get_location():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
-        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
             payload=location_data,
@@ -61,7 +60,6 @@ async def test_get_current_conditions():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
-        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
             payload=current_condition_data,
@@ -101,7 +99,6 @@ async def test_get_forecast():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
-        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
             payload=forecast_data,
@@ -140,7 +137,6 @@ async def test_get_hourly_forecast():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
-        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
             payload=hourly_forecast_data,
@@ -171,14 +167,12 @@ async def test_get_hourly_forecast():
 async def test_invalid_api_key_1():
     """Test with invalid API key."""
     async with ClientSession() as session:
-        try:
+        with pytest.raises(
+            InvalidApiKeyError,
+            match="Your API Key must be a 32-character hexadecimal string",
+        ):
             AccuWeather(
                 INVALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
-            )
-        except InvalidApiKeyError as error:
-            assert (
-                str(error.status)
-                == "Your API Key must be a 32-character hexadecimal string"
             )
 
 
@@ -188,16 +182,13 @@ async def test_invalid_api_key_2():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
-        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
             status=HTTPStatus.UNAUTHORIZED.value,
         )
         accuweather = AccuWeather(VALID_API_KEY, session, location_key=LOCATION_KEY)
-        try:
+        with pytest.raises(InvalidApiKeyError, match="Invalid API key"):
             await accuweather.async_get_current_conditions()
-        except InvalidApiKeyError as error:
-            assert str(error.status) == "Invalid API key"
 
     await session.close()
 
@@ -206,20 +197,20 @@ async def test_invalid_api_key_2():
 async def test_invalid_coordinates_1():
     """Test with invalid coordinates."""
     async with ClientSession() as session:
-        try:
+        with pytest.raises(
+            InvalidCoordinatesError, match="Your coordinates are invalid"
+        ):
             AccuWeather(VALID_API_KEY, session, latitude=55.55, longitude="78.00")
-        except InvalidCoordinatesError as error:
-            assert str(error.status) == "Your coordinates are invalid"
 
 
 @pytest.mark.asyncio
 async def test_invalid_coordinates_2():
     """Test with invalid coordinates."""
     async with ClientSession() as session:
-        try:
+        with pytest.raises(
+            InvalidCoordinatesError, match="Your coordinates are invalid"
+        ):
             AccuWeather(VALID_API_KEY, session, latitude=199.99, longitude=90.0)
-        except InvalidCoordinatesError as error:
-            assert str(error.status) == "Your coordinates are invalid"
 
 
 @pytest.mark.asyncio
@@ -233,7 +224,6 @@ async def test_api_error():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
-        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
             payload=payload,
@@ -242,10 +232,10 @@ async def test_api_error():
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        try:
+        with pytest.raises(
+            ApiError, match="Invalid response from AccuWeather API: 404"
+        ):
             await accuweather.async_get_location()
-        except ApiError as error:
-            assert str(error.status) == "Invalid response from AccuWeather API: 404"
 
     await session.close()
 
@@ -261,7 +251,6 @@ async def test_requests_exceeded_error():
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
-        # pylint:disable=line-too-long
         session_mock.get(
             "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
             payload=payload,
@@ -270,11 +259,10 @@ async def test_requests_exceeded_error():
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        try:
+        with pytest.raises(
+            RequestsExceededError,
+            match="The allowed number of requests has been exceeded",
+        ):
             await accuweather.async_get_location()
-        except RequestsExceededError as error:
-            assert (
-                str(error.status) == "The allowed number of requests has been exceeded"
-            )
 
     await session.close()

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from http import HTTPStatus
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import orjson
 from aiohttp import ClientSession
@@ -16,6 +16,9 @@ from .const import (
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
+    MAX_API_KEY_LENGTH,
+    MAX_LATITUDE,
+    MAX_LONGITUDE,
     REMOVE_FROM_CURRENT_CONDITION,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
@@ -35,7 +38,7 @@ _LOGGER = logging.getLogger(__name__)
 class AccuWeather:
     """Main class to perform AccuWeather API requests."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         api_key: str,
         session: ClientSession,
@@ -48,9 +51,8 @@ class AccuWeather:
             raise InvalidApiKeyError(
                 "Your API Key must be a 32-character hexadecimal string"
             )
-        if not location_key:
-            if not self._valid_coordinates(latitude, longitude):
-                raise InvalidCoordinatesError("Your coordinates are invalid")
+        if not location_key and not self._valid_coordinates(latitude, longitude):
+            raise InvalidCoordinatesError("Your coordinates are invalid")
 
         self.latitude = latitude
         self.longitude = longitude
@@ -68,8 +70,8 @@ class AccuWeather:
         if (
             isinstance(latitude, (int, float))
             and isinstance(longitude, (int, float))
-            and abs(latitude) <= 90
-            and abs(longitude) <= 180
+            and abs(latitude) <= MAX_LATITUDE
+            and abs(longitude) <= MAX_LONGITUDE
         ):
             return True
         return False
@@ -77,7 +79,7 @@ class AccuWeather:
     @staticmethod
     def _valid_api_key(api_key: str) -> bool:
         """Return True if API key is valid."""
-        if isinstance(api_key, str) and len(api_key) == 32:
+        if isinstance(api_key, str) and len(api_key) == MAX_API_KEY_LENGTH:
             return True
 
         return False
@@ -85,8 +87,7 @@ class AccuWeather:
     @staticmethod
     def _construct_url(arg: str, **kwargs: str) -> str:
         """Construct AccuWeather API URL."""
-        url = ENDPOINT + URLS[arg].format(**kwargs)
-        return url
+        return ENDPOINT + URLS[arg].format(**kwargs)
 
     @staticmethod
     def _clean_current_condition(
@@ -106,7 +107,7 @@ class AccuWeather:
         ]
 
         for day in parsed_data:
-            # For some forecast days, the AccuWeather API does not provide an Ozone value.
+            # For some forecast days, the API does not provide an Ozone value.
             day.setdefault("Ozone", {})
             day["Ozone"].setdefault("Value")
             day["Ozone"].setdefault("Category")
@@ -140,27 +141,28 @@ class AccuWeather:
         data: list[dict[str, Any]], to_remove: tuple[str, ...]
     ) -> list[dict[str, Any]]:
         """Parse and clean hourly forecast API response."""
-        parsed_data = [
+        return [
             {key: value for key, value in item.items() if key not in to_remove}
             for item in data
         ]
-        return parsed_data
 
     async def _async_get_data(self, url: str) -> Any:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status == HTTPStatus.UNAUTHORIZED.value:
                 raise InvalidApiKeyError("Invalid API key")
+
             if resp.status != HTTPStatus.OK.value:
-                # pylint: disable=no-member
                 error_text = orjson.loads(await resp.text())
                 if error_text["Message"] == REQUESTS_EXCEEDED:
                     raise RequestsExceededError(
                         "The allowed number of requests has been exceeded"
                     )
                 raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
+
             _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
             data = await resp.json()
+
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 
@@ -185,7 +187,10 @@ class AccuWeather:
         """Retrieve current conditions data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
-        assert self._location_key is not None
+
+        if TYPE_CHECKING:
+            assert self._location_key is not None  # noqa: S101
+
         url = self._construct_url(
             ATTR_CURRENT_CONDITIONS,
             api_key=self._api_key,
@@ -198,7 +203,10 @@ class AccuWeather:
         """Retrieve daily forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
-        assert self._location_key is not None
+
+        if TYPE_CHECKING:
+            assert self._location_key is not None  # noqa: S101
+
         url = self._construct_url(
             ATTR_FORECAST_DAILY_5,
             api_key=self._api_key,
@@ -214,7 +222,10 @@ class AccuWeather:
         """Retrieve hourly forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
-        assert self._location_key is not None
+
+        if TYPE_CHECKING:
+            assert self._location_key is not None  # noqa: S101
+
         url = self._construct_url(
             ATTR_FORECAST_HOURLY_12,
             api_key=self._api_key,

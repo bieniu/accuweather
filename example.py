@@ -1,3 +1,4 @@
+"""Example of usage."""
 import asyncio
 import logging
 
@@ -20,6 +21,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 async def main():
+    """Run main function."""
     async with ClientSession() as websession:
         try:
             accuweather = AccuWeather(
