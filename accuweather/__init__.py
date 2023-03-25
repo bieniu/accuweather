@@ -22,7 +22,6 @@ from .const import (
     MAX_LONGITUDE,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
-    TEMPERATURES,
     URLS,
 )
 from .exceptions import (
@@ -31,7 +30,7 @@ from .exceptions import (
     InvalidCoordinatesError,
     RequestsExceededError,
 )
-from .model import CurrentCondition, Value
+from .model import CurrentCondition, ForecastDay, Value
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,46 +90,6 @@ class AccuWeather:
     def _construct_url(arg: str, **kwargs: str) -> str:
         """Construct AccuWeather API URL."""
         return ENDPOINT + URLS[arg].format(**kwargs)
-
-    @staticmethod
-    def _parse_forecast_daily(
-        data: dict[str, Any], to_remove: tuple[str, ...]
-    ) -> list[dict[str, Any]]:
-        """Parse and clean daily forecast API response."""
-        parsed_data = [
-            {key: value for key, value in item.items() if key not in to_remove}
-            for item in data["DailyForecasts"]
-        ]
-
-        for day in parsed_data:
-            # For some forecast days, the API does not provide an Ozone value.
-            day.setdefault("Ozone", {})
-            day["Ozone"].setdefault("Value")
-            day["Ozone"].setdefault("Category")
-
-            for item in day["AirAndPollen"]:
-                if item["Name"] == "AirQuality":
-                    day[item["Type"]] = item
-                    day[item["Type"]].pop("Name")
-                    day[item["Type"]].pop("Type")
-                else:
-                    day[item["Name"]] = item
-                    day[item["Name"]].pop("Name")
-            day.pop("AirAndPollen")
-
-            for temp in TEMPERATURES:
-                day[f"{temp}Min"] = day[temp]["Minimum"]
-                day[f"{temp}Max"] = day[temp]["Maximum"]
-                day.pop(temp)
-
-            for key, value in day["Day"].items():
-                day[f"{key}Day"] = value
-            day.pop("Day")
-
-            for key, value in day["Night"].items():
-                day[f"{key}Night"] = value
-            day.pop("Night")
-        return parsed_data
 
     @staticmethod
     def _parse_forecast_hourly(
@@ -195,7 +154,8 @@ class AccuWeather:
         data = await self._async_get_data(url)
 
         return CurrentCondition(
-            local_observation=datetime.fromisoformat(data["LocalObservationDateTime"]),
+            date=datetime.fromisoformat(data["LocalObservationDateTime"]),
+            date_epoch=data["EpochTime"],
             weather_text=data["WeatherText"].lower(),
             weather_icon=data["WeatherIcon"],
             relative_humidity=Value(20, data["RelativeHumidity"]),
@@ -236,12 +196,12 @@ class AccuWeather:
             real_feel_temperature=Value(
                 data["RealFeelTemperature"][self.unit_system]["UnitType"],
                 data["RealFeelTemperature"][self.unit_system]["Value"],
-                data["RealFeelTemperature"][self.unit_system]["Phrase"].lower(),
+                data["RealFeelTemperature"][self.unit_system]["Phrase"],
             ),
             real_feel_temperature_shade=Value(
                 data["RealFeelTemperatureShade"][self.unit_system]["UnitType"],
                 data["RealFeelTemperatureShade"][self.unit_system]["Value"],
-                data["RealFeelTemperatureShade"][self.unit_system]["Phrase"].lower(),
+                data["RealFeelTemperatureShade"][self.unit_system]["Phrase"],
             ),
             dew_point=Value(
                 data["DewPoint"][self.unit_system]["UnitType"],
@@ -254,7 +214,7 @@ class AccuWeather:
             pressure=Value(
                 data["Pressure"][self.unit_system]["UnitType"],
                 data["RealFeelTemperatureShade"][self.unit_system]["Value"],
-                data["PressureTendency"]["LocalizedText"].lower(),
+                data["PressureTendency"]["LocalizedText"],
             ),
             precipitation_past_hour=Value(
                 data["PrecipitationSummary"]["PastHour"][self.unit_system]["UnitType"],
@@ -265,7 +225,7 @@ class AccuWeather:
             else None,
         )
 
-    async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
+    async def async_get_forecast(self, metric: bool = True) -> list[ForecastDay]:
         """Retrieve daily forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
@@ -280,7 +240,112 @@ class AccuWeather:
             metric=str(metric),
         )
         data = await self._async_get_data(url)
-        return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
+        forecast = []
+        for day in data["DailyForecasts"]:
+            forecast.append(
+                ForecastDay(
+                    cloud_cover_day=Value(20, day["Day"]["CloudCover"]),
+                    cloud_cover_night=Value(20, day["Night"]["CloudCover"]),
+                    date=datetime.fromisoformat(day["Date"]),
+                    date_epoch=day["EpochDate"],
+                    precipitation_ice_day=Value(
+                        day["Day"]["Ice"]["UnitType"], day["Day"]["Ice"]["Value"]
+                    ),
+                    precipitation_ice_night=Value(
+                        day["Night"]["Ice"]["UnitType"], day["Night"]["Ice"]["Value"]
+                    ),
+                    precipitation_liquid_day=Value(
+                        day["Day"]["TotalLiquid"]["UnitType"],
+                        day["Day"]["TotalLiquid"]["Value"],
+                    ),
+                    precipitation_liquid_night=Value(
+                        day["Night"]["TotalLiquid"]["UnitType"],
+                        day["Night"]["TotalLiquid"]["Value"],
+                    ),
+                    precipitation_probability_day=Value(
+                        20, day["Day"]["PrecipitationProbability"]
+                    ),
+                    precipitation_probability_night=Value(
+                        20, day["Night"]["PrecipitationProbability"]
+                    ),
+                    precipitation_rain_day=Value(
+                        day["Day"]["Rain"]["UnitType"], day["Day"]["Rain"]["Value"]
+                    ),
+                    precipitation_rain_night=Value(
+                        day["Night"]["Rain"]["UnitType"], day["Night"]["Rain"]["Value"]
+                    ),
+                    precipitation_snow_day=Value(
+                        day["Day"]["Snow"]["UnitType"], day["Day"]["Snow"]["Value"]
+                    ),
+                    precipitation_snow_night=Value(
+                        day["Night"]["Snow"]["UnitType"], day["Night"]["Snow"]["Value"]
+                    ),
+                    real_feel_temperature_max=Value(
+                        day["RealFeelTemperature"]["Maximum"]["UnitType"],
+                        day["RealFeelTemperature"]["Maximum"]["Value"],
+                        day["RealFeelTemperature"]["Maximum"]["Phrase"],
+                    ),
+                    real_feel_temperature_min=Value(
+                        day["RealFeelTemperature"]["Minimum"]["UnitType"],
+                        day["RealFeelTemperature"]["Minimum"]["Value"],
+                        day["RealFeelTemperature"]["Minimum"]["Phrase"],
+                    ),
+                    real_feel_temperature_shade_max=Value(
+                        day["RealFeelTemperatureShade"]["Maximum"]["UnitType"],
+                        day["RealFeelTemperatureShade"]["Maximum"]["Value"],
+                        day["RealFeelTemperatureShade"]["Maximum"]["Phrase"],
+                    ),
+                    real_feel_temperature_shade_min=Value(
+                        day["RealFeelTemperatureShade"]["Minimum"]["UnitType"],
+                        day["RealFeelTemperatureShade"]["Minimum"]["Value"],
+                        day["RealFeelTemperatureShade"]["Minimum"]["Phrase"],
+                    ),
+                    temperature_max=Value(
+                        day["Temperature"]["Maximum"]["UnitType"],
+                        day["Temperature"]["Maximum"]["Value"],
+                    ),
+                    temperature_min=Value(
+                        day["Temperature"]["Minimum"]["UnitType"],
+                        day["Temperature"]["Minimum"]["Value"],
+                    ),
+                    uv_index=self._get_pollen(day["AirAndPollen"], "UVIndex")["Value"],
+                    uv_index_text=self._get_pollen(day["AirAndPollen"], "UVIndex")[
+                        "Category"
+                    ],
+                    weather_icon_day=day["Day"]["Icon"],
+                    weather_icon_night=day["Night"]["Icon"],
+                    weather_text_day=day["Day"]["IconPhrase"].lower(),
+                    weather_text_night=day["Night"]["IconPhrase"].lower(),
+                    wind_direction_day=Value(
+                        99,
+                        day["Day"]["Wind"]["Direction"]["Degrees"],
+                        day["Day"]["Wind"]["Direction"]["Localized"],
+                    ),
+                    wind_direction_night=Value(
+                        99,
+                        day["Night"]["Wind"]["Direction"]["Degrees"],
+                        day["Night"]["Wind"]["Direction"]["Localized"],
+                    ),
+                    wind_gust_day=Value(
+                        day["Day"]["WindGust"]["Speed"]["UnitType"],
+                        day["Day"]["WindGust"]["Speed"]["Value"],
+                    ),
+                    wind_gust_night=Value(
+                        day["Night"]["WindGust"]["Speed"]["UnitType"],
+                        day["Night"]["WindGust"]["Speed"]["Value"],
+                    ),
+                    wind_speed_day=Value(
+                        day["Day"]["Wind"]["Speed"]["UnitType"],
+                        day["Day"]["Wind"]["Speed"]["Value"],
+                    ),
+                    wind_speed_night=Value(
+                        day["Night"]["Wind"]["Speed"]["UnitType"],
+                        day["Night"]["Wind"]["Speed"]["Value"],
+                    ),
+                )
+            )
+
+        return forecast
 
     async def async_get_forecast_hourly(
         self, metric: bool = True
@@ -315,3 +380,12 @@ class AccuWeather:
     def requests_remaining(self) -> int | None:
         """Return number of remaining allowed requests."""
         return self._requests_remaining
+
+    @staticmethod
+    def _get_pollen(pollen_list: list[dict[str, Any]], name: str) -> dict[str, Any]:
+        """Return exact pollen dict."""
+        for item in pollen_list:
+            if item["Name"] == name:
+                return item
+
+        return {"Value": None, "Category": None}
