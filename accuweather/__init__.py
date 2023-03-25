@@ -202,8 +202,7 @@ class AccuWeather:
                 data["Temperature"][self.unit_system]["Value"],
                 data["Temperature"][self.unit_system]["UnitType"],
             ),
-            uv_index=data["UVIndex"],
-            uv_index_text=data["UVIndexText"].lower(),
+            uv_index=Value(value=data["UVIndex"], text=data["UVIndexText"]),
             visibility=Value(
                 data["Visibility"][self.unit_system]["Value"],
                 data["Visibility"][self.unit_system]["UnitType"],
@@ -314,10 +313,7 @@ class AccuWeather:
                         day["Temperature"]["Minimum"]["Value"],
                         day["Temperature"]["Minimum"]["UnitType"],
                     ),
-                    uv_index=self._get_pollen(day["AirAndPollen"], "UVIndex")["Value"],
-                    uv_index_text=self._get_pollen(day["AirAndPollen"], "UVIndex")[
-                        "Category"
-                    ],
+                    uv_index=self._get_pollen(day["AirAndPollen"], "UVIndex"),
                     weather_icon_day=day["Day"]["Icon"],
                     weather_icon_night=day["Night"]["Icon"],
                     weather_text_day=day["Day"]["IconPhrase"].lower(),
@@ -388,10 +384,10 @@ class AccuWeather:
         return self._requests_remaining
 
     @staticmethod
-    def _get_pollen(pollen_list: list[dict[str, Any]], name: str) -> dict[str, Any]:
-        """Return exact pollen dict."""
+    def _get_pollen(pollen_list: list[dict[str, Any]], name: str) -> Value:
+        """Return Value object for exact pollen."""
         for item in pollen_list:
             if item["Name"] == name:
-                return item
+                return Value(value=item["Value"], text=item["Category"])
 
-        return {"Value": None, "Category": None}
+        return Value()

@@ -16,7 +16,7 @@ class AccuWeatherData:
 class Value(AccuWeatherData):
     """Value class."""
 
-    value: float | None
+    value: float | None = None
     unit_type: int | None = None
     text: str | None = None
 
@@ -25,7 +25,7 @@ class Value(AccuWeatherData):
     def __post_init__(self) -> None:
         """Post init."""
         self.unit = UNIT_MAP.get(self.unit_type) if self.unit_type else None
-        self.test = self.text.lower() if self.text else None
+        self.text = self.text.lower() if self.text else None
 
 
 @dataclass
@@ -47,8 +47,7 @@ class CurrentCondition(AccuWeatherData):
     real_feel_temperature: Value
     relative_humidity: Value
     temperature: Value
-    uv_index_text: str
-    uv_index: int
+    uv_index: Value
     visibility: Value
     weather_icon: int
     weather_text: str
@@ -83,8 +82,7 @@ class ForecastDay(AccuWeatherData):
     real_feel_temperature_shade_min: Value
     temperature_max: Value
     temperature_min: Value
-    uv_index: int
-    uv_index_text: str
+    uv_index: Value
     weather_icon_day: int
     weather_icon_night: int
     weather_text_day: str
