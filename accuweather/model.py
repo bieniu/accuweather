@@ -16,7 +16,7 @@ class AccuWeatherData:
 class Value(AccuWeatherData):
     """Value class."""
 
-    value: float
+    value: float | None
     unit_type: int | None = None
     text: str | None = None
 

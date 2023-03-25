@@ -27,6 +27,9 @@ URLS: dict[str, str] = {
     ATTR_FORECAST_HOURLY_12: "forecasts/v1/hourly/12hour/{location_key}?apikey={api_key}&details=true&metric={metric}",
 }
 
+UNIT_DEGREES: int = 99
+UNIT_PERCENTAGE: int = 20
+
 UNIT_MAP: dict[int, str] = {
     0: "ft",
     1: "m",

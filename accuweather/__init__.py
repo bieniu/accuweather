@@ -22,6 +22,8 @@ from .const import (
     MAX_LONGITUDE,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
+    UNIT_DEGREES,
+    UNIT_PERCENTAGE,
     URLS,
 )
 from .exceptions import (
@@ -154,75 +156,77 @@ class AccuWeather:
         data = await self._async_get_data(url)
 
         return CurrentCondition(
-            date=datetime.fromisoformat(data["LocalObservationDateTime"]),
-            date_epoch=data["EpochTime"],
-            weather_text=data["WeatherText"].lower(),
-            weather_icon=data["WeatherIcon"],
-            relative_humidity=Value(20, data["RelativeHumidity"]),
-            indoor_relative_humidity=Value(20, data["IndoorRelativeHumidity"]),
-            cloud_cover=Value(20, data["CloudCover"]),
-            uv_index=data["UVIndex"],
-            uv_index_text=data["UVIndexText"].lower(),
-            wind_direction=data["Wind"]["Direction"]["Degrees"],
-            is_day_time=data["IsDayTime"],
-            visibility=Value(
-                data["Visibility"][self.unit_system]["UnitType"],
-                data["Visibility"][self.unit_system]["Value"],
-            ),
-            wind_speed=Value(
-                data["Wind"]["Speed"][self.unit_system]["UnitType"],
-                data["Wind"]["Speed"][self.unit_system]["Value"],
-            ),
-            wind_gust=Value(
-                data["WindGust"]["Speed"][self.unit_system]["UnitType"],
-                data["WindGust"]["Speed"][self.unit_system]["Value"],
-            ),
-            temperature=Value(
-                data["Temperature"][self.unit_system]["UnitType"],
-                data["Temperature"][self.unit_system]["Value"],
-            ),
             apparent_temperature=Value(
-                data["ApparentTemperature"][self.unit_system]["UnitType"],
                 data["ApparentTemperature"][self.unit_system]["Value"],
-            ),
-            wind_chill_temperature=Value(
-                data["WindChillTemperature"][self.unit_system]["UnitType"],
-                data["WindChillTemperature"][self.unit_system]["Value"],
-            ),
-            wet_bulb_temperature=Value(
-                data["WetBulbTemperature"][self.unit_system]["UnitType"],
-                data["WetBulbTemperature"][self.unit_system]["Value"],
-            ),
-            real_feel_temperature=Value(
-                data["RealFeelTemperature"][self.unit_system]["UnitType"],
-                data["RealFeelTemperature"][self.unit_system]["Value"],
-                data["RealFeelTemperature"][self.unit_system]["Phrase"],
-            ),
-            real_feel_temperature_shade=Value(
-                data["RealFeelTemperatureShade"][self.unit_system]["UnitType"],
-                data["RealFeelTemperatureShade"][self.unit_system]["Value"],
-                data["RealFeelTemperatureShade"][self.unit_system]["Phrase"],
-            ),
-            dew_point=Value(
-                data["DewPoint"][self.unit_system]["UnitType"],
-                data["DewPoint"][self.unit_system]["Value"],
+                data["ApparentTemperature"][self.unit_system]["UnitType"],
             ),
             ceiling=Value(
-                data["Ceiling"][self.unit_system]["UnitType"],
                 data["Ceiling"][self.unit_system]["Value"],
+                data["Ceiling"][self.unit_system]["UnitType"],
             ),
-            pressure=Value(
-                data["Pressure"][self.unit_system]["UnitType"],
-                data["RealFeelTemperatureShade"][self.unit_system]["Value"],
-                data["PressureTendency"]["LocalizedText"],
+            cloud_cover=Value(data["CloudCover"], UNIT_PERCENTAGE),
+            date=datetime.fromisoformat(data["LocalObservationDateTime"]),
+            date_epoch=data["EpochTime"],
+            dew_point=Value(
+                data["DewPoint"][self.unit_system]["Value"],
+                data["DewPoint"][self.unit_system]["UnitType"],
             ),
+            indoor_relative_humidity=Value(
+                data["IndoorRelativeHumidity"], UNIT_PERCENTAGE
+            ),
+            is_day_time=data["IsDayTime"],
             precipitation_past_hour=Value(
-                data["PrecipitationSummary"]["PastHour"][self.unit_system]["UnitType"],
                 data["PrecipitationSummary"]["PastHour"][self.unit_system]["Value"],
+                data["PrecipitationSummary"]["PastHour"][self.unit_system]["UnitType"],
             ),
             precipitation_type=data["PrecipitationType"].lower()
             if data["HasPrecipitation"]
             else None,
+            pressure=Value(
+                data["Pressure"][self.unit_system]["Value"],
+                data["Pressure"][self.unit_system]["UnitType"],
+                data["PressureTendency"]["LocalizedText"],
+            ),
+            real_feel_temperature=Value(
+                data["RealFeelTemperature"][self.unit_system]["Value"],
+                data["RealFeelTemperature"][self.unit_system]["UnitType"],
+                data["RealFeelTemperature"][self.unit_system]["Phrase"],
+            ),
+            real_feel_temperature_shade=Value(
+                data["RealFeelTemperatureShade"][self.unit_system]["Value"],
+                data["RealFeelTemperatureShade"][self.unit_system]["UnitType"],
+                data["RealFeelTemperatureShade"][self.unit_system]["Phrase"],
+            ),
+            relative_humidity=Value(data["RelativeHumidity"], UNIT_PERCENTAGE),
+            temperature=Value(
+                data["Temperature"][self.unit_system]["Value"],
+                data["Temperature"][self.unit_system]["UnitType"],
+            ),
+            uv_index=data["UVIndex"],
+            uv_index_text=data["UVIndexText"].lower(),
+            visibility=Value(
+                data["Visibility"][self.unit_system]["Value"],
+                data["Visibility"][self.unit_system]["UnitType"],
+            ),
+            weather_text=data["WeatherText"].lower(),
+            weather_icon=data["WeatherIcon"],
+            wet_bulb_temperature=Value(
+                data["WetBulbTemperature"][self.unit_system]["Value"],
+                data["WetBulbTemperature"][self.unit_system]["UnitType"],
+            ),
+            wind_chill_temperature=Value(
+                data["WindChillTemperature"][self.unit_system]["Value"],
+                data["WindChillTemperature"][self.unit_system]["UnitType"],
+            ),
+            wind_direction=data["Wind"]["Direction"]["Degrees"],
+            wind_gust=Value(
+                data["WindGust"]["Speed"][self.unit_system]["Value"],
+                data["WindGust"]["Speed"][self.unit_system]["UnitType"],
+            ),
+            wind_speed=Value(
+                data["Wind"]["Speed"][self.unit_system]["Value"],
+                data["Wind"]["Speed"][self.unit_system]["UnitType"],
+            ),
         )
 
     async def async_get_forecast(self, metric: bool = True) -> list[ForecastDay]:
@@ -244,69 +248,71 @@ class AccuWeather:
         for day in data["DailyForecasts"]:
             forecast.append(
                 ForecastDay(
-                    cloud_cover_day=Value(20, day["Day"]["CloudCover"]),
-                    cloud_cover_night=Value(20, day["Night"]["CloudCover"]),
+                    cloud_cover_day=Value(day["Day"]["CloudCover"], UNIT_PERCENTAGE),
+                    cloud_cover_night=Value(
+                        day["Night"]["CloudCover"], UNIT_PERCENTAGE
+                    ),
                     date=datetime.fromisoformat(day["Date"]),
                     date_epoch=day["EpochDate"],
                     precipitation_ice_day=Value(
-                        day["Day"]["Ice"]["UnitType"], day["Day"]["Ice"]["Value"]
+                        day["Day"]["Ice"]["Value"], day["Day"]["Ice"]["UnitType"]
                     ),
                     precipitation_ice_night=Value(
-                        day["Night"]["Ice"]["UnitType"], day["Night"]["Ice"]["Value"]
+                        day["Night"]["Ice"]["Value"], day["Night"]["Ice"]["UnitType"]
                     ),
                     precipitation_liquid_day=Value(
-                        day["Day"]["TotalLiquid"]["UnitType"],
                         day["Day"]["TotalLiquid"]["Value"],
+                        day["Day"]["TotalLiquid"]["UnitType"],
                     ),
                     precipitation_liquid_night=Value(
-                        day["Night"]["TotalLiquid"]["UnitType"],
                         day["Night"]["TotalLiquid"]["Value"],
+                        day["Night"]["TotalLiquid"]["UnitType"],
                     ),
                     precipitation_probability_day=Value(
-                        20, day["Day"]["PrecipitationProbability"]
+                        day["Day"]["PrecipitationProbability"], UNIT_PERCENTAGE
                     ),
                     precipitation_probability_night=Value(
-                        20, day["Night"]["PrecipitationProbability"]
+                        day["Night"]["PrecipitationProbability"], UNIT_PERCENTAGE
                     ),
                     precipitation_rain_day=Value(
-                        day["Day"]["Rain"]["UnitType"], day["Day"]["Rain"]["Value"]
+                        day["Day"]["Rain"]["Value"], day["Day"]["Rain"]["UnitType"]
                     ),
                     precipitation_rain_night=Value(
-                        day["Night"]["Rain"]["UnitType"], day["Night"]["Rain"]["Value"]
+                        day["Night"]["Rain"]["Value"], day["Night"]["Rain"]["UnitType"]
                     ),
                     precipitation_snow_day=Value(
-                        day["Day"]["Snow"]["UnitType"], day["Day"]["Snow"]["Value"]
+                        day["Day"]["Snow"]["Value"], day["Day"]["Snow"]["UnitType"]
                     ),
                     precipitation_snow_night=Value(
-                        day["Night"]["Snow"]["UnitType"], day["Night"]["Snow"]["Value"]
+                        day["Night"]["Snow"]["Value"], day["Night"]["Snow"]["UnitType"]
                     ),
                     real_feel_temperature_max=Value(
-                        day["RealFeelTemperature"]["Maximum"]["UnitType"],
                         day["RealFeelTemperature"]["Maximum"]["Value"],
+                        day["RealFeelTemperature"]["Maximum"]["UnitType"],
                         day["RealFeelTemperature"]["Maximum"]["Phrase"],
                     ),
                     real_feel_temperature_min=Value(
-                        day["RealFeelTemperature"]["Minimum"]["UnitType"],
                         day["RealFeelTemperature"]["Minimum"]["Value"],
+                        day["RealFeelTemperature"]["Minimum"]["UnitType"],
                         day["RealFeelTemperature"]["Minimum"]["Phrase"],
                     ),
                     real_feel_temperature_shade_max=Value(
-                        day["RealFeelTemperatureShade"]["Maximum"]["UnitType"],
                         day["RealFeelTemperatureShade"]["Maximum"]["Value"],
+                        day["RealFeelTemperatureShade"]["Maximum"]["UnitType"],
                         day["RealFeelTemperatureShade"]["Maximum"]["Phrase"],
                     ),
                     real_feel_temperature_shade_min=Value(
-                        day["RealFeelTemperatureShade"]["Minimum"]["UnitType"],
                         day["RealFeelTemperatureShade"]["Minimum"]["Value"],
+                        day["RealFeelTemperatureShade"]["Minimum"]["UnitType"],
                         day["RealFeelTemperatureShade"]["Minimum"]["Phrase"],
                     ),
                     temperature_max=Value(
-                        day["Temperature"]["Maximum"]["UnitType"],
                         day["Temperature"]["Maximum"]["Value"],
+                        day["Temperature"]["Maximum"]["UnitType"],
                     ),
                     temperature_min=Value(
-                        day["Temperature"]["Minimum"]["UnitType"],
                         day["Temperature"]["Minimum"]["Value"],
+                        day["Temperature"]["Minimum"]["UnitType"],
                     ),
                     uv_index=self._get_pollen(day["AirAndPollen"], "UVIndex")["Value"],
                     uv_index_text=self._get_pollen(day["AirAndPollen"], "UVIndex")[
@@ -317,30 +323,30 @@ class AccuWeather:
                     weather_text_day=day["Day"]["IconPhrase"].lower(),
                     weather_text_night=day["Night"]["IconPhrase"].lower(),
                     wind_direction_day=Value(
-                        99,
                         day["Day"]["Wind"]["Direction"]["Degrees"],
+                        UNIT_DEGREES,
                         day["Day"]["Wind"]["Direction"]["Localized"],
                     ),
                     wind_direction_night=Value(
-                        99,
                         day["Night"]["Wind"]["Direction"]["Degrees"],
+                        UNIT_DEGREES,
                         day["Night"]["Wind"]["Direction"]["Localized"],
                     ),
                     wind_gust_day=Value(
-                        day["Day"]["WindGust"]["Speed"]["UnitType"],
                         day["Day"]["WindGust"]["Speed"]["Value"],
+                        day["Day"]["WindGust"]["Speed"]["UnitType"],
                     ),
                     wind_gust_night=Value(
-                        day["Night"]["WindGust"]["Speed"]["UnitType"],
                         day["Night"]["WindGust"]["Speed"]["Value"],
+                        day["Night"]["WindGust"]["Speed"]["UnitType"],
                     ),
                     wind_speed_day=Value(
-                        day["Day"]["Wind"]["Speed"]["UnitType"],
                         day["Day"]["Wind"]["Speed"]["Value"],
+                        day["Day"]["Wind"]["Speed"]["UnitType"],
                     ),
                     wind_speed_night=Value(
-                        day["Night"]["Wind"]["Speed"]["UnitType"],
                         day["Night"]["Wind"]["Speed"]["Value"],
+                        day["Night"]["Wind"]["Speed"]["UnitType"],
                     ),
                 )
             )
