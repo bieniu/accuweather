@@ -14,14 +14,11 @@ from .const import (
     ATTR_FORECAST_DAILY_5,
     ATTR_FORECAST_HOURLY_12,
     ATTR_GEOPOSITION,
-    ENDPOINT,
     HTTP_HEADERS,
-    MAX_API_KEY_LENGTH,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
     UNIT_DEGREES,
     UNIT_PERCENTAGE,
-    URLS,
 )
 from .exceptions import (
     ApiError,
@@ -30,7 +27,7 @@ from .exceptions import (
     RequestsExceededError,
 )
 from .model import CurrentCondition, ForecastDay, Value
-from .utils import _get_pollen, _valid_coordinates
+from .utils import _construct_url, _get_pollen, _valid_api_key, _valid_coordinates
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,7 +45,7 @@ class AccuWeather:
         metric: bool = True,
     ) -> None:
         """Initialize."""
-        if not self._valid_api_key(api_key):
+        if not _valid_api_key(api_key):
             raise InvalidApiKeyError(
                 "Your API Key must be a 32-character hexadecimal string"
             )
@@ -63,20 +60,6 @@ class AccuWeather:
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
         self.unit_system: str = "Metric" if metric else "Imperial"
-
-    @staticmethod
-    @staticmethod
-    def _valid_api_key(api_key: str) -> bool:
-        """Return True if API key is valid."""
-        if isinstance(api_key, str) and len(api_key) == MAX_API_KEY_LENGTH:
-            return True
-
-        return False
-
-    @staticmethod
-    def _construct_url(arg: str, **kwargs: str) -> str:
-        """Construct AccuWeather API URL."""
-        return ENDPOINT + URLS[arg].format(**kwargs)
 
     @staticmethod
     def _parse_forecast_hourly(
@@ -115,7 +98,7 @@ class AccuWeather:
 
     async def async_get_location(self) -> None:
         """Retrieve location data from AccuWeather."""
-        url = self._construct_url(
+        url = _construct_url(
             ATTR_GEOPOSITION,
             api_key=self._api_key,
             lat=str(self.latitude),
@@ -133,7 +116,7 @@ class AccuWeather:
         if TYPE_CHECKING:
             assert self._location_key is not None  # noqa: S101
 
-        url = self._construct_url(
+        url = _construct_url(
             ATTR_CURRENT_CONDITIONS,
             api_key=self._api_key,
             location_key=self._location_key,
@@ -221,7 +204,7 @@ class AccuWeather:
         if TYPE_CHECKING:
             assert self._location_key is not None  # noqa: S101
 
-        url = self._construct_url(
+        url = _construct_url(
             ATTR_FORECAST_DAILY_5,
             api_key=self._api_key,
             location_key=self._location_key,
@@ -344,7 +327,7 @@ class AccuWeather:
         if TYPE_CHECKING:
             assert self._location_key is not None  # noqa: S101
 
-        url = self._construct_url(
+        url = _construct_url(
             ATTR_FORECAST_HOURLY_12,
             api_key=self._api_key,
             location_key=self._location_key,

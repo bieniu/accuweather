@@ -3,8 +3,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from .const import MAX_LATITUDE, MAX_LONGITUDE
+from .const import ENDPOINT, MAX_API_KEY_LENGTH, MAX_LATITUDE, MAX_LONGITUDE, URLS
 from .model import Value
+
+
+def _valid_api_key(api_key: str) -> bool:
+    """Return True if API key is valid."""
+    if isinstance(api_key, str) and len(api_key) == MAX_API_KEY_LENGTH:
+        return True
+
+    return False
 
 
 def _valid_coordinates(
@@ -20,6 +28,11 @@ def _valid_coordinates(
         return True
 
     return False
+
+
+def _construct_url(arg: str, **kwargs: str) -> str:
+    """Construct AccuWeather API URL."""
+    return ENDPOINT + URLS[arg].format(**kwargs)
 
 
 def _get_pollen(pollen_list: list[dict[str, Any]], name: str) -> Value:
