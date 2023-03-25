@@ -4,7 +4,8 @@ import logging
 
 from aiohttp import ClientError, ClientSession
 
-from accuweather import AccuWeather, AccuweatherError
+from accuweather import AccuWeather
+from accuweather.exceptions import AccuweatherError
 
 LATITUDE = 52.0677904
 LONGITUDE = 19.4795644
@@ -25,7 +26,7 @@ async def main():
                 longitude=LONGITUDE,
             )
             current_conditions = await accuweather.async_get_current_conditions()
-            forecast = await accuweather.async_get_forecast(metric=True)
+            forecast = await accuweather.async_get_daily_forecast(days=5, metric=True)
             forecast_hourly = await accuweather.async_get_forecast_hourly(metric=True)
         except (AccuweatherError, ClientError) as error:
             print(f"Error: {error}")
