@@ -1,5 +1,4 @@
 """Python wrapper for getting weather data from AccueWeather for Limited Trial."""
-
 from __future__ import annotations
 
 import logging
@@ -18,8 +17,6 @@ from .const import (
     ENDPOINT,
     HTTP_HEADERS,
     MAX_API_KEY_LENGTH,
-    MAX_LATITUDE,
-    MAX_LONGITUDE,
     REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
     UNIT_DEGREES,
@@ -33,6 +30,7 @@ from .exceptions import (
     RequestsExceededError,
 )
 from .model import CurrentCondition, ForecastDay, Value
+from .utils import _get_pollen, _valid_coordinates
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -54,7 +52,7 @@ class AccuWeather:
             raise InvalidApiKeyError(
                 "Your API Key must be a 32-character hexadecimal string"
             )
-        if not location_key and not self._valid_coordinates(latitude, longitude):
+        if not location_key and not _valid_coordinates(latitude, longitude):
             raise InvalidCoordinatesError("Your coordinates are invalid")
 
         self.latitude = latitude
@@ -67,19 +65,6 @@ class AccuWeather:
         self.unit_system: str = "Metric" if metric else "Imperial"
 
     @staticmethod
-    def _valid_coordinates(
-        latitude: float | int | None, longitude: float | int | None
-    ) -> bool:
-        """Return True if coordinates are valid."""
-        if (
-            isinstance(latitude, (int, float))
-            and isinstance(longitude, (int, float))
-            and abs(latitude) <= MAX_LATITUDE
-            and abs(longitude) <= MAX_LONGITUDE
-        ):
-            return True
-        return False
-
     @staticmethod
     def _valid_api_key(api_key: str) -> bool:
         """Return True if API key is valid."""
@@ -313,7 +298,7 @@ class AccuWeather:
                         day["Temperature"]["Minimum"]["Value"],
                         day["Temperature"]["Minimum"]["UnitType"],
                     ),
-                    uv_index=self._get_pollen(day["AirAndPollen"], "UVIndex"),
+                    uv_index=_get_pollen(day["AirAndPollen"], "UVIndex"),
                     weather_icon_day=day["Day"]["Icon"],
                     weather_icon_night=day["Night"]["Icon"],
                     weather_text_day=day["Day"]["IconPhrase"].lower(),
@@ -382,12 +367,3 @@ class AccuWeather:
     def requests_remaining(self) -> int | None:
         """Return number of remaining allowed requests."""
         return self._requests_remaining
-
-    @staticmethod
-    def _get_pollen(pollen_list: list[dict[str, Any]], name: str) -> Value:
-        """Return Value object for exact pollen."""
-        for item in pollen_list:
-            if item["Name"] == name:
-                return Value(value=item["Value"], text=item["Category"])
-
-        return Value()
