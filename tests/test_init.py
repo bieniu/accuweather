@@ -77,22 +77,18 @@ async def test_get_current_conditions():
 
     await session.close()
 
-    assert current_conditions["WeatherIcon"] == 7
-    assert isinstance(current_conditions["HasPrecipitation"], bool)
-    assert not current_conditions["HasPrecipitation"]
-    assert not current_conditions["PrecipitationType"]
-    assert current_conditions["Temperature"]["Metric"]["Value"] == 23.1
-    assert current_conditions["Temperature"]["Metric"]["Unit"] == "C"
-    assert current_conditions["Temperature"]["Imperial"]["Value"] == 74
-    assert current_conditions["Temperature"]["Imperial"]["Unit"] == "F"
+    assert current_conditions.weather_icon == 38
+    assert current_conditions.precipitation_type is None
+    assert current_conditions.temperature.value == 0.5
+    assert current_conditions.temperature.unit == "°C"
     assert accuweather.requests_remaining == 23
 
 
 @pytest.mark.asyncio
-async def test_get_forecast():
+async def test_get_daily_forecast():
     """Test with valid forecast data."""
-    with open("tests/fixtures/forecast_data.json", encoding="utf-8") as file:
-        forecast_data = json.load(file)
+    with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
+        daily_forecast_data = json.load(file)
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
         location_data = json.load(file)
 
@@ -100,8 +96,8 @@ async def test_get_forecast():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
-            payload=forecast_data,
+            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=true",
+            payload=daily_forecast_data,
             headers=HEADERS,
         )
         session_mock.get(
@@ -113,16 +109,17 @@ async def test_get_forecast():
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        forecast = await accuweather.async_get_forecast()
+        forecast = await accuweather.async_get_daily_forecast()
 
     await session.close()
 
-    assert forecast[0]["IconDay"] == 15
-    assert forecast[0]["PrecipitationProbabilityDay"] == 57
-    assert forecast[0]["WindDay"]["Speed"]["Value"] == 13.0
-    assert forecast[0]["TemperatureMax"]["Value"] == 24.8
-    assert forecast[0]["TemperatureMax"]["Unit"] == "C"
-    assert forecast[0]["Ozone"]["Value"] == 23
+    assert forecast[0].weather_icon_day == 7
+    assert forecast[0].precipitation_probability_day.value == 25
+    assert forecast[0].precipitation_probability_day.unit == "%"
+    assert forecast[0].wind_speed_day.value == 22.2
+    assert forecast[0].wind_speed_day.unit == "km/h"
+    assert forecast[0].temperature_max.value == 16.1
+    assert forecast[0].temperature_max.unit == "°C"
     assert accuweather.requests_remaining == 23
 
 
@@ -138,7 +135,7 @@ async def test_get_hourly_forecast():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
+            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=true",
             payload=hourly_forecast_data,
             headers=HEADERS,
         )
@@ -151,15 +148,14 @@ async def test_get_hourly_forecast():
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        forecast = await accuweather.async_get_forecast_hourly()
+        forecast = await accuweather.async_get_hourly_forecast()
 
     await session.close()
 
-    assert forecast[0]["WeatherIcon"] == 4
-    assert forecast[0]["HasPrecipitation"] is False
-    assert forecast[0]["UVIndex"] == 2
-    assert forecast[0]["Temperature"]["Value"] == 26.3
-    assert forecast[0]["Temperature"]["Unit"] == "C"
+    assert forecast[0].weather_icon == 18
+    assert forecast[0].uv_index.value == 1
+    assert forecast[0].temperature.value == 11.7
+    assert forecast[0].temperature.unit == "°C"
     assert accuweather.requests_remaining == 23
 
 
