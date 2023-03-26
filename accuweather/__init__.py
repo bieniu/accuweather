@@ -1,8 +1,8 @@
 """Python wrapper for getting weather data from AccueWeather for Limited Trial."""
-
 from __future__ import annotations
 
 import logging
+from datetime import datetime
 from http import HTTPStatus
 from typing import TYPE_CHECKING, Any
 
@@ -11,19 +11,14 @@ from aiohttp import ClientSession
 
 from .const import (
     ATTR_CURRENT_CONDITIONS,
-    ATTR_FORECAST_DAILY_5,
-    ATTR_FORECAST_HOURLY_12,
+    ATTR_FORECAST_DAILY,
+    ATTR_FORECAST_HOURLY,
     ATTR_GEOPOSITION,
-    ENDPOINT,
     HTTP_HEADERS,
-    MAX_API_KEY_LENGTH,
-    MAX_LATITUDE,
-    MAX_LONGITUDE,
-    REMOVE_FROM_CURRENT_CONDITION,
-    REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
-    TEMPERATURES,
-    URLS,
+    UNIT_DEGREES,
+    UNIT_HOUR,
+    UNIT_PERCENTAGE,
 )
 from .exceptions import (
     ApiError,
@@ -31,6 +26,8 @@ from .exceptions import (
     InvalidCoordinatesError,
     RequestsExceededError,
 )
+from .model import CurrentCondition, ForecastDay, ForecastHour, Value
+from .utils import _construct_url, _get_pollutant, _valid_api_key, _valid_coordinates
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,13 +42,14 @@ class AccuWeather:
         latitude: float | None = None,
         longitude: float | None = None,
         location_key: str | None = None,
+        metric: bool = True,
     ) -> None:
         """Initialize."""
-        if not self._valid_api_key(api_key):
+        if not _valid_api_key(api_key):
             raise InvalidApiKeyError(
                 "Your API Key must be a 32-character hexadecimal string"
             )
-        if not location_key and not self._valid_coordinates(latitude, longitude):
+        if not location_key and not _valid_coordinates(latitude, longitude):
             raise InvalidCoordinatesError("Your coordinates are invalid")
 
         self.latitude = latitude
@@ -61,88 +59,7 @@ class AccuWeather:
         self._location_key = location_key
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
-
-    @staticmethod
-    def _valid_coordinates(
-        latitude: float | int | None, longitude: float | int | None
-    ) -> bool:
-        """Return True if coordinates are valid."""
-        if (
-            isinstance(latitude, (int, float))
-            and isinstance(longitude, (int, float))
-            and abs(latitude) <= MAX_LATITUDE
-            and abs(longitude) <= MAX_LONGITUDE
-        ):
-            return True
-        return False
-
-    @staticmethod
-    def _valid_api_key(api_key: str) -> bool:
-        """Return True if API key is valid."""
-        if isinstance(api_key, str) and len(api_key) == MAX_API_KEY_LENGTH:
-            return True
-
-        return False
-
-    @staticmethod
-    def _construct_url(arg: str, **kwargs: str) -> str:
-        """Construct AccuWeather API URL."""
-        return ENDPOINT + URLS[arg].format(**kwargs)
-
-    @staticmethod
-    def _clean_current_condition(
-        data: dict[str, Any], to_remove: tuple[str, ...]
-    ) -> dict[str, Any]:
-        """Clean current condition API response."""
-        return {key: data[key] for key in data if key not in to_remove}
-
-    @staticmethod
-    def _parse_forecast_daily(
-        data: dict[str, Any], to_remove: tuple[str, ...]
-    ) -> list[dict[str, Any]]:
-        """Parse and clean daily forecast API response."""
-        parsed_data = [
-            {key: value for key, value in item.items() if key not in to_remove}
-            for item in data["DailyForecasts"]
-        ]
-
-        for day in parsed_data:
-            # For some forecast days, the API does not provide an Ozone value.
-            day.setdefault("Ozone", {})
-            day["Ozone"].setdefault("Value")
-            day["Ozone"].setdefault("Category")
-
-            for item in day["AirAndPollen"]:
-                if item["Name"] == "AirQuality":
-                    day[item["Type"]] = item
-                day[item["Name"]] = item
-                day[item["Name"]]["Category"] = day[item["Name"]]["Category"].lower()
-                day[item["Name"]].pop("Name")
-            day.pop("AirAndPollen")
-
-            for temp in TEMPERATURES:
-                day[f"{temp}Min"] = day[temp]["Minimum"]
-                day[f"{temp}Max"] = day[temp]["Maximum"]
-                day.pop(temp)
-
-            for key, value in day["Day"].items():
-                day[f"{key}Day"] = value
-            day.pop("Day")
-
-            for key, value in day["Night"].items():
-                day[f"{key}Night"] = value
-            day.pop("Night")
-        return parsed_data
-
-    @staticmethod
-    def _parse_forecast_hourly(
-        data: list[dict[str, Any]], to_remove: tuple[str, ...]
-    ) -> list[dict[str, Any]]:
-        """Parse and clean hourly forecast API response."""
-        return [
-            {key: value for key, value in item.items() if key not in to_remove}
-            for item in data
-        ]
+        self.metric = metric
 
     async def _async_get_data(self, url: str) -> Any:
         """Retrieve data from AccuWeather API."""
@@ -164,14 +81,11 @@ class AccuWeather:
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 
-        if "hourly" in url:
-            return data
-
-        return data if isinstance(data, dict) else data[0]
+        return data
 
     async def async_get_location(self) -> None:
         """Retrieve location data from AccuWeather."""
-        url = self._construct_url(
+        url = _construct_url(
             ATTR_GEOPOSITION,
             api_key=self._api_key,
             lat=str(self.latitude),
@@ -181,57 +95,416 @@ class AccuWeather:
         self._location_key = data["Key"]
         self._location_name = data["LocalizedName"]
 
-    async def async_get_current_conditions(self) -> dict[str, Any]:
+    async def async_get_current_conditions(self) -> CurrentCondition:
         """Retrieve current conditions data from AccuWeather."""
+        unit_system: str = "Metric" if self.metric else "Imperial"
+
         if not self._location_key:
             await self.async_get_location()
 
         if TYPE_CHECKING:
             assert self._location_key is not None  # noqa: S101
 
-        url = self._construct_url(
+        url = _construct_url(
             ATTR_CURRENT_CONDITIONS,
             api_key=self._api_key,
             location_key=self._location_key,
         )
-        data = await self._async_get_data(url)
-        return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
+        data = (await self._async_get_data(url))[0]
 
-    async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
+        return CurrentCondition(
+            apparent_temperature=Value(
+                data["ApparentTemperature"][unit_system]["Value"],
+                data["ApparentTemperature"][unit_system]["UnitType"],
+            ),
+            ceiling=Value(
+                data["Ceiling"][unit_system]["Value"],
+                data["Ceiling"][unit_system]["UnitType"],
+            ),
+            cloud_cover=Value(data["CloudCover"], UNIT_PERCENTAGE),
+            date_time=datetime.fromisoformat(data["LocalObservationDateTime"]),
+            date_time_epoch=data["EpochTime"],
+            dew_point=Value(
+                data["DewPoint"][unit_system]["Value"],
+                data["DewPoint"][unit_system]["UnitType"],
+            ),
+            has_precipitation=data["HasPrecipitation"],
+            indoor_relative_humidity=Value(
+                data["IndoorRelativeHumidity"], UNIT_PERCENTAGE
+            ),
+            is_day_time=data["IsDayTime"],
+            precipitation_past_12_hours=Value(
+                data["PrecipitationSummary"]["Past12Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past12Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_18_hours=Value(
+                data["PrecipitationSummary"]["Past18Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past18Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_24_hours=Value(
+                data["PrecipitationSummary"]["Past24Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past24Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_3_hours=Value(
+                data["PrecipitationSummary"]["Past3Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past3Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_6_hours=Value(
+                data["PrecipitationSummary"]["Past6Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past6Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_9_hours=Value(
+                data["PrecipitationSummary"]["Past9Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past9Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_hour=Value(
+                data["PrecipitationSummary"]["PastHour"][unit_system]["Value"],
+                data["PrecipitationSummary"]["PastHour"][unit_system]["UnitType"],
+            ),
+            precipitation_type=data["PrecipitationType"].lower()
+            if data["HasPrecipitation"]
+            else None,
+            pressure=Value(
+                data["Pressure"][unit_system]["Value"],
+                data["Pressure"][unit_system]["UnitType"],
+                data["PressureTendency"]["LocalizedText"],
+            ),
+            real_feel_temperature=Value(
+                data["RealFeelTemperature"][unit_system]["Value"],
+                data["RealFeelTemperature"][unit_system]["UnitType"],
+                data["RealFeelTemperature"][unit_system]["Phrase"],
+            ),
+            real_feel_temperature_shade=Value(
+                data["RealFeelTemperatureShade"][unit_system]["Value"],
+                data["RealFeelTemperatureShade"][unit_system]["UnitType"],
+                data["RealFeelTemperatureShade"][unit_system]["Phrase"],
+            ),
+            relative_humidity=Value(data["RelativeHumidity"], UNIT_PERCENTAGE),
+            temperature=Value(
+                data["Temperature"][unit_system]["Value"],
+                data["Temperature"][unit_system]["UnitType"],
+            ),
+            uv_index=Value(value=data["UVIndex"], text=data["UVIndexText"]),
+            visibility=Value(
+                data["Visibility"][unit_system]["Value"],
+                data["Visibility"][unit_system]["UnitType"],
+            ),
+            weather_text=data["WeatherText"].lower(),
+            weather_icon=data["WeatherIcon"],
+            wet_bulb_temperature=Value(
+                data["WetBulbTemperature"][unit_system]["Value"],
+                data["WetBulbTemperature"][unit_system]["UnitType"],
+            ),
+            wind_chill_temperature=Value(
+                data["WindChillTemperature"][unit_system]["Value"],
+                data["WindChillTemperature"][unit_system]["UnitType"],
+            ),
+            wind_direction=Value(
+                data["Wind"]["Direction"]["Degrees"],
+                99,
+                data["Wind"]["Direction"]["Localized"],
+            ),
+            wind_gust=Value(
+                data["WindGust"]["Speed"][unit_system]["Value"],
+                data["WindGust"]["Speed"][unit_system]["UnitType"],
+            ),
+            wind_speed=Value(
+                data["Wind"]["Speed"][unit_system]["Value"],
+                data["Wind"]["Speed"][unit_system]["UnitType"],
+            ),
+        )
+
+    async def async_get_daily_forecast(self, days: int = 5) -> list[ForecastDay]:
         """Retrieve daily forecast data from AccuWeather."""
+        forecast = []
+
         if not self._location_key:
             await self.async_get_location()
 
         if TYPE_CHECKING:
             assert self._location_key is not None  # noqa: S101
 
-        url = self._construct_url(
-            ATTR_FORECAST_DAILY_5,
+        url = _construct_url(
+            ATTR_FORECAST_DAILY,
+            days=str(days),
             api_key=self._api_key,
             location_key=self._location_key,
-            metric=str(metric),
+            metric=str(self.metric).lower(),
         )
         data = await self._async_get_data(url)
-        return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
 
-    async def async_get_forecast_hourly(
-        self, metric: bool = True
-    ) -> list[dict[str, Any]]:
+        for day in data["DailyForecasts"]:
+            forecast.append(
+                ForecastDay(
+                    air_quality=_get_pollutant(day["AirAndPollen"], "AirQuality"),
+                    cloud_cover_day=Value(day["Day"]["CloudCover"], UNIT_PERCENTAGE),
+                    cloud_cover_night=Value(
+                        day["Night"]["CloudCover"], UNIT_PERCENTAGE
+                    ),
+                    date_time_epoch=day["EpochDate"],
+                    date_time=datetime.fromisoformat(day["Date"]),
+                    grass_pollen=_get_pollutant(day["AirAndPollen"], "Grass"),
+                    has_precipitation_day=day["Day"]["HasPrecipitation"],
+                    has_precipitation_night=day["Night"]["HasPrecipitation"],
+                    hours_of_ice_day=Value(day["Day"]["HoursOfIce"], UNIT_HOUR),
+                    hours_of_ice_night=Value(day["Night"]["HoursOfIce"], UNIT_HOUR),
+                    hours_of_precipitation_day=Value(
+                        day["Day"]["HoursOfPrecipitation"], UNIT_HOUR
+                    ),
+                    hours_of_precipitation_night=Value(
+                        day["Night"]["HoursOfPrecipitation"], UNIT_HOUR
+                    ),
+                    hours_of_rain_day=Value(day["Day"]["HoursOfRain"], UNIT_HOUR),
+                    hours_of_rain_night=Value(day["Night"]["HoursOfRain"], UNIT_HOUR),
+                    hours_of_snow_day=Value(day["Day"]["HoursOfSnow"], UNIT_HOUR),
+                    hours_of_snow_night=Value(day["Night"]["HoursOfSnow"], UNIT_HOUR),
+                    hours_of_sun=Value(day["HoursOfSun"], UNIT_HOUR),
+                    ice_probability_day=Value(
+                        day["Day"]["IceProbability"], UNIT_PERCENTAGE
+                    ),
+                    ice_probability_night=Value(
+                        day["Night"]["IceProbability"], UNIT_PERCENTAGE
+                    ),
+                    mold=_get_pollutant(day["AirAndPollen"], "Mold"),
+                    precipitation_ice_day=Value(
+                        day["Day"]["Ice"]["Value"], day["Day"]["Ice"]["UnitType"]
+                    ),
+                    precipitation_ice_night=Value(
+                        day["Night"]["Ice"]["Value"], day["Night"]["Ice"]["UnitType"]
+                    ),
+                    precipitation_liquid_day=Value(
+                        day["Day"]["TotalLiquid"]["Value"],
+                        day["Day"]["TotalLiquid"]["UnitType"],
+                    ),
+                    precipitation_liquid_night=Value(
+                        day["Night"]["TotalLiquid"]["Value"],
+                        day["Night"]["TotalLiquid"]["UnitType"],
+                    ),
+                    precipitation_probability_day=Value(
+                        day["Day"]["PrecipitationProbability"], UNIT_PERCENTAGE
+                    ),
+                    precipitation_probability_night=Value(
+                        day["Night"]["PrecipitationProbability"], UNIT_PERCENTAGE
+                    ),
+                    precipitation_rain_day=Value(
+                        day["Day"]["Rain"]["Value"], day["Day"]["Rain"]["UnitType"]
+                    ),
+                    precipitation_rain_night=Value(
+                        day["Night"]["Rain"]["Value"], day["Night"]["Rain"]["UnitType"]
+                    ),
+                    precipitation_snow_day=Value(
+                        day["Day"]["Snow"]["Value"], day["Day"]["Snow"]["UnitType"]
+                    ),
+                    precipitation_snow_night=Value(
+                        day["Night"]["Snow"]["Value"], day["Night"]["Snow"]["UnitType"]
+                    ),
+                    precipitation_type_day=day["Day"]["PrecipitationType"].lower()
+                    if day["Day"]["HasPrecipitation"]
+                    else None,
+                    precipitation_type_night=day["Night"]["PrecipitationType"].lower()
+                    if day["Night"]["HasPrecipitation"]
+                    else None,
+                    ragweed_pollen=_get_pollutant(day["AirAndPollen"], "Ragweed"),
+                    rain_probability_day=Value(
+                        day["Day"]["RainProbability"], UNIT_PERCENTAGE
+                    ),
+                    rain_probability_night=Value(
+                        day["Night"]["RainProbability"], UNIT_PERCENTAGE
+                    ),
+                    real_feel_temperature_max=Value(
+                        day["RealFeelTemperature"]["Maximum"]["Value"],
+                        day["RealFeelTemperature"]["Maximum"]["UnitType"],
+                        day["RealFeelTemperature"]["Maximum"]["Phrase"],
+                    ),
+                    real_feel_temperature_min=Value(
+                        day["RealFeelTemperature"]["Minimum"]["Value"],
+                        day["RealFeelTemperature"]["Minimum"]["UnitType"],
+                        day["RealFeelTemperature"]["Minimum"]["Phrase"],
+                    ),
+                    real_feel_temperature_shade_max=Value(
+                        day["RealFeelTemperatureShade"]["Maximum"]["Value"],
+                        day["RealFeelTemperatureShade"]["Maximum"]["UnitType"],
+                        day["RealFeelTemperatureShade"]["Maximum"]["Phrase"],
+                    ),
+                    real_feel_temperature_shade_min=Value(
+                        day["RealFeelTemperatureShade"]["Minimum"]["Value"],
+                        day["RealFeelTemperatureShade"]["Minimum"]["UnitType"],
+                        day["RealFeelTemperatureShade"]["Minimum"]["Phrase"],
+                    ),
+                    snow_probability_day=Value(
+                        day["Day"]["SnowProbability"], UNIT_PERCENTAGE
+                    ),
+                    snow_probability_night=Value(
+                        day["Night"]["SnowProbability"], UNIT_PERCENTAGE
+                    ),
+                    solar_irradiance_day=Value(
+                        day["Day"]["SolarIrradiance"]["Value"],
+                        day["Day"]["SolarIrradiance"]["UnitType"],
+                    ),
+                    solar_irradiance_night=Value(
+                        day["Night"]["SolarIrradiance"]["Value"],
+                        day["Night"]["SolarIrradiance"]["UnitType"],
+                    ),
+                    thunderstorm_probability_day=Value(
+                        day["Day"]["ThunderstormProbability"], UNIT_PERCENTAGE
+                    ),
+                    thunderstorm_probability_night=Value(
+                        day["Night"]["ThunderstormProbability"], UNIT_PERCENTAGE
+                    ),
+                    temperature_max=Value(
+                        day["Temperature"]["Maximum"]["Value"],
+                        day["Temperature"]["Maximum"]["UnitType"],
+                    ),
+                    temperature_min=Value(
+                        day["Temperature"]["Minimum"]["Value"],
+                        day["Temperature"]["Minimum"]["UnitType"],
+                    ),
+                    tree_pollen=_get_pollutant(day["AirAndPollen"], "Tree"),
+                    uv_index=_get_pollutant(day["AirAndPollen"], "UVIndex"),
+                    weather_icon_day=day["Day"]["Icon"],
+                    weather_icon_night=day["Night"]["Icon"],
+                    weather_text_day=day["Day"]["IconPhrase"].lower(),
+                    weather_text_night=day["Night"]["IconPhrase"].lower(),
+                    weather_long_text_day=day["Day"]["LongPhrase"].lower(),
+                    weather_long_text_night=day["Night"]["LongPhrase"].lower(),
+                    wind_direction_day=Value(
+                        day["Day"]["Wind"]["Direction"]["Degrees"],
+                        UNIT_DEGREES,
+                        day["Day"]["Wind"]["Direction"]["Localized"],
+                    ),
+                    wind_direction_night=Value(
+                        day["Night"]["Wind"]["Direction"]["Degrees"],
+                        UNIT_DEGREES,
+                        day["Night"]["Wind"]["Direction"]["Localized"],
+                    ),
+                    wind_gust_day=Value(
+                        day["Day"]["WindGust"]["Speed"]["Value"],
+                        day["Day"]["WindGust"]["Speed"]["UnitType"],
+                    ),
+                    wind_gust_night=Value(
+                        day["Night"]["WindGust"]["Speed"]["Value"],
+                        day["Night"]["WindGust"]["Speed"]["UnitType"],
+                    ),
+                    wind_speed_day=Value(
+                        day["Day"]["Wind"]["Speed"]["Value"],
+                        day["Day"]["Wind"]["Speed"]["UnitType"],
+                    ),
+                    wind_speed_night=Value(
+                        day["Night"]["Wind"]["Speed"]["Value"],
+                        day["Night"]["Wind"]["Speed"]["UnitType"],
+                    ),
+                )
+            )
+
+        return forecast
+
+    async def async_get_hourly_forecast(self, hours: int = 12) -> list[ForecastHour]:
         """Retrieve hourly forecast data from AccuWeather."""
+        forecast = []
+
         if not self._location_key:
             await self.async_get_location()
 
         if TYPE_CHECKING:
             assert self._location_key is not None  # noqa: S101
 
-        url = self._construct_url(
-            ATTR_FORECAST_HOURLY_12,
+        url = _construct_url(
+            ATTR_FORECAST_HOURLY,
+            hours=str(hours),
             api_key=self._api_key,
             location_key=self._location_key,
-            metric=str(metric),
+            metric=str(self.metric).lower(),
         )
         data = await self._async_get_data(url)
-        return self._parse_forecast_hourly(data, REMOVE_FROM_FORECAST)
+
+        for hour in data:
+            forecast.append(
+                ForecastHour(
+                    ceiling=Value(
+                        hour["Ceiling"]["Value"], hour["Ceiling"]["UnitType"]
+                    ),
+                    cloud_cover=Value(hour["CloudCover"], UNIT_PERCENTAGE),
+                    date_time=datetime.fromisoformat(hour["DateTime"]),
+                    date_time_epoch=hour["EpochDateTime"],
+                    dew_point=Value(
+                        hour["DewPoint"]["Value"], hour["DewPoint"]["UnitType"]
+                    ),
+                    has_precipitation=hour["HasPrecipitation"],
+                    ice_probability=Value(hour["IceProbability"], UNIT_PERCENTAGE),
+                    indoor_relative_humidity=Value(
+                        hour["RelativeHumidity"], UNIT_PERCENTAGE
+                    ),
+                    is_daylight=hour["IsDaylight"],
+                    precipitation_ice=Value(
+                        hour["Ice"]["Value"], hour["Ice"]["UnitType"]
+                    ),
+                    precipitation_liquid=Value(
+                        hour["TotalLiquid"]["Value"],
+                        hour["TotalLiquid"]["UnitType"],
+                    ),
+                    precipitation_probability=Value(
+                        hour["PrecipitationProbability"], UNIT_PERCENTAGE
+                    ),
+                    precipitation_rain=Value(
+                        hour["Rain"]["Value"], hour["Rain"]["UnitType"]
+                    ),
+                    precipitation_snow=Value(
+                        hour["Snow"]["Value"], hour["Snow"]["UnitType"]
+                    ),
+                    precipitation_type=hour["PrecipitationType"].lower()
+                    if hour["HasPrecipitation"]
+                    else None,
+                    rain_probability=Value(hour["RainProbability"], UNIT_PERCENTAGE),
+                    real_feel_temperature=Value(
+                        hour["RealFeelTemperature"]["Value"],
+                        hour["RealFeelTemperature"]["UnitType"],
+                        hour["RealFeelTemperature"]["Phrase"],
+                    ),
+                    real_feel_temperature_shade=Value(
+                        hour["RealFeelTemperatureShade"]["Value"],
+                        hour["RealFeelTemperatureShade"]["UnitType"],
+                        hour["RealFeelTemperatureShade"]["Phrase"],
+                    ),
+                    relative_humidity=Value(hour["RelativeHumidity"], UNIT_PERCENTAGE),
+                    snow_probability=Value(hour["SnowProbability"], UNIT_PERCENTAGE),
+                    solar_irradiance=Value(
+                        hour["SolarIrradiance"]["Value"],
+                        hour["SolarIrradiance"]["UnitType"],
+                    ),
+                    temperature=Value(
+                        hour["Temperature"]["Value"],
+                        hour["Temperature"]["UnitType"],
+                    ),
+                    thunderstorm_probability=Value(
+                        hour["ThunderstormProbability"], UNIT_PERCENTAGE
+                    ),
+                    uv_index=Value(value=hour["UVIndex"], text=hour["UVIndexText"]),
+                    visibility=Value(
+                        hour["Visibility"]["Value"], hour["Visibility"]["UnitType"]
+                    ),
+                    weather_icon=hour["WeatherIcon"],
+                    weather_text=hour["IconPhrase"].lower(),
+                    wet_bulb_temperature=Value(
+                        hour["WetBulbTemperature"]["Value"],
+                        hour["WetBulbTemperature"]["UnitType"],
+                    ),
+                    wind_direction=Value(
+                        hour["Wind"]["Direction"]["Degrees"],
+                        UNIT_DEGREES,
+                        hour["Wind"]["Direction"]["Localized"],
+                    ),
+                    wind_gust=Value(
+                        hour["WindGust"]["Speed"]["Value"],
+                        hour["WindGust"]["Speed"]["UnitType"],
+                    ),
+                    wind_speed=Value(
+                        hour["Wind"]["Speed"]["Value"],
+                        hour["Wind"]["Speed"]["UnitType"],
+                    ),
+                )
+            )
+
+        return forecast
 
     @property
     def location_name(self) -> str | None:
