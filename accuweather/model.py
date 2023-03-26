@@ -24,7 +24,7 @@ class Value(AccuWeatherData):
 
     def __post_init__(self) -> None:
         """Post init."""
-        self.unit = UNIT_MAP.get(self.unit_type) if self.unit_type else None
+        self.unit = UNIT_MAP[self.unit_type] if self.unit_type is not None else None
         self.text = self.text.lower() if self.text else None
 
 
@@ -38,8 +38,15 @@ class CurrentCondition(AccuWeatherData):
     date_time_epoch: int
     date_time: datetime
     dew_point: Value
+    has_precipitation: bool
     indoor_relative_humidity: Value
     is_day_time: bool
+    precipitation_past_12_hours: Value
+    precipitation_past_18_hours: Value
+    precipitation_past_24_hours: Value
+    precipitation_past_3_hours: Value
+    precipitation_past_6_hours: Value
+    precipitation_past_9_hours: Value
     precipitation_past_hour: Value
     precipitation_type: str | None
     pressure: Value

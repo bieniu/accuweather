@@ -58,7 +58,7 @@ class AccuWeather:
         self._location_key = location_key
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
-        self.unit_system: str = "Metric" if metric else "Imperial"
+        self.metric = metric
 
     async def _async_get_data(self, url: str) -> Any:
         """Retrieve data from AccuWeather API."""
@@ -99,6 +99,8 @@ class AccuWeather:
 
     async def async_get_current_conditions(self) -> CurrentCondition:
         """Retrieve current conditions data from AccuWeather."""
+        unit_system: str = "Metric" if self.metric else "Imperial"
+
         if not self._location_key:
             await self.async_get_location()
 
@@ -114,80 +116,107 @@ class AccuWeather:
 
         return CurrentCondition(
             apparent_temperature=Value(
-                data["ApparentTemperature"][self.unit_system]["Value"],
-                data["ApparentTemperature"][self.unit_system]["UnitType"],
+                data["ApparentTemperature"][unit_system]["Value"],
+                data["ApparentTemperature"][unit_system]["UnitType"],
             ),
             ceiling=Value(
-                data["Ceiling"][self.unit_system]["Value"],
-                data["Ceiling"][self.unit_system]["UnitType"],
+                data["Ceiling"][unit_system]["Value"],
+                data["Ceiling"][unit_system]["UnitType"],
             ),
             cloud_cover=Value(data["CloudCover"], UNIT_PERCENTAGE),
             date_time=datetime.fromisoformat(data["LocalObservationDateTime"]),
             date_time_epoch=data["EpochTime"],
             dew_point=Value(
-                data["DewPoint"][self.unit_system]["Value"],
-                data["DewPoint"][self.unit_system]["UnitType"],
+                data["DewPoint"][unit_system]["Value"],
+                data["DewPoint"][unit_system]["UnitType"],
             ),
+            has_precipitation=data["HasPrecipitation"],
             indoor_relative_humidity=Value(
                 data["IndoorRelativeHumidity"], UNIT_PERCENTAGE
             ),
             is_day_time=data["IsDayTime"],
+            precipitation_past_12_hours=Value(
+                data["PrecipitationSummary"]["Past12Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past12Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_18_hours=Value(
+                data["PrecipitationSummary"]["Past18Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past18Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_24_hours=Value(
+                data["PrecipitationSummary"]["Past24Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past24Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_3_hours=Value(
+                data["PrecipitationSummary"]["Past3Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past3Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_6_hours=Value(
+                data["PrecipitationSummary"]["Past6Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past6Hours"][unit_system]["UnitType"],
+            ),
+            precipitation_past_9_hours=Value(
+                data["PrecipitationSummary"]["Past9Hours"][unit_system]["Value"],
+                data["PrecipitationSummary"]["Past9Hours"][unit_system]["UnitType"],
+            ),
             precipitation_past_hour=Value(
-                data["PrecipitationSummary"]["PastHour"][self.unit_system]["Value"],
-                data["PrecipitationSummary"]["PastHour"][self.unit_system]["UnitType"],
+                data["PrecipitationSummary"]["PastHour"][unit_system]["Value"],
+                data["PrecipitationSummary"]["PastHour"][unit_system]["UnitType"],
             ),
             precipitation_type=data["PrecipitationType"].lower()
             if data["HasPrecipitation"]
             else None,
             pressure=Value(
-                data["Pressure"][self.unit_system]["Value"],
-                data["Pressure"][self.unit_system]["UnitType"],
+                data["Pressure"][unit_system]["Value"],
+                data["Pressure"][unit_system]["UnitType"],
                 data["PressureTendency"]["LocalizedText"],
             ),
             real_feel_temperature=Value(
-                data["RealFeelTemperature"][self.unit_system]["Value"],
-                data["RealFeelTemperature"][self.unit_system]["UnitType"],
-                data["RealFeelTemperature"][self.unit_system]["Phrase"],
+                data["RealFeelTemperature"][unit_system]["Value"],
+                data["RealFeelTemperature"][unit_system]["UnitType"],
+                data["RealFeelTemperature"][unit_system]["Phrase"],
             ),
             real_feel_temperature_shade=Value(
-                data["RealFeelTemperatureShade"][self.unit_system]["Value"],
-                data["RealFeelTemperatureShade"][self.unit_system]["UnitType"],
-                data["RealFeelTemperatureShade"][self.unit_system]["Phrase"],
+                data["RealFeelTemperatureShade"][unit_system]["Value"],
+                data["RealFeelTemperatureShade"][unit_system]["UnitType"],
+                data["RealFeelTemperatureShade"][unit_system]["Phrase"],
             ),
             relative_humidity=Value(data["RelativeHumidity"], UNIT_PERCENTAGE),
             temperature=Value(
-                data["Temperature"][self.unit_system]["Value"],
-                data["Temperature"][self.unit_system]["UnitType"],
+                data["Temperature"][unit_system]["Value"],
+                data["Temperature"][unit_system]["UnitType"],
             ),
             uv_index=Value(value=data["UVIndex"], text=data["UVIndexText"]),
             visibility=Value(
-                data["Visibility"][self.unit_system]["Value"],
-                data["Visibility"][self.unit_system]["UnitType"],
+                data["Visibility"][unit_system]["Value"],
+                data["Visibility"][unit_system]["UnitType"],
             ),
             weather_text=data["WeatherText"].lower(),
             weather_icon=data["WeatherIcon"],
             wet_bulb_temperature=Value(
-                data["WetBulbTemperature"][self.unit_system]["Value"],
-                data["WetBulbTemperature"][self.unit_system]["UnitType"],
+                data["WetBulbTemperature"][unit_system]["Value"],
+                data["WetBulbTemperature"][unit_system]["UnitType"],
             ),
             wind_chill_temperature=Value(
-                data["WindChillTemperature"][self.unit_system]["Value"],
-                data["WindChillTemperature"][self.unit_system]["UnitType"],
+                data["WindChillTemperature"][unit_system]["Value"],
+                data["WindChillTemperature"][unit_system]["UnitType"],
             ),
-            wind_direction=data["Wind"]["Direction"]["Degrees"],
+            wind_direction=Value(
+                data["Wind"]["Direction"]["Degrees"],
+                99,
+                data["Wind"]["Direction"]["Localized"],
+            ),
             wind_gust=Value(
-                data["WindGust"]["Speed"][self.unit_system]["Value"],
-                data["WindGust"]["Speed"][self.unit_system]["UnitType"],
+                data["WindGust"]["Speed"][unit_system]["Value"],
+                data["WindGust"]["Speed"][unit_system]["UnitType"],
             ),
             wind_speed=Value(
-                data["Wind"]["Speed"][self.unit_system]["Value"],
-                data["Wind"]["Speed"][self.unit_system]["UnitType"],
+                data["Wind"]["Speed"][unit_system]["Value"],
+                data["Wind"]["Speed"][unit_system]["UnitType"],
             ),
         )
 
-    async def async_get_daily_forecast(
-        self, days: int = 5, metric: bool = True
-    ) -> list[ForecastDay]:
+    async def async_get_daily_forecast(self, days: int = 5) -> list[ForecastDay]:
         """Retrieve daily forecast data from AccuWeather."""
         forecast = []
 
@@ -202,7 +231,7 @@ class AccuWeather:
             days=str(days),
             api_key=self._api_key,
             location_key=self._location_key,
-            metric=str(metric).lower(),
+            metric=str(self.metric).lower(),
         )
         data = await self._async_get_data(url)
 
@@ -311,9 +340,7 @@ class AccuWeather:
 
         return forecast
 
-    async def async_get_hourly_forecast(
-        self, hours: int = 12, metric: bool = True
-    ) -> list[ForecastHour]:
+    async def async_get_hourly_forecast(self, hours: int = 12) -> list[ForecastHour]:
         """Retrieve hourly forecast data from AccuWeather."""
         forecast = []
 
@@ -328,7 +355,7 @@ class AccuWeather:
             hours=str(hours),
             api_key=self._api_key,
             location_key=self._location_key,
-            metric=str(metric).lower(),
+            metric=str(self.metric).lower(),
         )
         data = await self._async_get_data(url)
 

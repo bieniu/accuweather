@@ -32,7 +32,7 @@ UNIT_PERCENTAGE: int = 20
 
 UNIT_MAP: dict[int, str] = {
     0: "ft",
-    1: "m",
+    1: "in",
     2: "mi",
     3: "mm",
     5: "m",
@@ -40,7 +40,7 @@ UNIT_MAP: dict[int, str] = {
     7: "km/h",
     9: "mi/h",
     12: "inHg",
-    14: "mb",
+    14: "mbar",
     17: "°C",
     18: "°F",
     20: "%",
