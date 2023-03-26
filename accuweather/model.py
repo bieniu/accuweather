@@ -75,6 +75,8 @@ class ForecastDay(AccuWeatherData):
     date_time_epoch: int
     date_time: datetime
     grass_pollen: Value
+    has_precipitation_day: bool
+    has_precipitation_night: bool
     hours_of_ice_day: Value
     hours_of_ice_night: Value
     hours_of_precipitation_day: Value
@@ -97,6 +99,8 @@ class ForecastDay(AccuWeatherData):
     precipitation_rain_night: Value
     precipitation_snow_day: Value
     precipitation_snow_night: Value
+    precipitation_type_day: str | None
+    precipitation_type_night: str | None
     ragweed_pollen: Value
     rain_probability_day: Value
     rain_probability_night: Value
@@ -132,20 +136,34 @@ class ForecastDay(AccuWeatherData):
 class ForecastHour(AccuWeatherData):
     """Forecast per hour class."""
 
+    ceiling: Value
     cloud_cover: Value
     date_time_epoch: int
     date_time: datetime
+    dew_point: Value
+    has_precipitation: bool
+    ice_probability: Value
+    indoor_relative_humidity: Value
+    is_daylight: bool
     precipitation_ice: Value
     precipitation_liquid: Value
     precipitation_probability: Value
     precipitation_rain: Value
     precipitation_snow: Value
+    precipitation_type: str | None
+    rain_probability: Value
     real_feel_temperature_shade: Value
     real_feel_temperature: Value
+    relative_humidity: Value
+    snow_probability: Value
+    solar_irradiance: Value
     temperature: Value
+    thunderstorm_probability: Value
     uv_index: Value
+    visibility: Value
     weather_icon: int
     weather_text: str
+    wet_bulb_temperature: Value
     wind_direction: Value
     wind_gust: Value
     wind_speed: Value

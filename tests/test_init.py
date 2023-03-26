@@ -418,6 +418,8 @@ async def test_get_daily_forecast_imperial():
     assert forecast[0].grass_pollen.value == 0
     assert forecast[0].grass_pollen.unit == "p/m³"
     assert forecast[0].grass_pollen.text == "low"
+    assert forecast[0].has_precipitation_day is True
+    assert forecast[0].has_precipitation_night is True
     assert forecast[0].hours_of_ice_day.value == 0.0
     assert forecast[0].hours_of_ice_day.unit == "h"
     assert forecast[0].hours_of_ice_night.value == 0.0
@@ -463,6 +465,8 @@ async def test_get_daily_forecast_imperial():
     assert forecast[0].precipitation_snow_day.unit == "in"
     assert forecast[0].precipitation_snow_night.value == 0.0
     assert forecast[0].precipitation_snow_night.unit == "in"
+    assert forecast[0].precipitation_type_day == "rain"
+    assert forecast[0].precipitation_type_night == "rain"
     assert forecast[0].ragweed_pollen.value == 0
     assert forecast[0].ragweed_pollen.unit == "p/m³"
     assert forecast[0].ragweed_pollen.text == "low"
@@ -553,10 +557,154 @@ async def test_get_hourly_forecast_metric():
 
     await session.close()
 
-    assert forecast[0].weather_icon == 18
-    assert forecast[0].uv_index.value == 1
+    assert len(forecast) == 12
+    assert forecast[0].ceiling.value == 884.0
+    assert forecast[0].ceiling.unit == "m"
+    assert forecast[0].cloud_cover.value == 76
+    assert forecast[0].cloud_cover.unit == "%"
+    assert str(forecast[0].date_time) == "2023-03-25 15:00:00+01:00"
+    assert forecast[0].date_time_epoch == 1679752800
+    assert forecast[0].dew_point.value == 5.6
+    assert forecast[0].dew_point.unit == "°C"
+    assert forecast[0].has_precipitation is True
+    assert forecast[0].ice_probability.value == 0
+    assert forecast[0].ice_probability.unit == "%"
+    assert forecast[0].indoor_relative_humidity.value == 66
+    assert forecast[0].indoor_relative_humidity.unit == "%"
+    assert forecast[0].is_daylight is True
+    assert forecast[0].precipitation_ice.value == 0.0
+    assert forecast[0].precipitation_ice.unit == "mm"
+    assert forecast[0].precipitation_liquid.value == 0.3
+    assert forecast[0].precipitation_liquid.unit == "mm"
+    assert forecast[0].precipitation_probability.value == 60
+    assert forecast[0].precipitation_probability.unit == "%"
+    assert forecast[0].precipitation_rain.value == 0.3
+    assert forecast[0].precipitation_rain.unit == "mm"
+    assert forecast[0].precipitation_snow.value == 0.0
+    assert forecast[0].precipitation_snow.unit == "cm"
+    assert forecast[0].precipitation_type == "rain"
+    assert forecast[0].rain_probability.value == 60
+    assert forecast[0].rain_probability.unit == "%"
+    assert forecast[0].real_feel_temperature_shade.value == 6.7
+    assert forecast[0].real_feel_temperature_shade.unit == "°C"
+    assert forecast[0].real_feel_temperature.value == 7.3
+    assert forecast[0].real_feel_temperature.unit == "°C"
+    assert forecast[0].relative_humidity.value == 66
+    assert forecast[0].relative_humidity.unit == "%"
+    assert forecast[0].snow_probability.value == 0
+    assert forecast[0].snow_probability.unit == "%"
+    assert forecast[0].solar_irradiance.value == 293.5
+    assert forecast[0].solar_irradiance.unit == "W/m²"
     assert forecast[0].temperature.value == 11.7
     assert forecast[0].temperature.unit == "°C"
+    assert forecast[0].thunderstorm_probability.value == 6
+    assert forecast[0].thunderstorm_probability.unit == "%"
+    assert forecast[0].uv_index.value == 1
+    assert forecast[0].uv_index.unit is None
+    assert forecast[0].uv_index.text == "low"
+    assert forecast[0].visibility.value == 9.7
+    assert forecast[0].visibility.unit == "km"
+    assert forecast[0].weather_icon == 18
+    assert forecast[0].weather_text == "rain"
+    assert forecast[0].wet_bulb_temperature.value == 8.9
+    assert forecast[0].wet_bulb_temperature.unit == "°C"
+    assert forecast[0].wind_direction.value == 235
+    assert forecast[0].wind_direction.unit == "°"
+    assert forecast[0].wind_direction.text == "sw"
+    assert forecast[0].wind_gust.value == 35.2
+    assert forecast[0].wind_gust.unit == "km/h"
+    assert forecast[0].wind_speed.value == 22.2
+    assert forecast[0].wind_speed.unit == "km/h"
+    assert accuweather.requests_remaining == 23
+
+
+@pytest.mark.asyncio
+async def test_get_hourly_forecast_imperial():
+    """Test with valid hourly_forecast data."""
+    with open("tests/fixtures/hourly_forecast_imperial.json", encoding="utf-8") as file:
+        hourly_forecast_data = json.load(file)
+    with open("tests/fixtures/location.json", encoding="utf-8") as file:
+        location_data = json.load(file)
+
+    session = aiohttp.ClientSession()
+
+    with aioresponses() as session_mock:
+        session_mock.get(
+            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=false",
+            payload=hourly_forecast_data,
+            headers=HEADERS,
+        )
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            payload=location_data,
+            headers=HEADERS,
+        )
+
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE, metric=False
+        )
+        forecast = await accuweather.async_get_hourly_forecast()
+
+    await session.close()
+
+    assert len(forecast) == 12
+    assert forecast[0].ceiling.value == 22700.0
+    assert forecast[0].ceiling.unit == "ft"
+    assert forecast[0].cloud_cover.value == 93
+    assert forecast[0].cloud_cover.unit == "%"
+    assert str(forecast[0].date_time) == "2023-03-26 22:00:00+02:00"
+    assert forecast[0].date_time_epoch == 1679860800
+    assert forecast[0].dew_point.value == 37.0
+    assert forecast[0].dew_point.unit == "°F"
+    assert forecast[0].has_precipitation is False
+    assert forecast[0].ice_probability.value == 0
+    assert forecast[0].ice_probability.unit == "%"
+    assert forecast[0].indoor_relative_humidity.value == 84
+    assert forecast[0].indoor_relative_humidity.unit == "%"
+    assert forecast[0].is_daylight is False
+    assert forecast[0].precipitation_ice.value == 0.0
+    assert forecast[0].precipitation_ice.unit == "in"
+    assert forecast[0].precipitation_liquid.value == 0.0
+    assert forecast[0].precipitation_liquid.unit == "in"
+    assert forecast[0].precipitation_probability.value == 20
+    assert forecast[0].precipitation_probability.unit == "%"
+    assert forecast[0].precipitation_rain.value == 0.0
+    assert forecast[0].precipitation_rain.unit == "in"
+    assert forecast[0].precipitation_snow.value == 0.0
+    assert forecast[0].precipitation_snow.unit == "in"
+    assert forecast[0].precipitation_type is None
+    assert forecast[0].rain_probability.value == 20
+    assert forecast[0].rain_probability.unit == "%"
+    assert forecast[0].real_feel_temperature_shade.value == 44.0
+    assert forecast[0].real_feel_temperature_shade.unit == "°F"
+    assert forecast[0].real_feel_temperature.value == 44.0
+    assert forecast[0].real_feel_temperature.unit == "°F"
+    assert forecast[0].relative_humidity.value == 84
+    assert forecast[0].relative_humidity.unit == "%"
+    assert forecast[0].snow_probability.value == 0
+    assert forecast[0].snow_probability.unit == "%"
+    assert forecast[0].solar_irradiance.value == 0.0
+    assert forecast[0].solar_irradiance.unit == "W/m²"
+    assert forecast[0].temperature.value == 42.0
+    assert forecast[0].temperature.unit == "°F"
+    assert forecast[0].thunderstorm_probability.value == 0
+    assert forecast[0].thunderstorm_probability.unit == "%"
+    assert forecast[0].uv_index.value == 0
+    assert forecast[0].uv_index.unit is None
+    assert forecast[0].uv_index.text == "low"
+    assert forecast[0].visibility.value == 10.0
+    assert forecast[0].visibility.unit == "mi"
+    assert forecast[0].weather_icon == 7
+    assert forecast[0].weather_text == "cloudy"
+    assert forecast[0].wet_bulb_temperature.value == 40.0
+    assert forecast[0].wet_bulb_temperature.unit == "°F"
+    assert forecast[0].wind_direction.value == 231
+    assert forecast[0].wind_direction.unit == "°"
+    assert forecast[0].wind_direction.text == "sw"
+    assert forecast[0].wind_gust.value == 6.9
+    assert forecast[0].wind_gust.unit == "mi/h"
+    assert forecast[0].wind_speed.value == 2.3
+    assert forecast[0].wind_speed.unit == "mi/h"
     assert accuweather.requests_remaining == 23
 
 

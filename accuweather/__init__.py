@@ -244,6 +244,8 @@ class AccuWeather:
                     date_time_epoch=day["EpochDate"],
                     date_time=datetime.fromisoformat(day["Date"]),
                     grass_pollen=_get_pollutant(day["AirAndPollen"], "Grass"),
+                    has_precipitation_day=day["Day"]["HasPrecipitation"],
+                    has_precipitation_night=day["Night"]["HasPrecipitation"],
                     hours_of_ice_day=Value(day["Day"]["HoursOfIce"], UNIT_HOUR),
                     hours_of_ice_night=Value(day["Night"]["HoursOfIce"], UNIT_HOUR),
                     hours_of_precipitation_day=Value(
@@ -296,6 +298,12 @@ class AccuWeather:
                     precipitation_snow_night=Value(
                         day["Night"]["Snow"]["Value"], day["Night"]["Snow"]["UnitType"]
                     ),
+                    precipitation_type_day=day["Day"]["PrecipitationType"].lower()
+                    if day["Day"]["HasPrecipitation"]
+                    else None,
+                    precipitation_type_night=day["Night"]["PrecipitationType"].lower()
+                    if day["Night"]["HasPrecipitation"]
+                    else None,
                     ragweed_pollen=_get_pollutant(day["AirAndPollen"], "Ragweed"),
                     rain_probability_day=Value(
                         day["Day"]["RainProbability"], UNIT_PERCENTAGE
@@ -412,9 +420,21 @@ class AccuWeather:
         for hour in data:
             forecast.append(
                 ForecastHour(
+                    ceiling=Value(
+                        hour["Ceiling"]["Value"], hour["Ceiling"]["UnitType"]
+                    ),
                     cloud_cover=Value(hour["CloudCover"], UNIT_PERCENTAGE),
                     date_time=datetime.fromisoformat(hour["DateTime"]),
                     date_time_epoch=hour["EpochDateTime"],
+                    dew_point=Value(
+                        hour["DewPoint"]["Value"], hour["DewPoint"]["UnitType"]
+                    ),
+                    has_precipitation=hour["HasPrecipitation"],
+                    ice_probability=Value(hour["IceProbability"], UNIT_PERCENTAGE),
+                    indoor_relative_humidity=Value(
+                        hour["RelativeHumidity"], UNIT_PERCENTAGE
+                    ),
+                    is_daylight=hour["IsDaylight"],
                     precipitation_ice=Value(
                         hour["Ice"]["Value"], hour["Ice"]["UnitType"]
                     ),
@@ -431,6 +451,10 @@ class AccuWeather:
                     precipitation_snow=Value(
                         hour["Snow"]["Value"], hour["Snow"]["UnitType"]
                     ),
+                    precipitation_type=hour["PrecipitationType"].lower()
+                    if hour["HasPrecipitation"]
+                    else None,
+                    rain_probability=Value(hour["RainProbability"], UNIT_PERCENTAGE),
                     real_feel_temperature=Value(
                         hour["RealFeelTemperature"]["Value"],
                         hour["RealFeelTemperature"]["UnitType"],
@@ -441,13 +465,29 @@ class AccuWeather:
                         hour["RealFeelTemperatureShade"]["UnitType"],
                         hour["RealFeelTemperatureShade"]["Phrase"],
                     ),
+                    relative_humidity=Value(hour["RelativeHumidity"], UNIT_PERCENTAGE),
+                    snow_probability=Value(hour["SnowProbability"], UNIT_PERCENTAGE),
+                    solar_irradiance=Value(
+                        hour["SolarIrradiance"]["Value"],
+                        hour["SolarIrradiance"]["UnitType"],
+                    ),
                     temperature=Value(
                         hour["Temperature"]["Value"],
                         hour["Temperature"]["UnitType"],
                     ),
+                    thunderstorm_probability=Value(
+                        hour["ThunderstormProbability"], UNIT_PERCENTAGE
+                    ),
                     uv_index=Value(value=hour["UVIndex"], text=hour["UVIndexText"]),
+                    visibility=Value(
+                        hour["Visibility"]["Value"], hour["Visibility"]["UnitType"]
+                    ),
                     weather_icon=hour["WeatherIcon"],
                     weather_text=hour["IconPhrase"].lower(),
+                    wet_bulb_temperature=Value(
+                        hour["WetBulbTemperature"]["Value"],
+                        hour["WetBulbTemperature"]["UnitType"],
+                    ),
                     wind_direction=Value(
                         hour["Wind"]["Direction"]["Degrees"],
                         UNIT_DEGREES,
