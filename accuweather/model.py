@@ -93,3 +93,26 @@ class ForecastDay(AccuWeatherData):
     wind_gust_night: Value
     wind_speed_day: Value
     wind_speed_night: Value
+
+
+@dataclass
+class ForecastHour(AccuWeatherData):
+    """Forecast per hour class."""
+
+    cloud_cover: Value
+    date_epoch: int
+    date: datetime
+    precipitation_ice: Value
+    precipitation_liquid: Value
+    precipitation_probability: Value
+    precipitation_rain: Value
+    precipitation_snow: Value
+    real_feel_temperature: Value
+    real_feel_temperature_shade: Value
+    temperature: Value
+    uv_index: Value
+    weather_icon: int
+    weather_text: str
+    wind_direction: Value
+    wind_gust: Value
+    wind_speed: Value

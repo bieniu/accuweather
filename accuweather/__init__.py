@@ -15,7 +15,6 @@ from .const import (
     ATTR_FORECAST_HOURLY_12,
     ATTR_GEOPOSITION,
     HTTP_HEADERS,
-    REMOVE_FROM_FORECAST,
     REQUESTS_EXCEEDED,
     UNIT_DEGREES,
     UNIT_PERCENTAGE,
@@ -26,7 +25,7 @@ from .exceptions import (
     InvalidCoordinatesError,
     RequestsExceededError,
 )
-from .model import CurrentCondition, ForecastDay, Value
+from .model import CurrentCondition, ForecastDay, ForecastHour, Value
 from .utils import _construct_url, _get_pollen, _valid_api_key, _valid_coordinates
 
 _LOGGER = logging.getLogger(__name__)
@@ -60,16 +59,6 @@ class AccuWeather:
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
         self.unit_system: str = "Metric" if metric else "Imperial"
-
-    @staticmethod
-    def _parse_forecast_hourly(
-        data: list[dict[str, Any]], to_remove: tuple[str, ...]
-    ) -> list[dict[str, Any]]:
-        """Parse and clean hourly forecast API response."""
-        return [
-            {key: value for key, value in item.items() if key not in to_remove}
-            for item in data
-        ]
 
     async def _async_get_data(self, url: str) -> Any:
         """Retrieve data from AccuWeather API."""
@@ -200,6 +189,8 @@ class AccuWeather:
         self, days: int = 5, metric: bool = True
     ) -> list[ForecastDay]:
         """Retrieve daily forecast data from AccuWeather."""
+        forecast = []
+
         if not self._location_key:
             await self.async_get_location()
 
@@ -214,7 +205,7 @@ class AccuWeather:
             metric=str(metric).lower(),
         )
         data = await self._async_get_data(url)
-        forecast = []
+
         for day in data["DailyForecasts"]:
             forecast.append(
                 ForecastDay(
@@ -322,8 +313,10 @@ class AccuWeather:
 
     async def async_get_forecast_hourly(
         self, metric: bool = True
-    ) -> list[dict[str, Any]]:
+    ) -> list[ForecastHour]:
         """Retrieve hourly forecast data from AccuWeather."""
+        forecast = []
+
         if not self._location_key:
             await self.async_get_location()
 
@@ -337,7 +330,63 @@ class AccuWeather:
             metric=str(metric).lower(),
         )
         data = await self._async_get_data(url)
-        return self._parse_forecast_hourly(data, REMOVE_FROM_FORECAST)
+
+        for hour in data:
+            forecast.append(
+                ForecastHour(
+                    cloud_cover=Value(hour["CloudCover"], UNIT_PERCENTAGE),
+                    date=datetime.fromisoformat(hour["DateTime"]),
+                    date_epoch=hour["EpochDateTime"],
+                    precipitation_ice=Value(
+                        hour["Ice"]["Value"], hour["Ice"]["UnitType"]
+                    ),
+                    precipitation_liquid=Value(
+                        hour["TotalLiquid"]["Value"],
+                        hour["TotalLiquid"]["UnitType"],
+                    ),
+                    precipitation_probability=Value(
+                        hour["PrecipitationProbability"], UNIT_PERCENTAGE
+                    ),
+                    precipitation_rain=Value(
+                        hour["Rain"]["Value"], hour["Rain"]["UnitType"]
+                    ),
+                    precipitation_snow=Value(
+                        hour["Snow"]["Value"], hour["Snow"]["UnitType"]
+                    ),
+                    real_feel_temperature=Value(
+                        hour["RealFeelTemperature"]["Value"],
+                        hour["RealFeelTemperature"]["UnitType"],
+                        hour["RealFeelTemperature"]["Phrase"],
+                    ),
+                    real_feel_temperature_shade=Value(
+                        hour["RealFeelTemperatureShade"]["Value"],
+                        hour["RealFeelTemperatureShade"]["UnitType"],
+                        hour["RealFeelTemperatureShade"]["Phrase"],
+                    ),
+                    temperature=Value(
+                        hour["Temperature"]["Value"],
+                        hour["Temperature"]["UnitType"],
+                    ),
+                    uv_index=Value(value=hour["UVIndex"], text=hour["UVIndexText"]),
+                    weather_icon=hour["WeatherIcon"],
+                    weather_text=hour["IconPhrase"].lower(),
+                    wind_direction=Value(
+                        hour["Wind"]["Direction"]["Degrees"],
+                        UNIT_DEGREES,
+                        hour["Wind"]["Direction"]["Localized"],
+                    ),
+                    wind_gust=Value(
+                        hour["WindGust"]["Speed"]["Value"],
+                        hour["WindGust"]["Speed"]["UnitType"],
+                    ),
+                    wind_speed=Value(
+                        hour["Wind"]["Speed"]["Value"],
+                        hour["Wind"]["Speed"]["UnitType"],
+                    ),
+                )
+            )
+
+        return forecast
 
     @property
     def location_name(self) -> str | None:
