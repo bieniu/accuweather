@@ -12,7 +12,7 @@ from aiohttp import ClientSession
 from .const import (
     ATTR_CURRENT_CONDITIONS,
     ATTR_FORECAST_DAILY,
-    ATTR_FORECAST_HOURLY_12,
+    ATTR_FORECAST_HOURLY,
     ATTR_GEOPOSITION,
     HTTP_HEADERS,
     REQUESTS_EXCEEDED,
@@ -312,7 +312,7 @@ class AccuWeather:
         return forecast
 
     async def async_get_forecast_hourly(
-        self, metric: bool = True
+        self, hours: int = 12, metric: bool = True
     ) -> list[ForecastHour]:
         """Retrieve hourly forecast data from AccuWeather."""
         forecast = []
@@ -324,7 +324,8 @@ class AccuWeather:
             assert self._location_key is not None  # noqa: S101
 
         url = _construct_url(
-            ATTR_FORECAST_HOURLY_12,
+            ATTR_FORECAST_HOURLY,
+            hours=str(hours),
             api_key=self._api_key,
             location_key=self._location_key,
             metric=str(metric).lower(),

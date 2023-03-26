@@ -3,7 +3,7 @@ from __future__ import annotations
 
 ATTR_CURRENT_CONDITIONS: str = "currentconditions"
 ATTR_FORECAST_DAILY: str = "forecasts"
-ATTR_FORECAST_HOURLY_12: str = "forecasts_hourly"
+ATTR_FORECAST_HOURLY: str = "forecasts_hourly"
 ATTR_GEOPOSITION: str = "geoposition"
 
 MAX_API_KEY_LENGTH = 32
@@ -24,7 +24,7 @@ URLS: dict[str, str] = {
     ATTR_GEOPOSITION: "locations/v1/cities/geoposition/search?apikey={api_key}&q={lat}%2C{lon}",
     ATTR_CURRENT_CONDITIONS: "currentconditions/v1/{location_key}?apikey={api_key}&details=true",
     ATTR_FORECAST_DAILY: "forecasts/v1/daily/{days}day/{location_key}?apikey={api_key}&details=true&metric={metric}",
-    ATTR_FORECAST_HOURLY_12: "forecasts/v1/hourly/12hour/{location_key}?apikey={api_key}&details=true&metric={metric}",
+    ATTR_FORECAST_HOURLY: "forecasts/v1/hourly/{hours}hour/{location_key}?apikey={api_key}&details=true&metric={metric}",
 }
 
 UNIT_DEGREES: int = 99
