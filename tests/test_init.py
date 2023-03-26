@@ -26,7 +26,7 @@ VALID_API_KEY = "32-character-string-1234567890qw"
 @pytest.mark.asyncio
 async def test_get_location():
     """Test with valid location data."""
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/location.json", encoding="utf-8") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
@@ -50,11 +50,11 @@ async def test_get_location():
 
 
 @pytest.mark.asyncio
-async def test_get_current_conditions():
+async def test_get_current_conditions_metric():
     """Test with valid current condition data."""
-    with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/current_conditions.json", encoding="utf-8") as file:
         current_condition_data = json.load(file)
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/location.json", encoding="utf-8") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
@@ -143,9 +143,9 @@ async def test_get_current_conditions():
 @pytest.mark.asyncio
 async def test_get_current_conditions_imperial():
     """Test with valid current condition data."""
-    with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/current_conditions.json", encoding="utf-8") as file:
         current_condition_data = json.load(file)
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/location.json", encoding="utf-8") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
@@ -232,11 +232,11 @@ async def test_get_current_conditions_imperial():
 
 
 @pytest.mark.asyncio
-async def test_get_daily_forecast():
+async def test_get_daily_forecast_metric():
     """Test with valid forecast data."""
-    with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/daily_forecast_metric.json", encoding="utf-8") as file:
         daily_forecast_data = json.load(file)
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/location.json", encoding="utf-8") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
@@ -377,11 +377,159 @@ async def test_get_daily_forecast():
 
 
 @pytest.mark.asyncio
-async def test_get_hourly_forecast():
+async def test_get_daily_forecast_imperial():
+    """Test with valid forecast data."""
+    with open("tests/fixtures/daily_forecast_imperial.json", encoding="utf-8") as file:
+        daily_forecast_data = json.load(file)
+    with open("tests/fixtures/location.json", encoding="utf-8") as file:
+        location_data = json.load(file)
+
+    session = aiohttp.ClientSession()
+
+    with aioresponses() as session_mock:
+        session_mock.get(
+            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=false",
+            payload=daily_forecast_data,
+            headers=HEADERS,
+        )
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            payload=location_data,
+            headers=HEADERS,
+        )
+
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE, metric=False
+        )
+        forecast = await accuweather.async_get_daily_forecast()
+
+    await session.close()
+
+    assert len(forecast) == 5
+    assert forecast[0].air_quality.value == 0
+    assert forecast[0].air_quality.unit is None
+    assert forecast[0].air_quality.text == "good"
+    assert forecast[0].cloud_cover_day.value == 80
+    assert forecast[0].cloud_cover_day.unit == "%"
+    assert forecast[0].cloud_cover_night.value == 94
+    assert forecast[0].cloud_cover_night.unit == "%"
+    assert forecast[0].date_time_epoch == 1679806800
+    assert str(forecast[0].date_time) == "2023-03-26 07:00:00+02:00"
+    assert forecast[0].grass_pollen.value == 0
+    assert forecast[0].grass_pollen.unit == "p/m³"
+    assert forecast[0].grass_pollen.text == "low"
+    assert forecast[0].hours_of_ice_day.value == 0.0
+    assert forecast[0].hours_of_ice_day.unit == "h"
+    assert forecast[0].hours_of_ice_night.value == 0.0
+    assert forecast[0].hours_of_ice_night.unit == "h"
+    assert forecast[0].hours_of_precipitation_day.value == 1.0
+    assert forecast[0].hours_of_precipitation_day.unit == "h"
+    assert forecast[0].hours_of_precipitation_night.value == 1.0
+    assert forecast[0].hours_of_precipitation_night.unit == "h"
+    assert forecast[0].hours_of_rain_day.value == 1.0
+    assert forecast[0].hours_of_rain_day.unit == "h"
+    assert forecast[0].hours_of_rain_night.value == 1.0
+    assert forecast[0].hours_of_rain_night.unit == "h"
+    assert forecast[0].hours_of_snow_day.value == 0.0
+    assert forecast[0].hours_of_snow_day.unit == "h"
+    assert forecast[0].hours_of_snow_night.value == 0.0
+    assert forecast[0].hours_of_snow_night.unit == "h"
+    assert forecast[0].hours_of_sun.value == 2.6
+    assert forecast[0].hours_of_sun.unit == "h"
+    assert forecast[0].ice_probability_day.value == 0
+    assert forecast[0].ice_probability_day.unit == "%"
+    assert forecast[0].ice_probability_night.value == 0
+    assert forecast[0].ice_probability_night.unit == "%"
+    assert forecast[0].mold.value == 0
+    assert forecast[0].mold.unit == "p/m³"
+    assert forecast[0].mold.text == "low"
+    assert forecast[0].precipitation_ice_day.value == 0.0
+    assert forecast[0].precipitation_ice_day.unit == "in"
+    assert forecast[0].precipitation_ice_night.value == 0.0
+    assert forecast[0].precipitation_ice_night.unit == "in"
+    assert forecast[0].precipitation_liquid_day.value == 0.03
+    assert forecast[0].precipitation_liquid_day.unit == "in"
+    assert forecast[0].precipitation_liquid_night.value == 0.04
+    assert forecast[0].precipitation_liquid_night.unit == "in"
+    assert forecast[0].precipitation_probability_day.value == 43
+    assert forecast[0].precipitation_probability_day.unit == "%"
+    assert forecast[0].precipitation_probability_night.value == 60
+    assert forecast[0].precipitation_probability_night.unit == "%"
+    assert forecast[0].precipitation_rain_day.value == 0.03
+    assert forecast[0].precipitation_rain_day.unit == "in"
+    assert forecast[0].precipitation_rain_night.value == 0.04
+    assert forecast[0].precipitation_rain_night.unit == "in"
+    assert forecast[0].precipitation_snow_day.value == 0.0
+    assert forecast[0].precipitation_snow_day.unit == "in"
+    assert forecast[0].precipitation_snow_night.value == 0.0
+    assert forecast[0].precipitation_snow_night.unit == "in"
+    assert forecast[0].ragweed_pollen.value == 0
+    assert forecast[0].ragweed_pollen.unit == "p/m³"
+    assert forecast[0].ragweed_pollen.text == "low"
+    assert forecast[0].rain_probability_day.value == 43
+    assert forecast[0].rain_probability_day.unit == "%"
+    assert forecast[0].rain_probability_night.value == 60
+    assert forecast[0].rain_probability_night.unit == "%"
+    assert forecast[0].real_feel_temperature_max.value == 45.0
+    assert forecast[0].real_feel_temperature_max.unit == "°F"
+    assert forecast[0].real_feel_temperature_min.value == 28.0
+    assert forecast[0].real_feel_temperature_min.unit == "°F"
+    assert forecast[0].real_feel_temperature_shade_max.value == 44.0
+    assert forecast[0].real_feel_temperature_shade_max.unit == "°F"
+    assert forecast[0].real_feel_temperature_shade_min.value == 28.0
+    assert forecast[0].real_feel_temperature_shade_min.unit == "°F"
+    assert forecast[0].snow_probability_day.value == 0
+    assert forecast[0].snow_probability_day.unit == "%"
+    assert forecast[0].snow_probability_night.value == 0
+    assert forecast[0].snow_probability_night.unit == "%"
+    assert forecast[0].solar_irradiance_day.value == 2872.9
+    assert forecast[0].solar_irradiance_day.unit == "W/m²"
+    assert forecast[0].solar_irradiance_night.value == 16.4
+    assert forecast[0].solar_irradiance_night.unit == "W/m²"
+    assert forecast[0].temperature_max.value == 51.0
+    assert forecast[0].temperature_max.unit == "°F"
+    assert forecast[0].thunderstorm_probability_day.value == 9
+    assert forecast[0].thunderstorm_probability_day.unit == "%"
+    assert forecast[0].thunderstorm_probability_night.value == 12
+    assert forecast[0].thunderstorm_probability_night.unit == "%"
+    assert forecast[0].tree_pollen.value == 2
+    assert forecast[0].tree_pollen.unit == "p/m³"
+    assert forecast[0].tree_pollen.text == "low"
+    assert forecast[0].uv_index.value == 1
+    assert forecast[0].uv_index.unit is None
+    assert forecast[0].uv_index.text == "low"
+    assert forecast[0].weather_icon_day == 13
+    assert forecast[0].weather_icon_night == 12
+    assert (
+        forecast[0].weather_long_text_day
+        == "variable cloudiness with a shower in places; breezy this morning"
+    )
+    assert forecast[0].weather_long_text_night == "cloudy with a couple of showers late"
+    assert forecast[0].weather_text_day == "mostly cloudy w/ showers"
+    assert forecast[0].weather_text_night == "showers"
+    assert forecast[0].wind_direction_day.value == 255
+    assert forecast[0].wind_direction_day.unit == "°"
+    assert forecast[0].wind_direction_day.text == "wsw"
+    assert forecast[0].wind_direction_night.value == 320
+    assert forecast[0].wind_direction_night.unit == "°"
+    assert forecast[0].wind_direction_night.text == "nw"
+    assert forecast[0].wind_gust_day.value == 27.6
+    assert forecast[0].wind_gust_day.unit == "mi/h"
+    assert forecast[0].wind_gust_night.value == 16.1
+    assert forecast[0].wind_gust_night.unit == "mi/h"
+    assert forecast[0].wind_speed_day.value == 15.0
+    assert forecast[0].wind_speed_day.unit == "mi/h"
+    assert forecast[0].wind_speed_night.value == 4.6
+    assert forecast[0].wind_speed_night.unit == "mi/h"
+    assert accuweather.requests_remaining == 23
+
+
+@pytest.mark.asyncio
+async def test_get_hourly_forecast_metric():
     """Test with valid hourly_forecast data."""
-    with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/hourly_forecast_metric.json", encoding="utf-8") as file:
         hourly_forecast_data = json.load(file)
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/location.json", encoding="utf-8") as file:
         location_data = json.load(file)
 
     session = aiohttp.ClientSession()
