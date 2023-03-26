@@ -267,6 +267,24 @@ async def test_get_daily_forecast():
     assert forecast[0].wind_speed_day.unit == "km/h"
     assert forecast[0].temperature_max.value == 16.1
     assert forecast[0].temperature_max.unit == "°C"
+    assert forecast[0].air_quality.value == 0
+    assert forecast[0].air_quality.unit is None
+    assert forecast[0].air_quality.text == "good"
+    assert forecast[0].uv_index.value == 2
+    assert forecast[0].uv_index.unit is None
+    assert forecast[0].uv_index.text == "low"
+    assert forecast[0].mold.value == 300
+    assert forecast[0].mold.unit == "p/m³"
+    assert forecast[0].mold.text == "low"
+    assert forecast[0].grass_pollen.value == 0
+    assert forecast[0].grass_pollen.unit == "p/m³"
+    assert forecast[0].grass_pollen.text == "low"
+    assert forecast[0].ragweed_pollen.value == 0
+    assert forecast[0].ragweed_pollen.unit == "p/m³"
+    assert forecast[0].ragweed_pollen.text == "low"
+    assert forecast[0].tree_pollen.value == 2
+    assert forecast[0].tree_pollen.unit == "p/m³"
+    assert forecast[0].tree_pollen.text == "low"
     assert accuweather.requests_remaining == 23
 
 

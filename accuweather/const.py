@@ -28,7 +28,9 @@ URLS: dict[str, str] = {
 }
 
 UNIT_DEGREES: int = 99
+UNIT_HOUR: int = 98
 UNIT_PERCENTAGE: int = 20
+UNIT_PPM3: int = 97
 
 UNIT_MAP: dict[int, str] = {
     0: "ft",
@@ -45,5 +47,7 @@ UNIT_MAP: dict[int, str] = {
     17: "°C",
     18: "°F",
     20: "%",
+    97: "p/m³",
+    98: "h",
     99: "°",
 }

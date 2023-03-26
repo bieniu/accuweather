@@ -3,7 +3,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from .const import ENDPOINT, MAX_API_KEY_LENGTH, MAX_LATITUDE, MAX_LONGITUDE, URLS
+from .const import (
+    ENDPOINT,
+    MAX_API_KEY_LENGTH,
+    MAX_LATITUDE,
+    MAX_LONGITUDE,
+    UNIT_PPM3,
+    URLS,
+)
 from .model import Value
 
 
@@ -35,10 +42,12 @@ def _construct_url(arg: str, **kwargs: str) -> str:
     return ENDPOINT + URLS[arg].format(**kwargs)
 
 
-def _get_pollen(pollen_list: list[dict[str, Any]], name: str) -> Value:
-    """Return Value object for exact pollen."""
-    for item in pollen_list:
+def _get_pollutant(pollutant_list: list[dict[str, Any]], name: str) -> Value:
+    """Return Value object for exact pollutant."""
+    unit = UNIT_PPM3 if name in ("Grass", "Mold", "Tree", "Ragweed") else None
+
+    for item in pollutant_list:
         if item["Name"] == name:
-            return Value(value=item["Value"], text=item["Category"])
+            return Value(item["Value"], unit, item["Category"])
 
     return Value()

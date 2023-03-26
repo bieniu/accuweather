@@ -69,10 +69,14 @@ class CurrentCondition(AccuWeatherData):
 class ForecastDay(AccuWeatherData):
     """Forecast per day class."""
 
+    air_quality: Value
     cloud_cover_day: Value
     cloud_cover_night: Value
     date_time_epoch: int
     date_time: datetime
+    grass_pollen: Value
+    hours_of_sun: Value
+    mold: Value
     precipitation_ice_day: Value
     precipitation_ice_night: Value
     precipitation_liquid_day: Value
@@ -83,12 +87,14 @@ class ForecastDay(AccuWeatherData):
     precipitation_rain_night: Value
     precipitation_snow_day: Value
     precipitation_snow_night: Value
+    ragweed_pollen: Value
     real_feel_temperature_max: Value
     real_feel_temperature_min: Value
     real_feel_temperature_shade_max: Value
     real_feel_temperature_shade_min: Value
     temperature_max: Value
     temperature_min: Value
+    tree_pollen: Value
     uv_index: Value
     weather_icon_day: int
     weather_icon_night: int

@@ -17,6 +17,7 @@ from .const import (
     HTTP_HEADERS,
     REQUESTS_EXCEEDED,
     UNIT_DEGREES,
+    UNIT_HOUR,
     UNIT_PERCENTAGE,
 )
 from .exceptions import (
@@ -26,7 +27,7 @@ from .exceptions import (
     RequestsExceededError,
 )
 from .model import CurrentCondition, ForecastDay, ForecastHour, Value
-from .utils import _construct_url, _get_pollen, _valid_api_key, _valid_coordinates
+from .utils import _construct_url, _get_pollutant, _valid_api_key, _valid_coordinates
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -238,12 +239,16 @@ class AccuWeather:
         for day in data["DailyForecasts"]:
             forecast.append(
                 ForecastDay(
+                    air_quality=_get_pollutant(day["AirAndPollen"], "AirQuality"),
                     cloud_cover_day=Value(day["Day"]["CloudCover"], UNIT_PERCENTAGE),
                     cloud_cover_night=Value(
                         day["Night"]["CloudCover"], UNIT_PERCENTAGE
                     ),
                     date_time=datetime.fromisoformat(day["Date"]),
                     date_time_epoch=day["EpochDate"],
+                    grass_pollen=_get_pollutant(day["AirAndPollen"], "Grass"),
+                    hours_of_sun=Value(day["HoursOfSun"], UNIT_HOUR),
+                    mold=_get_pollutant(day["AirAndPollen"], "Mold"),
                     precipitation_ice_day=Value(
                         day["Day"]["Ice"]["Value"], day["Day"]["Ice"]["UnitType"]
                     ),
@@ -276,6 +281,7 @@ class AccuWeather:
                     precipitation_snow_night=Value(
                         day["Night"]["Snow"]["Value"], day["Night"]["Snow"]["UnitType"]
                     ),
+                    ragweed_pollen=_get_pollutant(day["AirAndPollen"], "Ragweed"),
                     real_feel_temperature_max=Value(
                         day["RealFeelTemperature"]["Maximum"]["Value"],
                         day["RealFeelTemperature"]["Maximum"]["UnitType"],
@@ -304,7 +310,8 @@ class AccuWeather:
                         day["Temperature"]["Minimum"]["Value"],
                         day["Temperature"]["Minimum"]["UnitType"],
                     ),
-                    uv_index=_get_pollen(day["AirAndPollen"], "UVIndex"),
+                    tree_pollen=_get_pollutant(day["AirAndPollen"], "Tree"),
+                    uv_index=_get_pollutant(day["AirAndPollen"], "UVIndex"),
                     weather_icon_day=day["Day"]["Icon"],
                     weather_icon_night=day["Night"]["Icon"],
                     weather_text_day=day["Day"]["IconPhrase"].lower(),
