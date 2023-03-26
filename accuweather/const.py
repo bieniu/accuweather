@@ -35,6 +35,7 @@ UNIT_MAP: dict[int, str] = {
     1: "in",
     2: "mi",
     3: "mm",
+    4: "cm",
     5: "m",
     6: "km",
     7: "km/h",
