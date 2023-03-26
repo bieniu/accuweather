@@ -1,0 +1,1280 @@
+[
+    {
+        "DateTime": "2023-03-26T22:00:00+02:00",
+        "EpochDateTime": 1679860800,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 42.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 44.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Chilly"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 44.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Chilly"
+        },
+        "WetBulbTemperature": {
+            "Value": 40.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 2.3,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 231,
+                "Localized": "SW",
+                "English": "SW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 6.9,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 84,
+        "IndoorRelativeHumidity": 32,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 22700.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 20,
+        "ThunderstormProbability": 0,
+        "RainProbability": 20,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 93,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=1&hbhhour=22&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=1&hbhhour=22&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-26T23:00:00+02:00",
+        "EpochDateTime": 1679864400,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 41.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 42.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Chilly"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 42.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Chilly"
+        },
+        "WetBulbTemperature": {
+            "Value": 39.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 2.3,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 238,
+                "Localized": "WSW",
+                "English": "WSW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 9.2,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 87,
+        "IndoorRelativeHumidity": 32,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 22700.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 20,
+        "ThunderstormProbability": 0,
+        "RainProbability": 20,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 90,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=1&hbhhour=23&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=1&hbhhour=23&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T00:00:00+02:00",
+        "EpochDateTime": 1679868000,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 40.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 40.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Chilly"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 40.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Chilly"
+        },
+        "WetBulbTemperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 3.5,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 253,
+                "Localized": "WSW",
+                "English": "WSW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 6.9,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 89,
+        "IndoorRelativeHumidity": 31,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 2100.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 20,
+        "ThunderstormProbability": 0,
+        "RainProbability": 20,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 93,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=0&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=0&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T01:00:00+02:00",
+        "EpochDateTime": 1679871600,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 39.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 39.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 39.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 36.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 3.5,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 288,
+                "Localized": "WNW",
+                "English": "WNW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 6.9,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 90,
+        "IndoorRelativeHumidity": 31,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 2100.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 25,
+        "ThunderstormProbability": 0,
+        "RainProbability": 25,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 96,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=1&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=1&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T02:00:00+02:00",
+        "EpochDateTime": 1679875200,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 36.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 4.6,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 331,
+                "Localized": "NNW",
+                "English": "NNW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 8.1,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 91,
+        "IndoorRelativeHumidity": 30,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 2100.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 48,
+        "ThunderstormProbability": 9,
+        "RainProbability": 48,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=2&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=2&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T03:00:00+02:00",
+        "EpochDateTime": 1679878800,
+        "WeatherIcon": 12,
+        "IconPhrase": "Showers",
+        "HasPrecipitation": true,
+        "PrecipitationType": "Rain",
+        "PrecipitationIntensity": "Light",
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 34.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 34.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 36.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 4.6,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 19,
+                "Localized": "NNE",
+                "English": "NNE"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 9.2,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 91,
+        "IndoorRelativeHumidity": 30,
+        "Visibility": {
+            "Value": 6.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 2100.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 52,
+        "ThunderstormProbability": 10,
+        "RainProbability": 52,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.02,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.02,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=3&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=3&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T04:00:00+02:00",
+        "EpochDateTime": 1679882400,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 39.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 36.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 4.6,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 17,
+                "Localized": "NNE",
+                "English": "NNE"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 11.5,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 90,
+        "IndoorRelativeHumidity": 31,
+        "Visibility": {
+            "Value": 6.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 2100.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 48,
+        "ThunderstormProbability": 9,
+        "RainProbability": 48,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=4&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=4&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T05:00:00+02:00",
+        "EpochDateTime": 1679886000,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 39.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 36.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 5.8,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 13,
+                "Localized": "NNE",
+                "English": "NNE"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 12.7,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 90,
+        "IndoorRelativeHumidity": 31,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 2100.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 43,
+        "ThunderstormProbability": 8,
+        "RainProbability": 43,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=5&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=5&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T06:00:00+02:00",
+        "EpochDateTime": 1679889600,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": false,
+        "Temperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 34.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 34.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 35.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 6.9,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 355,
+                "Localized": "N",
+                "English": "N"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 13.8,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 89,
+        "IndoorRelativeHumidity": 30,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 2100.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 47,
+        "ThunderstormProbability": 9,
+        "RainProbability": 47,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 0.0,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=6&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=6&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T07:00:00+02:00",
+        "EpochDateTime": 1679893200,
+        "WeatherIcon": 12,
+        "IconPhrase": "Showers",
+        "HasPrecipitation": true,
+        "PrecipitationType": "Rain",
+        "PrecipitationIntensity": "Light",
+        "IsDaylight": true,
+        "Temperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 28.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 28.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 36.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 34.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 9.2,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 344,
+                "Localized": "NNW",
+                "English": "NNW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 16.1,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 87,
+        "IndoorRelativeHumidity": 42,
+        "Visibility": {
+            "Value": 6.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 1400.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 51,
+        "ThunderstormProbability": 10,
+        "RainProbability": 51,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.02,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.02,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 16.4,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=7&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=7&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T08:00:00+02:00",
+        "EpochDateTime": 1679896800,
+        "WeatherIcon": 18,
+        "IconPhrase": "Rain",
+        "HasPrecipitation": true,
+        "PrecipitationType": "Rain",
+        "PrecipitationIntensity": "Light",
+        "IsDaylight": true,
+        "Temperature": {
+            "Value": 37.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 25.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 25.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 35.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 32.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 11.5,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 337,
+                "Localized": "NNW",
+                "English": "NNW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 17.3,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 83,
+        "IndoorRelativeHumidity": 41,
+        "Visibility": {
+            "Value": 6.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 1400.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 56,
+        "ThunderstormProbability": 0,
+        "RainProbability": 56,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.03,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.03,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 85.3,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=8&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=8&lang=en-us"
+    },
+    {
+        "DateTime": "2023-03-27T09:00:00+02:00",
+        "EpochDateTime": 1679900400,
+        "WeatherIcon": 7,
+        "IconPhrase": "Cloudy",
+        "HasPrecipitation": false,
+        "IsDaylight": true,
+        "Temperature": {
+            "Value": 38.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "RealFeelTemperature": {
+            "Value": 28.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "RealFeelTemperatureShade": {
+            "Value": 27.0,
+            "Unit": "F",
+            "UnitType": 18,
+            "Phrase": "Cold"
+        },
+        "WetBulbTemperature": {
+            "Value": 35.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "DewPoint": {
+            "Value": 31.0,
+            "Unit": "F",
+            "UnitType": 18
+        },
+        "Wind": {
+            "Speed": {
+                "Value": 12.7,
+                "Unit": "mi/h",
+                "UnitType": 9
+            },
+            "Direction": {
+                "Degrees": 332,
+                "Localized": "NNW",
+                "English": "NNW"
+            }
+        },
+        "WindGust": {
+            "Speed": {
+                "Value": 19.6,
+                "Unit": "mi/h",
+                "UnitType": 9
+            }
+        },
+        "RelativeHumidity": 77,
+        "IndoorRelativeHumidity": 40,
+        "Visibility": {
+            "Value": 10.0,
+            "Unit": "mi",
+            "UnitType": 2
+        },
+        "Ceiling": {
+            "Value": 1400.0,
+            "Unit": "ft",
+            "UnitType": 0
+        },
+        "UVIndex": 0,
+        "UVIndexText": "Low",
+        "PrecipitationProbability": 49,
+        "ThunderstormProbability": 0,
+        "RainProbability": 49,
+        "SnowProbability": 0,
+        "IceProbability": 0,
+        "TotalLiquid": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Rain": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Snow": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "Ice": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "CloudCover": 100,
+        "Evapotranspiration": {
+            "Value": 0.0,
+            "Unit": "in",
+            "UnitType": 1
+        },
+        "SolarIrradiance": {
+            "Value": 141.9,
+            "Unit": "W/m\u00b2",
+            "UnitType": 33
+        },
+        "MobileLink": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=9&lang=en-us",
+        "Link": "http://www.accuweather.com/en/pl/pitek/268068/hourly-weather-forecast/268068?day=2&hbhhour=9&lang=en-us"
+    }
+]
