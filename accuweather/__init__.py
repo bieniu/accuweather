@@ -244,10 +244,28 @@ class AccuWeather:
                     cloud_cover_night=Value(
                         day["Night"]["CloudCover"], UNIT_PERCENTAGE
                     ),
-                    date_time=datetime.fromisoformat(day["Date"]),
                     date_time_epoch=day["EpochDate"],
+                    date_time=datetime.fromisoformat(day["Date"]),
                     grass_pollen=_get_pollutant(day["AirAndPollen"], "Grass"),
+                    hours_of_ice_day=Value(day["Day"]["HoursOfIce"], UNIT_HOUR),
+                    hours_of_ice_night=Value(day["Night"]["HoursOfIce"], UNIT_HOUR),
+                    hours_of_precipitation_day=Value(
+                        day["Day"]["HoursOfPrecipitation"], UNIT_HOUR
+                    ),
+                    hours_of_precipitation_night=Value(
+                        day["Night"]["HoursOfPrecipitation"], UNIT_HOUR
+                    ),
+                    hours_of_rain_day=Value(day["Day"]["HoursOfRain"], UNIT_HOUR),
+                    hours_of_rain_night=Value(day["Night"]["HoursOfRain"], UNIT_HOUR),
+                    hours_of_snow_day=Value(day["Day"]["HoursOfSnow"], UNIT_HOUR),
+                    hours_of_snow_night=Value(day["Night"]["HoursOfSnow"], UNIT_HOUR),
                     hours_of_sun=Value(day["HoursOfSun"], UNIT_HOUR),
+                    ice_probability_day=Value(
+                        day["Day"]["IceProbability"], UNIT_PERCENTAGE
+                    ),
+                    ice_probability_night=Value(
+                        day["Night"]["IceProbability"], UNIT_PERCENTAGE
+                    ),
                     mold=_get_pollutant(day["AirAndPollen"], "Mold"),
                     precipitation_ice_day=Value(
                         day["Day"]["Ice"]["Value"], day["Day"]["Ice"]["UnitType"]
@@ -282,6 +300,12 @@ class AccuWeather:
                         day["Night"]["Snow"]["Value"], day["Night"]["Snow"]["UnitType"]
                     ),
                     ragweed_pollen=_get_pollutant(day["AirAndPollen"], "Ragweed"),
+                    rain_probability_day=Value(
+                        day["Day"]["RainProbability"], UNIT_PERCENTAGE
+                    ),
+                    rain_probability_night=Value(
+                        day["Night"]["RainProbability"], UNIT_PERCENTAGE
+                    ),
                     real_feel_temperature_max=Value(
                         day["RealFeelTemperature"]["Maximum"]["Value"],
                         day["RealFeelTemperature"]["Maximum"]["UnitType"],
@@ -302,6 +326,26 @@ class AccuWeather:
                         day["RealFeelTemperatureShade"]["Minimum"]["UnitType"],
                         day["RealFeelTemperatureShade"]["Minimum"]["Phrase"],
                     ),
+                    snow_probability_day=Value(
+                        day["Day"]["SnowProbability"], UNIT_PERCENTAGE
+                    ),
+                    snow_probability_night=Value(
+                        day["Night"]["SnowProbability"], UNIT_PERCENTAGE
+                    ),
+                    solar_irradiance_day=Value(
+                        day["Day"]["SolarIrradiance"]["Value"],
+                        day["Day"]["SolarIrradiance"]["UnitType"],
+                    ),
+                    solar_irradiance_night=Value(
+                        day["Night"]["SolarIrradiance"]["Value"],
+                        day["Night"]["SolarIrradiance"]["UnitType"],
+                    ),
+                    thunderstorm_probability_day=Value(
+                        day["Day"]["ThunderstormProbability"], UNIT_PERCENTAGE
+                    ),
+                    thunderstorm_probability_night=Value(
+                        day["Night"]["ThunderstormProbability"], UNIT_PERCENTAGE
+                    ),
                     temperature_max=Value(
                         day["Temperature"]["Maximum"]["Value"],
                         day["Temperature"]["Maximum"]["UnitType"],
@@ -316,6 +360,8 @@ class AccuWeather:
                     weather_icon_night=day["Night"]["Icon"],
                     weather_text_day=day["Day"]["IconPhrase"].lower(),
                     weather_text_night=day["Night"]["IconPhrase"].lower(),
+                    weather_long_text_day=day["Day"]["LongPhrase"].lower(),
+                    weather_long_text_night=day["Night"]["LongPhrase"].lower(),
                     wind_direction_day=Value(
                         day["Day"]["Wind"]["Direction"]["Degrees"],
                         UNIT_DEGREES,
