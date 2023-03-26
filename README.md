@@ -17,12 +17,14 @@ To generate API key go to https://developer.accuweather.com/user/register and af
 ## How to use package
 ```python
 """Example of usage."""
+"""Example of usage."""
 import asyncio
 import logging
 
 from aiohttp import ClientError, ClientSession
 
-from accuweather import AccuWeather, AccuweatherError
+from accuweather import AccuWeather
+from accuweather.exceptions import AccuweatherError
 
 LATITUDE = 52.0677904
 LONGITUDE = 19.4795644
@@ -37,11 +39,15 @@ async def main():
     async with ClientSession() as websession:
         try:
             accuweather = AccuWeather(
-                API_KEY, websession, latitude=LATITUDE, longitude=LONGITUDE,
+                API_KEY,
+                websession,
+                latitude=LATITUDE,
+                longitude=LONGITUDE,
+                metric=True,
             )
             current_conditions = await accuweather.async_get_current_conditions()
-            forecast = await accuweather.async_get_forecast(metric=True)
-            forecast_hourly = await accuweather.async_get_forecast_hourly(metric=True)
+            forecast = await accuweather.async_get_daily_forecast(days=5)
+            forecast_hourly = await accuweather.async_get_hourly_forecast(hours=12)
         except (AccuweatherError, ClientError) as error:
             print(f"Error: {error}")
         else:
