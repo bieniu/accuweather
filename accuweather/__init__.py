@@ -122,8 +122,8 @@ class AccuWeather:
                 data["Ceiling"][self.unit_system]["UnitType"],
             ),
             cloud_cover=Value(data["CloudCover"], UNIT_PERCENTAGE),
-            date=datetime.fromisoformat(data["LocalObservationDateTime"]),
-            date_epoch=data["EpochTime"],
+            date_time=datetime.fromisoformat(data["LocalObservationDateTime"]),
+            date_time_epoch=data["EpochTime"],
             dew_point=Value(
                 data["DewPoint"][self.unit_system]["Value"],
                 data["DewPoint"][self.unit_system]["UnitType"],
@@ -213,8 +213,8 @@ class AccuWeather:
                     cloud_cover_night=Value(
                         day["Night"]["CloudCover"], UNIT_PERCENTAGE
                     ),
-                    date=datetime.fromisoformat(day["Date"]),
-                    date_epoch=day["EpochDate"],
+                    date_time=datetime.fromisoformat(day["Date"]),
+                    date_time_epoch=day["EpochDate"],
                     precipitation_ice_day=Value(
                         day["Day"]["Ice"]["Value"], day["Day"]["Ice"]["UnitType"]
                     ),
@@ -336,8 +336,8 @@ class AccuWeather:
             forecast.append(
                 ForecastHour(
                     cloud_cover=Value(hour["CloudCover"], UNIT_PERCENTAGE),
-                    date=datetime.fromisoformat(hour["DateTime"]),
-                    date_epoch=hour["EpochDateTime"],
+                    date_time=datetime.fromisoformat(hour["DateTime"]),
+                    date_time_epoch=hour["EpochDateTime"],
                     precipitation_ice=Value(
                         hour["Ice"]["Value"], hour["Ice"]["UnitType"]
                     ),

@@ -35,11 +35,11 @@ class CurrentCondition(AccuWeatherData):
     apparent_temperature: Value
     ceiling: Value
     cloud_cover: Value
+    date_time_epoch: int
+    date_time: datetime
     dew_point: Value
     indoor_relative_humidity: Value
     is_day_time: bool
-    date: datetime
-    date_epoch: int
     precipitation_past_hour: Value
     precipitation_type: str | None
     pressure: Value
@@ -64,8 +64,8 @@ class ForecastDay(AccuWeatherData):
 
     cloud_cover_day: Value
     cloud_cover_night: Value
-    date_epoch: int
-    date: datetime
+    date_time_epoch: int
+    date_time: datetime
     precipitation_ice_day: Value
     precipitation_ice_night: Value
     precipitation_liquid_day: Value
@@ -100,15 +100,15 @@ class ForecastHour(AccuWeatherData):
     """Forecast per hour class."""
 
     cloud_cover: Value
-    date_epoch: int
-    date: datetime
+    date_time_epoch: int
+    date_time: datetime
     precipitation_ice: Value
     precipitation_liquid: Value
     precipitation_probability: Value
     precipitation_rain: Value
     precipitation_snow: Value
-    real_feel_temperature: Value
     real_feel_temperature_shade: Value
+    real_feel_temperature: Value
     temperature: Value
     uv_index: Value
     weather_icon: int
