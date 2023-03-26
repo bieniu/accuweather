@@ -25,9 +25,13 @@ async def main():
                 latitude=LATITUDE,
                 longitude=LONGITUDE,
             )
-            current_conditions = await accuweather.async_get_current_conditions()
+            current_conditions = await accuweather.async_get_current_conditions(
+                metric=True
+            )
             forecast = await accuweather.async_get_daily_forecast(days=5, metric=True)
-            forecast_hourly = await accuweather.async_get_forecast_hourly(metric=True)
+            forecast_hourly = await accuweather.async_get_hourly_forecast(
+                hours=12, metric=True
+            )
         except (AccuweatherError, ClientError) as error:
             print(f"Error: {error}")
         else:

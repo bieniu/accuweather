@@ -311,7 +311,7 @@ class AccuWeather:
 
         return forecast
 
-    async def async_get_forecast_hourly(
+    async def async_get_hourly_forecast(
         self, hours: int = 12, metric: bool = True
     ) -> list[ForecastHour]:
         """Retrieve hourly forecast data from AccuWeather."""
