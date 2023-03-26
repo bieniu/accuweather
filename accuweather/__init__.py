@@ -81,10 +81,7 @@ class AccuWeather:
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 
-        if "hourly" in url:
-            return data
-
-        return data if isinstance(data, dict) else data[0]
+        return data
 
     async def async_get_location(self) -> None:
         """Retrieve location data from AccuWeather."""
@@ -113,7 +110,7 @@ class AccuWeather:
             api_key=self._api_key,
             location_key=self._location_key,
         )
-        data = await self._async_get_data(url)
+        data = (await self._async_get_data(url))[0]
 
         return CurrentCondition(
             apparent_temperature=Value(
