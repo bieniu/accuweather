@@ -44,6 +44,7 @@ async def main():
                 latitude=LATITUDE,
                 longitude=LONGITUDE,
                 metric=True,
+                language="pl",
             )
             current_conditions = await accuweather.async_get_current_conditions()
             forecast = await accuweather.async_get_daily_forecast(days=5)

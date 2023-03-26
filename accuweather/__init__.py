@@ -15,6 +15,7 @@ from .const import (
     ATTR_FORECAST_HOURLY,
     ATTR_GEOPOSITION,
     HTTP_HEADERS,
+    LANGUAGE_MAP,
     REQUESTS_EXCEEDED,
     UNIT_DEGREES,
     UNIT_HOUR,
@@ -43,6 +44,7 @@ class AccuWeather:
         longitude: float | None = None,
         location_key: str | None = None,
         metric: bool = True,
+        language: str = "en",
     ) -> None:
         """Initialize."""
         if not _valid_api_key(api_key):
@@ -60,6 +62,7 @@ class AccuWeather:
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
         self.metric = metric
+        self.language = LANGUAGE_MAP.get(language, "en-us")
 
     async def _async_get_data(self, url: str) -> Any:
         """Retrieve data from AccuWeather API."""
@@ -90,6 +93,7 @@ class AccuWeather:
             api_key=self._api_key,
             lat=str(self.latitude),
             lon=str(self.longitude),
+            language=self.language,
         )
         data = await self._async_get_data(url)
         self._location_key = data["Key"]
@@ -109,6 +113,7 @@ class AccuWeather:
             ATTR_CURRENT_CONDITIONS,
             api_key=self._api_key,
             location_key=self._location_key,
+            language=self.language,
         )
         data = (await self._async_get_data(url))[0]
 
@@ -230,6 +235,7 @@ class AccuWeather:
             api_key=self._api_key,
             location_key=self._location_key,
             metric=str(self.metric).lower(),
+            language=self.language,
         )
         data = await self._async_get_data(url)
 
@@ -414,6 +420,7 @@ class AccuWeather:
             api_key=self._api_key,
             location_key=self._location_key,
             metric=str(self.metric).lower(),
+            language=self.language,
         )
         data = await self._async_get_data(url)
 

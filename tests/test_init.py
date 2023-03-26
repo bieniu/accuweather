@@ -33,7 +33,7 @@ async def test_get_location():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -61,12 +61,12 @@ async def test_get_current_conditions_metric():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
+            "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true&language=en-us",
             payload=current_condition_data,
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -152,12 +152,12 @@ async def test_get_current_conditions_imperial():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
+            "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true&language=en-us",
             payload=current_condition_data,
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -243,12 +243,12 @@ async def test_get_daily_forecast_metric():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=true",
+            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=true&language=en-us",
             payload=daily_forecast_data,
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -388,12 +388,12 @@ async def test_get_daily_forecast_imperial():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=false",
+            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=false&language=en-us",
             payload=daily_forecast_data,
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -540,12 +540,12 @@ async def test_get_hourly_forecast_metric():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=true",
+            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=true&language=en-us",
             payload=hourly_forecast_data,
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -630,12 +630,12 @@ async def test_get_hourly_forecast_imperial():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=false",
+            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=false&language=en-us",
             payload=hourly_forecast_data,
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -728,7 +728,7 @@ async def test_invalid_api_key_2():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true",
+            "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true&language=en-us",
             status=HTTPStatus.UNAUTHORIZED.value,
         )
         accuweather = AccuWeather(VALID_API_KEY, session, location_key=LOCATION_KEY)
@@ -770,7 +770,7 @@ async def test_api_error():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=payload,
             status=404,
         )
@@ -797,7 +797,7 @@ async def test_requests_exceeded_error():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
             payload=payload,
             status=503,
         )
