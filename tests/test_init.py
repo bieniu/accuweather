@@ -260,31 +260,119 @@ async def test_get_daily_forecast():
 
     await session.close()
 
-    assert forecast[0].weather_icon_day == 7
-    assert forecast[0].precipitation_probability_day.value == 25
-    assert forecast[0].precipitation_probability_day.unit == "%"
-    assert forecast[0].wind_speed_day.value == 22.2
-    assert forecast[0].wind_speed_day.unit == "km/h"
-    assert forecast[0].temperature_max.value == 16.1
-    assert forecast[0].temperature_max.unit == "°C"
+    assert len(forecast) == 5
     assert forecast[0].air_quality.value == 0
     assert forecast[0].air_quality.unit is None
     assert forecast[0].air_quality.text == "good"
-    assert forecast[0].uv_index.value == 2
-    assert forecast[0].uv_index.unit is None
-    assert forecast[0].uv_index.text == "low"
-    assert forecast[0].mold.value == 300
-    assert forecast[0].mold.unit == "p/m³"
-    assert forecast[0].mold.text == "low"
+    assert forecast[0].cloud_cover_day.value == 91
+    assert forecast[0].cloud_cover_day.unit == "%"
+    assert forecast[0].cloud_cover_night.value == 85
+    assert forecast[0].cloud_cover_night.unit == "%"
+    assert forecast[0].date_time_epoch == 1679551200
+    assert str(forecast[0].date_time) == "2023-03-23 07:00:00+01:00"
     assert forecast[0].grass_pollen.value == 0
     assert forecast[0].grass_pollen.unit == "p/m³"
     assert forecast[0].grass_pollen.text == "low"
+    assert forecast[0].hours_of_ice_day.value == 0.0
+    assert forecast[0].hours_of_ice_day.unit == "h"
+    assert forecast[0].hours_of_ice_night.value == 0.0
+    assert forecast[0].hours_of_ice_night.unit == "h"
+    assert forecast[0].hours_of_precipitation_day.value == 0.0
+    assert forecast[0].hours_of_precipitation_day.unit == "h"
+    assert forecast[0].hours_of_precipitation_night.value == 0.0
+    assert forecast[0].hours_of_precipitation_night.unit == "h"
+    assert forecast[0].hours_of_rain_day.value == 0.0
+    assert forecast[0].hours_of_rain_day.unit == "h"
+    assert forecast[0].hours_of_rain_night.value == 0.0
+    assert forecast[0].hours_of_rain_night.unit == "h"
+    assert forecast[0].hours_of_snow_day.value == 0.0
+    assert forecast[0].hours_of_snow_day.unit == "h"
+    assert forecast[0].hours_of_snow_night.value == 0.0
+    assert forecast[0].hours_of_snow_night.unit == "h"
+    assert forecast[0].hours_of_sun.value == 1.4
+    assert forecast[0].hours_of_sun.unit == "h"
+    assert forecast[0].ice_probability_day.value == 0
+    assert forecast[0].ice_probability_day.unit == "%"
+    assert forecast[0].ice_probability_night.value == 0
+    assert forecast[0].ice_probability_night.unit == "%"
+    assert forecast[0].mold.value == 300
+    assert forecast[0].mold.unit == "p/m³"
+    assert forecast[0].mold.text == "low"
+    assert forecast[0].precipitation_ice_day.value == 0.0
+    assert forecast[0].precipitation_ice_day.unit == "mm"
+    assert forecast[0].precipitation_ice_night.value == 0.0
+    assert forecast[0].precipitation_ice_night.unit == "mm"
+    assert forecast[0].precipitation_liquid_day.value == 0.0
+    assert forecast[0].precipitation_liquid_day.unit == "mm"
+    assert forecast[0].precipitation_liquid_night.value == 0.0
+    assert forecast[0].precipitation_liquid_night.unit == "mm"
+    assert forecast[0].precipitation_probability_day.value == 25
+    assert forecast[0].precipitation_probability_day.unit == "%"
+    assert forecast[0].precipitation_probability_night.value == 25
+    assert forecast[0].precipitation_probability_night.unit == "%"
+    assert forecast[0].precipitation_rain_day.value == 0.0
+    assert forecast[0].precipitation_rain_day.unit == "mm"
+    assert forecast[0].precipitation_rain_night.value == 0.0
+    assert forecast[0].precipitation_rain_night.unit == "mm"
+    assert forecast[0].precipitation_snow_day.value == 0.0
+    assert forecast[0].precipitation_snow_day.unit == "cm"
+    assert forecast[0].precipitation_snow_night.value == 0.0
+    assert forecast[0].precipitation_snow_night.unit == "cm"
     assert forecast[0].ragweed_pollen.value == 0
     assert forecast[0].ragweed_pollen.unit == "p/m³"
     assert forecast[0].ragweed_pollen.text == "low"
+    assert forecast[0].rain_probability_day.value == 25
+    assert forecast[0].rain_probability_day.unit == "%"
+    assert forecast[0].rain_probability_night.value == 25
+    assert forecast[0].rain_probability_night.unit == "%"
+    assert forecast[0].real_feel_temperature_max.value == 13.4
+    assert forecast[0].real_feel_temperature_max.unit == "°C"
+    assert forecast[0].real_feel_temperature_min.value == 5.9
+    assert forecast[0].real_feel_temperature_min.unit == "°C"
+    assert forecast[0].real_feel_temperature_shade_max.value == 12.9
+    assert forecast[0].real_feel_temperature_shade_max.unit == "°C"
+    assert forecast[0].real_feel_temperature_shade_min.value == 5.9
+    assert forecast[0].real_feel_temperature_shade_min.unit == "°C"
+    assert forecast[0].snow_probability_day.value == 0
+    assert forecast[0].snow_probability_day.unit == "%"
+    assert forecast[0].snow_probability_night.value == 0
+    assert forecast[0].snow_probability_night.unit == "%"
+    assert forecast[0].solar_irradiance_day.value == 2396.9
+    assert forecast[0].solar_irradiance_day.unit == "W/m²"
+    assert forecast[0].solar_irradiance_night.value == 8.6
+    assert forecast[0].solar_irradiance_night.unit == "W/m²"
+    assert forecast[0].temperature_max.value == 16.1
+    assert forecast[0].temperature_max.unit == "°C"
+    assert forecast[0].thunderstorm_probability_day.value == 0
+    assert forecast[0].thunderstorm_probability_day.unit == "%"
+    assert forecast[0].thunderstorm_probability_night.value == 0
+    assert forecast[0].thunderstorm_probability_night.unit == "%"
     assert forecast[0].tree_pollen.value == 2
     assert forecast[0].tree_pollen.unit == "p/m³"
     assert forecast[0].tree_pollen.text == "low"
+    assert forecast[0].uv_index.value == 2
+    assert forecast[0].uv_index.unit is None
+    assert forecast[0].uv_index.text == "low"
+    assert forecast[0].weather_icon_day == 7
+    assert forecast[0].weather_icon_night == 38
+    assert forecast[0].weather_long_text_day == "cloudy and warm"
+    assert forecast[0].weather_long_text_night == "mostly cloudy and mild"
+    assert forecast[0].weather_text_day == "cloudy"
+    assert forecast[0].weather_text_night == "mostly cloudy"
+    assert forecast[0].wind_direction_day.value == 229
+    assert forecast[0].wind_direction_day.unit == "°"
+    assert forecast[0].wind_direction_day.text == "sw"
+    assert forecast[0].wind_direction_night.value == 225
+    assert forecast[0].wind_direction_night.unit == "°"
+    assert forecast[0].wind_direction_night.text == "sw"
+    assert forecast[0].wind_gust_day.value == 48.2
+    assert forecast[0].wind_gust_day.unit == "km/h"
+    assert forecast[0].wind_gust_night.value == 31.5
+    assert forecast[0].wind_gust_night.unit == "km/h"
+    assert forecast[0].wind_speed_day.value == 22.2
+    assert forecast[0].wind_speed_day.unit == "km/h"
+    assert forecast[0].wind_speed_night.value == 14.8
+    assert forecast[0].wind_speed_night.unit == "km/h"
     assert accuweather.requests_remaining == 23
 
 
