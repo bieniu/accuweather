@@ -187,7 +187,7 @@ class AccuWeather:
             await self.async_get_location()
 
         if TYPE_CHECKING:
-            assert self._location_key is not None  # noqa: S101
+            assert self._location_key is not None
 
         url = self._construct_url(
             ATTR_CURRENT_CONDITIONS,
@@ -203,7 +203,7 @@ class AccuWeather:
             await self.async_get_location()
 
         if TYPE_CHECKING:
-            assert self._location_key is not None  # noqa: S101
+            assert self._location_key is not None
 
         url = self._construct_url(
             ATTR_FORECAST_DAILY_5,
@@ -222,7 +222,7 @@ class AccuWeather:
             await self.async_get_location()
 
         if TYPE_CHECKING:
-            assert self._location_key is not None  # noqa: S101
+            assert self._location_key is not None
 
         url = self._construct_url(
             ATTR_FORECAST_HOURLY_12,
