@@ -89,8 +89,8 @@ async def test_get_current_conditions():
 
 
 @pytest.mark.asyncio
-async def test_get_forecast():
-    """Test with valid forecast data."""
+async def test_get_daily_forecast():
+    """Test with valid daily forecast data."""
     with open("tests/fixtures/forecast_data.json", encoding="utf-8") as file:
         forecast_data = json.load(file)
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
@@ -100,7 +100,7 @@ async def test_get_forecast():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
+            "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=true",
             payload=forecast_data,
             headers=HEADERS,
         )
@@ -113,7 +113,7 @@ async def test_get_forecast():
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        forecast = await accuweather.async_get_forecast()
+        forecast = await accuweather.async_get_daily_forecast()
 
     await session.close()
 
@@ -127,7 +127,7 @@ async def test_get_forecast():
 
 @pytest.mark.asyncio
 async def test_get_hourly_forecast():
-    """Test with valid hourly_forecast data."""
+    """Test with valid hourly forecast data."""
     with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
         hourly_forecast_data = json.load(file)
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
@@ -137,7 +137,7 @@ async def test_get_hourly_forecast():
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=True",
+            "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=true",
             payload=hourly_forecast_data,
             headers=HEADERS,
         )
@@ -150,7 +150,7 @@ async def test_get_hourly_forecast():
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        forecast = await accuweather.async_get_forecast_hourly()
+        forecast = await accuweather.async_get_hourly_forecast()
 
     await session.close()
 
