@@ -29,7 +29,7 @@ async def main():
                 websession,
                 latitude=LATITUDE,
                 longitude=LONGITUDE,
-                language="pl-pl",
+                language="pl",
             )
             current_conditions = await accuweather.async_get_current_conditions()
             forecast_daily = await accuweather.async_get_daily_forecast(

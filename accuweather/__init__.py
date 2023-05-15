@@ -16,6 +16,7 @@ from .const import (
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
+    LANGUAGE_MAP,
     MAX_API_KEY_LENGTH,
     MAX_LATITUDE,
     MAX_LONGITUDE,
@@ -45,7 +46,7 @@ class AccuWeather:
         latitude: float | None = None,
         longitude: float | None = None,
         location_key: str | None = None,
-        language: str = "en-us",
+        language: str = "en",
     ) -> None:
         """Initialize."""
         if not self._valid_api_key(api_key):
@@ -57,7 +58,7 @@ class AccuWeather:
 
         self.latitude = latitude
         self.longitude = longitude
-        self.language = language
+        self.language = LANGUAGE_MAP.get(language, "en-us")
         self._api_key = api_key
         self._session = session
         self._location_key = location_key
