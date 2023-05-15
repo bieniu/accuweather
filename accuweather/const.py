@@ -17,7 +17,6 @@ REQUESTS_EXCEEDED: str = "The allowed number of requests has been exceeded."
 REMOVE_FROM_CURRENT_CONDITION: tuple[str, ...] = (
     "LocalObservationDateTime",
     "EpochTime",
-    "WeatherText",
     "IsDayTime",
     "TemperatureSummary",
     "MobileLink",
