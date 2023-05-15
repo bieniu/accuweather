@@ -16,6 +16,7 @@ from .const import (
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
+    LANGUAGE_MAP,
     MAX_API_KEY_LENGTH,
     MAX_LATITUDE,
     MAX_LONGITUDE,
@@ -45,6 +46,7 @@ class AccuWeather:
         latitude: float | None = None,
         longitude: float | None = None,
         location_key: str | None = None,
+        language: str = "en",
     ) -> None:
         """Initialize."""
         if not self._valid_api_key(api_key):
@@ -56,6 +58,7 @@ class AccuWeather:
 
         self.latitude = latitude
         self.longitude = longitude
+        self.language = LANGUAGE_MAP.get(language, "en-us")
         self._api_key = api_key
         self._session = session
         self._location_key = location_key
@@ -169,6 +172,7 @@ class AccuWeather:
             api_key=self._api_key,
             lat=str(self.latitude),
             lon=str(self.longitude),
+            language=self.language,
         )
         data = await self._async_get_data(url)
         self._location_key = data["Key"]
@@ -186,6 +190,7 @@ class AccuWeather:
             ATTR_CURRENT_CONDITIONS,
             api_key=self._api_key,
             location_key=self._location_key,
+            language=self.language,
         )
         data = await self._async_get_data(url)
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
@@ -206,6 +211,7 @@ class AccuWeather:
             location_key=self._location_key,
             days=str(days),
             metric=str(metric).lower(),
+            language=self.language,
         )
         data = await self._async_get_data(url)
         return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
@@ -226,6 +232,7 @@ class AccuWeather:
             location_key=self._location_key,
             hours=str(hours),
             metric=str(metric).lower(),
+            language=self.language,
         )
         data = await self._async_get_data(url)
         return self._parse_forecast_hourly(data, REMOVE_FROM_FORECAST)
