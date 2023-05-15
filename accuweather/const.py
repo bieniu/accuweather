@@ -23,15 +23,33 @@ REMOVE_FROM_CURRENT_CONDITION: tuple[str, ...] = (
     "MobileLink",
     "Link",
 )
-REMOVE_FROM_FORECAST: tuple[str, ...] = ("Sun", "Moon", "Sources", "MobileLink", "Link")
+REMOVE_FROM_FORECAST: tuple[str, ...] = (
+    "Sun",
+    "Moon",
+    "Sources",
+    "MobileLink",
+    "Link",
+)
 TEMPERATURES: tuple[str, ...] = (
     "Temperature",
     "RealFeelTemperature",
     "RealFeelTemperatureShade",
 )
 URLS: dict[str, str] = {
-    ATTR_GEOPOSITION: "locations/v1/cities/geoposition/search?apikey={api_key}&q={lat}%2C{lon}",
-    ATTR_CURRENT_CONDITIONS: "currentconditions/v1/{location_key}?apikey={api_key}&details=true",
-    ATTR_FORECAST_DAILY: "forecasts/v1/daily/{days}day/{location_key}?apikey={api_key}&details=true&metric={metric}",
-    ATTR_FORECAST_HOURLY: "forecasts/v1/hourly/{hours}hour/{location_key}?apikey={api_key}&details=true&metric={metric}",
+    ATTR_GEOPOSITION: (
+        "locations/v1/cities/geoposition/search?apikey={api_key}"
+        "&q={lat}%2C{lon}&language={language}"
+    ),
+    ATTR_CURRENT_CONDITIONS: (
+        "currentconditions/v1/{location_key}?apikey={api_key}"
+        "&details=true&language={language}"
+    ),
+    ATTR_FORECAST_DAILY: (
+        "forecasts/v1/daily/{days}day/{location_key}?apikey={api_key}"
+        "&details=true&metric={metric}&language={language}"
+    ),
+    ATTR_FORECAST_HOURLY: (
+        "forecasts/v1/hourly/{hours}hour/{location_key}?apikey={api_key}"
+        "&details=true&metric={metric}&language={language}"
+    ),
 }
