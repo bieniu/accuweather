@@ -1,4 +1,4 @@
-"""Python wrapper for getting weather data from AccueWeather for Limited Trial."""
+"""Python wrapper for getting weather data from AccueWeather API."""
 
 from __future__ import annotations
 
