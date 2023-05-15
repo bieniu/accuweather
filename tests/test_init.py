@@ -123,6 +123,7 @@ async def test_get_forecast():
     assert forecast[0]["TemperatureMax"]["Value"] == 24.8
     assert forecast[0]["TemperatureMax"]["Unit"] == "C"
     assert forecast[0]["Ozone"]["Value"] == 23
+    assert forecast[0]["AirQuality"]["Category"] == "unhealthy"
     assert accuweather.requests_remaining == 23
 
 

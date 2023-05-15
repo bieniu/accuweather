@@ -116,7 +116,9 @@ class AccuWeather:
                 if item["Name"] == "AirQuality":
                     day[item["Type"]] = item
                 day[item["Name"]] = item
-                day[item["Name"]]["Category"] = day[item["Name"]]["Category"].lower()
+                day[item["Name"]]["Category"] = (
+                    day[item["Name"]]["Category"].split(" ")[0].lower()
+                )
                 day[item["Name"]].pop("Name")
             day.pop("AirAndPollen")
 
