@@ -107,14 +107,7 @@ class AccuWeather:
         ]
 
         for day in parsed_data:
-            # For some forecast days, the API does not provide an Ozone value.
-            day.setdefault("Ozone", {})
-            day["Ozone"].setdefault("Value")
-            day["Ozone"].setdefault("Category")
-
             for item in day["AirAndPollen"]:
-                if item["Name"] == "AirQuality":
-                    day[item["Type"]] = item
                 day[item["Name"]] = item
                 day[item["Name"]]["Category"] = day[item["Name"]]["Category"].lower()
                 day[item["Name"]].pop("Name")
