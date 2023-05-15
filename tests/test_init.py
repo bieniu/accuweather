@@ -132,6 +132,7 @@ async def test_get_daily_forecast():
     assert forecast[0]["PrecipitationIntensityDay"] == "light"
     assert forecast[0]["ShortPhraseDay"] == "Cooler with periods of rain"
     assert forecast[0]["LongPhraseDay"] == "Cooler with periods of rain"
+    assert forecast[0]["AirQuality"]["Category"] == "unhealthy"
     assert accuweather.requests_remaining == 23
 
 

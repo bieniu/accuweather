@@ -85,7 +85,7 @@
 				{
 					"Name": "AirQuality",
 					"Value": 0,
-					"Category": "Good",
+					"Category": "Unhealthy (Sensitive)",
 					"CategoryValue": 1,
 					"Type": "Ozone"
 				},

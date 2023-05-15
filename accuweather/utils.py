@@ -66,7 +66,11 @@ def parse_daily_forecast(
     for day in parsed_data:
         for item in day["AirAndPollen"]:
             day[item["Name"]] = item
-            day[item["Name"]]["Category"] = day[item["Name"]]["Category"].lower()
+            # Sometimes this state contains a space and an additional description
+            # https://github.com/home-assistant/core/issues/93115
+            day[item["Name"]]["Category"] = (
+                day[item["Name"]]["Category"].split(" ")[0].lower()
+            )
             day[item["Name"]].pop("Name")
         day.pop("AirAndPollen")
 
