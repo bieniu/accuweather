@@ -11,8 +11,8 @@ from aiohttp import ClientSession
 
 from .const import (
     ATTR_CURRENT_CONDITIONS,
-    ATTR_FORECAST_DAILY_5,
-    ATTR_FORECAST_HOURLY_12,
+    ATTR_FORECAST_DAILY,
+    ATTR_FORECAST_HOURLY,
     ATTR_GEOPOSITION,
     ENDPOINT,
     HTTP_HEADERS,
@@ -190,7 +190,9 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return self._clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
-    async def async_get_forecast(self, metric: bool = True) -> list[dict[str, Any]]:
+    async def async_get_daily_forecast(
+        self, days: int = 5, metric: bool = True
+    ) -> list[dict[str, Any]]:
         """Retrieve daily forecast data from AccuWeather."""
         if not self._location_key:
             await self.async_get_location()
@@ -199,16 +201,17 @@ class AccuWeather:
             assert self._location_key is not None
 
         url = self._construct_url(
-            ATTR_FORECAST_DAILY_5,
+            ATTR_FORECAST_DAILY,
             api_key=self._api_key,
             location_key=self._location_key,
-            metric=str(metric),
+            days=str(days),
+            metric=str(metric).lower(),
         )
         data = await self._async_get_data(url)
         return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
 
     async def async_get_forecast_hourly(
-        self, metric: bool = True
+        self, hours: int = 12, metric: bool = True
     ) -> list[dict[str, Any]]:
         """Retrieve hourly forecast data from AccuWeather."""
         if not self._location_key:
@@ -218,10 +221,11 @@ class AccuWeather:
             assert self._location_key is not None
 
         url = self._construct_url(
-            ATTR_FORECAST_HOURLY_12,
+            ATTR_FORECAST_HOURLY,
             api_key=self._api_key,
             location_key=self._location_key,
-            metric=str(metric),
+            hours=str(hours),
+            metric=str(metric).lower(),
         )
         data = await self._async_get_data(url)
         return self._parse_forecast_hourly(data, REMOVE_FROM_FORECAST)
