@@ -44,7 +44,14 @@ def clean_current_condition(
     data: dict[str, Any], to_remove: tuple[str, ...]
 ) -> dict[str, Any]:
     """Clean current condition API response."""
-    return {key: data[key] for key in data if key not in to_remove}
+    result = {key: data[key] for key in data if key not in to_remove}
+    if isinstance(result["PrecipitationType"], str):
+        result["PrecipitationType"] = result["PrecipitationType"].lower()
+    result["UVIndexText"] = result["UVIndexText"].lower()
+    result["PressureTendency"]["LocalizedText"] = result["PressureTendency"][
+        "LocalizedText"
+    ].lower()
+    return result
 
 
 def parse_daily_forecast(
@@ -68,13 +75,14 @@ def parse_daily_forecast(
             day[f"{temp}Max"] = day[temp]["Maximum"]
             day.pop(temp)
 
-        for key, value in day["Day"].items():
-            day[f"{key}Day"] = value
-        day.pop("Day")
+        for item in ("Day", "Night"):
+            for key, value in day[item].items():
+                if isinstance(value, str) and key not in ("ShortPhrase", "LongPhrase"):
+                    day[f"{key}{item}"] = value.lower()
+                else:
+                    day[f"{key}{item}"] = value
+            day.pop(item)
 
-        for key, value in day["Night"].items():
-            day[f"{key}Night"] = value
-        day.pop("Night")
     return parsed_data
 
 
@@ -82,7 +90,14 @@ def parse_hourly_forecast(
     data: list[dict[str, Any]], to_remove: tuple[str, ...]
 ) -> list[dict[str, Any]]:
     """Parse and clean hourly forecast API response."""
-    return [
+    result = [
         {key: value for key, value in item.items() if key not in to_remove}
         for item in data
     ]
+
+    for hour in result:
+        for key, value in hour.items():
+            if isinstance(value, str):
+                hour[key] = value.lower()
+
+    return result

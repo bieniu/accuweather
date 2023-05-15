@@ -78,20 +78,24 @@ async def test_get_current_conditions():
     await session.close()
 
     assert current_conditions["WeatherIcon"] == 7
-    assert isinstance(current_conditions["HasPrecipitation"], bool)
-    assert not current_conditions["HasPrecipitation"]
-    assert not current_conditions["PrecipitationType"]
-    assert current_conditions["Temperature"]["Metric"]["Value"] == 23.1
+    assert current_conditions["WeatherText"] == "Cloudy"
+    assert current_conditions["HasPrecipitation"] is False
+    assert current_conditions["PrecipitationType"] is None
+    assert current_conditions["Temperature"]["Metric"]["Value"] == 13.4
     assert current_conditions["Temperature"]["Metric"]["Unit"] == "C"
-    assert current_conditions["Temperature"]["Imperial"]["Value"] == 74
+    assert current_conditions["Temperature"]["Imperial"]["Value"] == 56
     assert current_conditions["Temperature"]["Imperial"]["Unit"] == "F"
+    assert current_conditions["UVIndex"] == 2
+    assert current_conditions["UVIndexText"] == "low"
+    assert current_conditions["PressureTendency"]["LocalizedText"] == "steady"
+
     assert accuweather.requests_remaining == 23
 
 
 @pytest.mark.asyncio
 async def test_get_daily_forecast():
     """Test with valid daily forecast data."""
-    with open("tests/fixtures/forecast_data.json", encoding="utf-8") as file:
+    with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
         forecast_data = json.load(file)
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
         location_data = json.load(file)
@@ -117,11 +121,17 @@ async def test_get_daily_forecast():
 
     await session.close()
 
-    assert forecast[0]["IconDay"] == 15
-    assert forecast[0]["PrecipitationProbabilityDay"] == 57
-    assert forecast[0]["WindDay"]["Speed"]["Value"] == 13.0
-    assert forecast[0]["TemperatureMax"]["Value"] == 24.8
+    assert forecast[0]["IconDay"] == 18
+    assert forecast[0]["IconPhraseDay"] == "rain"
+    assert forecast[0]["PrecipitationProbabilityDay"] == 91
+    assert forecast[0]["WindDay"]["Speed"]["Value"] == 16.7
+    assert forecast[0]["TemperatureMax"]["Value"] == 16.2
     assert forecast[0]["TemperatureMax"]["Unit"] == "C"
+    assert forecast[0]["UVIndex"]["Category"] == "low"
+    assert forecast[0]["PrecipitationTypeDay"] == "rain"
+    assert forecast[0]["PrecipitationIntensityDay"] == "light"
+    assert forecast[0]["ShortPhraseDay"] == "Cooler with periods of rain"
+    assert forecast[0]["LongPhraseDay"] == "Cooler with periods of rain"
     assert accuweather.requests_remaining == 23
 
 
@@ -154,10 +164,14 @@ async def test_get_hourly_forecast():
 
     await session.close()
 
-    assert forecast[0]["WeatherIcon"] == 4
-    assert forecast[0]["HasPrecipitation"] is False
+    assert forecast[0]["WeatherIcon"] == 18
+    assert forecast[0]["IconPhrase"] == "rain"
+    assert forecast[0]["HasPrecipitation"] is True
     assert forecast[0]["UVIndex"] == 2
-    assert forecast[0]["Temperature"]["Value"] == 26.3
+    assert forecast[0]["UVIndexText"] == "low"
+    assert forecast[0]["PrecipitationType"] == "rain"
+    assert forecast[0]["PrecipitationIntensity"] == "light"
+    assert forecast[0]["Temperature"]["Value"] == 14.7
     assert forecast[0]["Temperature"]["Unit"] == "C"
     assert accuweather.requests_remaining == 23
 
