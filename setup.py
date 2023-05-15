@@ -14,7 +14,7 @@ setup(
     name="accuweather",
     version=VERSION,
     author="Maciej Bieniek",
-    description="Python wrapper for getting weather data from AccuWeather servers.",
+    description="Python wrapper for getting weather data from AccuWeather API.",
     long_description=README_FILE.read_text(encoding="utf-8"),
     long_description_content_type="text/markdown",
     include_package_data=True,

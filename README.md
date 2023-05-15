@@ -6,7 +6,7 @@
 
 # accuweather
 
-Python wrapper for getting weather data from AccuWeather servers for Limited Trial package.
+Python wrapper for getting weather data from AccuWeather API.
 
 
 ## API key
@@ -32,7 +32,6 @@ from accuweather import (
 
 LATITUDE = 52.0677904
 LONGITUDE = 19.4795644
-LOCATION_KEY = "268068"
 API_KEY = "xxxxx"
 
 logging.basicConfig(level=logging.DEBUG)
@@ -43,11 +42,19 @@ async def main():
     async with ClientSession() as websession:
         try:
             accuweather = AccuWeather(
-                API_KEY, websession, latitude=LATITUDE, longitude=LONGITUDE
+                API_KEY,
+                websession,
+                latitude=LATITUDE,
+                longitude=LONGITUDE,
+                language="pl",
             )
             current_conditions = await accuweather.async_get_current_conditions()
-            forecast = await accuweather.async_get_forecast(metric=True)
-            forecast_hourly = await accuweather.async_get_forecast_hourly(metric=True)
+            forecast_daily = await accuweather.async_get_daily_forecast(
+                days=5, metric=True
+            )
+            forecast_hourly = await accuweather.async_get_hourly_forecast(
+                hours=12, metric=True
+            )
         except (
             ApiError,
             InvalidApiKeyError,
@@ -60,7 +67,7 @@ async def main():
             print(f"Location: {accuweather.location_name} ({accuweather.location_key})")
             print(f"Requests remaining: {accuweather.requests_remaining}")
             print(f"Current: {current_conditions}")
-            print(f"Forecast: {forecast}")
+            print(f"Forecast: {forecast_daily}")
             print(f"Forecast hourly: {forecast_hourly}")
 
 
