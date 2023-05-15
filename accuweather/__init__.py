@@ -210,7 +210,7 @@ class AccuWeather:
         data = await self._async_get_data(url)
         return self._parse_forecast_daily(data, REMOVE_FROM_FORECAST)
 
-    async def async_get_forecast_hourly(
+    async def async_get_hourly_forecast(
         self, hours: int = 12, metric: bool = True
     ) -> list[dict[str, Any]]:
         """Retrieve hourly forecast data from AccuWeather."""

@@ -31,7 +31,7 @@ async def main():
             forecast_daily = await accuweather.async_get_daily_forecast(
                 days=5, metric=True
             )
-            forecast_hourly = await accuweather.async_get_forecast_hourly(
+            forecast_hourly = await accuweather.async_get_hourly_forecast(
                 hours=12, metric=True
             )
         except (
