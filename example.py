@@ -25,7 +25,11 @@ async def main():
     async with ClientSession() as websession:
         try:
             accuweather = AccuWeather(
-                API_KEY, websession, latitude=LATITUDE, longitude=LONGITUDE
+                API_KEY,
+                websession,
+                latitude=LATITUDE,
+                longitude=LONGITUDE,
+                language="pl-pl",
             )
             current_conditions = await accuweather.async_get_current_conditions()
             forecast_daily = await accuweather.async_get_daily_forecast(
