@@ -27,8 +27,8 @@ from .exceptions import (
     RequestsExceededError,
 )
 from .utils import (
-    clean_current_condition,
     construct_url,
+    parse_current_condition,
     parse_daily_forecast,
     parse_hourly_forecast,
     valid_api_key,
@@ -120,7 +120,7 @@ class AccuWeather:
             language=self.language,
         )
         data = await self._async_get_data(url)
-        return clean_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
+        return parse_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_daily_forecast(
         self, days: int = 5, metric: bool = True

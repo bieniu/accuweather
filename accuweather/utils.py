@@ -40,7 +40,7 @@ def construct_url(arg: str, **kwargs: str) -> str:
     return ENDPOINT + URLS[arg].format(**kwargs)
 
 
-def clean_current_condition(
+def parse_current_condition(
     data: dict[str, Any], to_remove: tuple[str, ...]
 ) -> dict[str, Any]:
     """Clean current condition API response."""
