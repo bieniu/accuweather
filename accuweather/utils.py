@@ -13,9 +13,7 @@ from .const import (
 )
 
 
-def valid_coordinates(
-    latitude: float | int | None, longitude: float | int | None
-) -> bool:
+def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
     """Return True if coordinates are valid."""
     if (
         isinstance(latitude, (int, float))
