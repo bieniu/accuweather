@@ -16,8 +16,8 @@ from .const import (
 def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
     """Return True if coordinates are valid."""
     if (
-        isinstance(latitude, (int, float))
-        and isinstance(longitude, (int, float))
+        isinstance(latitude, int | float)
+        and isinstance(longitude, int | float)
         and abs(latitude) <= MAX_LATITUDE
         and abs(longitude) <= MAX_LONGITUDE
     ):
