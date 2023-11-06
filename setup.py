@@ -7,9 +7,6 @@ PROJECT_DIR = Path(__file__).parent.resolve()
 README_FILE = PROJECT_DIR / "README.md"
 VERSION = "2.0.0"
 
-with open("requirements.txt", encoding="utf-8") as file:
-    requirements = file.read().splitlines()
-
 setup(
     name="accuweather",
     version=VERSION,
@@ -23,7 +20,7 @@ setup(
     packages=["accuweather"],
     package_data={"accuweather": ["py.typed"]},
     python_requires=">=3.10",
-    install_requires=requirements,
+    install_requires=["aiohttp>=3.7.0", "orjson"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: Apache Software License",
