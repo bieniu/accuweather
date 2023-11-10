@@ -78,6 +78,7 @@ ignore = [
     "D411",     # Missing blank line before section
     "FBT001",   # Boolean positional arg in function definition
     "FBT002",   # Boolean default value in function definition
+    "ISC001",   # Single line implicit string concatenation
     "PT023",    # Use `@pytest.mark.asyncio()` over `@pytest.mark.asyncio`
     "TRY003",   # Avoid specifying long messages outside the exception class
 ]
