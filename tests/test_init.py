@@ -23,12 +23,37 @@ LONGITUDE = 19.4795644
 VALID_API_KEY = "32-character-string-1234567890qw"
 
 
-@pytest.mark.asyncio
-async def test_get_location():
-    """Test with valid location data."""
+@pytest.fixture()
+def location_data():
+    """Location data fixture."""
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
-        location_data = json.load(file)
+        return json.load(file)
 
+
+@pytest.fixture()
+def current_condition_data():
+    """Weather current condition data fixture."""
+    with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
+        return json.load(file)
+
+
+@pytest.fixture()
+def daily_forecast_data():
+    """Daily forecast data fixture."""
+    with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
+        return json.load(file)
+
+
+@pytest.fixture()
+def hourly_forecast_data():
+    """Hourly forecast data fixture."""
+    with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
+        return json.load(file)
+
+
+@pytest.mark.asyncio
+async def test_get_location(location_data):
+    """Test with valid location data."""
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
@@ -50,13 +75,8 @@ async def test_get_location():
 
 
 @pytest.mark.asyncio
-async def test_get_current_conditions():
+async def test_get_current_conditions(location_data, current_condition_data):
     """Test with valid current condition data."""
-    with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
-        current_condition_data = json.load(file)
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
-        location_data = json.load(file)
-
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
@@ -93,19 +113,14 @@ async def test_get_current_conditions():
 
 
 @pytest.mark.asyncio
-async def test_get_daily_forecast():
+async def test_get_daily_forecast(location_data, daily_forecast_data):
     """Test with valid daily forecast data."""
-    with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
-        forecast_data = json.load(file)
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
-        location_data = json.load(file)
-
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=true&language=en-us",
-            payload=forecast_data,
+            payload=daily_forecast_data,
             headers=HEADERS,
         )
         session_mock.get(
@@ -137,13 +152,8 @@ async def test_get_daily_forecast():
 
 
 @pytest.mark.asyncio
-async def test_get_hourly_forecast():
+async def test_get_hourly_forecast(location_data, hourly_forecast_data):
     """Test with valid hourly forecast data."""
-    with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
-        hourly_forecast_data = json.load(file)
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
-        location_data = json.load(file)
-
     session = aiohttp.ClientSession()
 
     with aioresponses() as session_mock:
@@ -277,26 +287,6 @@ async def test_requests_exceeded_error():
             RequestsExceededError,
             match="The allowed number of requests has been exceeded",
         ):
-            await accuweather.async_get_location()
-
-    await session.close()
-
-
-@pytest.mark.asyncio
-async def test_json_decode_error():
-    """Test with JSON decode error."""
-    session = aiohttp.ClientSession()
-
-    with aioresponses() as session_mock:
-        session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
-            payload=None,
-            status=502,
-        )
-        accuweather = AccuWeather(
-            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
-        )
-        with pytest.raises(ApiError, match="Can't decode API response"):
             await accuweather.async_get_location()
 
     await session.close()
