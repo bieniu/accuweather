@@ -1,8 +1,8 @@
 """Tests for accuweather package."""
-import json
 from http import HTTPStatus
 
 import aiohttp
+import orjson
 import pytest
 from aiohttp import ClientSession
 from aioresponses import aioresponses
@@ -27,28 +27,28 @@ VALID_API_KEY = "32-character-string-1234567890qw"
 def location_data():
     """Location data fixture."""
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
-        return json.load(file)
+        return orjson.loads(file.read())
 
 
 @pytest.fixture()
 def current_condition_data():
     """Weather current condition data fixture."""
     with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
-        return json.load(file)
+        return orjson.loads(file.read())
 
 
 @pytest.fixture()
 def daily_forecast_data():
     """Daily forecast data fixture."""
     with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
-        return json.load(file)
+        return orjson.loads(file.read())
 
 
 @pytest.fixture()
 def hourly_forecast_data():
     """Hourly forecast data fixture."""
     with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
-        return json.load(file)
+        return orjson.loads(file.read())
 
 
 @pytest.mark.asyncio
