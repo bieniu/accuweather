@@ -77,9 +77,7 @@ class AccuWeather:
                 try:
                     error_text = orjson.loads(await resp.text())
                 except orjson.JSONDecodeError as exc:
-                    raise ApiError(
-                        f"Invalid response from AccuWeather API: {exc}"
-                    ) from exc
+                    raise ApiError(f"Can't decode API response: {exc}") from exc
                 if error_text["Message"] == REQUESTS_EXCEEDED:
                     raise RequestsExceededError(
                         "The allowed number of requests has been exceeded"

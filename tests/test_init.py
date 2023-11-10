@@ -280,3 +280,23 @@ async def test_requests_exceeded_error():
             await accuweather.async_get_location()
 
     await session.close()
+
+
+@pytest.mark.asyncio
+async def test_json_decode_error():
+    """Test with JSON decode error."""
+    session = aiohttp.ClientSession()
+
+    with aioresponses() as session_mock:
+        session_mock.get(
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
+            payload=None,
+            status=502,
+        )
+        accuweather = AccuWeather(
+            VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
+        )
+        with pytest.raises(ApiError, match="Can't decode API response"):
+            await accuweather.async_get_location()
+
+    await session.close()
