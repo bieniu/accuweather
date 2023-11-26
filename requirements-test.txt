@@ -1,4 +1,4 @@
-git+https://github.com/pnuckowski/aioresponses.git@master#aioresponses==0.7.5
+aioresponses==0.7.6
 coverage==7.3.2
 mypy==1.7.0
 pytest-asyncio==0.21.1
