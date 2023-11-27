@@ -7,4 +7,3 @@ pytest-error-for-skips==2.0.2
 pytest-timeout==2.2.0
 pytest==7.4.3
 ruff==0.1.6
-setuptools>=68.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
