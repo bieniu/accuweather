@@ -19,7 +19,7 @@ API_KEY = "xxxxx"
 logging.basicConfig(level=logging.DEBUG)
 
 
-async def main():
+async def main() -> None:
     """Run main function."""
     async with ClientSession() as websession:
         try:

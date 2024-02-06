@@ -1,5 +1,6 @@
 """Tests for accuweather package."""
 from http import HTTPStatus
+from typing import Any
 
 import aiohttp
 import orjson
@@ -24,35 +25,35 @@ VALID_API_KEY = "32-character-string-1234567890qw"
 
 
 @pytest.fixture()
-def location_data():
+def location_data() -> dict[str, Any]:
     """Location data fixture."""
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
 @pytest.fixture()
-def current_condition_data():
+def current_condition_data() -> dict[str, Any]:
     """Weather current condition data fixture."""
     with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
 @pytest.fixture()
-def daily_forecast_data():
+def daily_forecast_data() -> dict[str, Any]:
     """Daily forecast data fixture."""
     with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
 @pytest.fixture()
-def hourly_forecast_data():
+def hourly_forecast_data() -> list[dict[str, Any]]:
     """Hourly forecast data fixture."""
     with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
-@pytest.mark.asyncio
-async def test_get_location(location_data):
+@pytest.mark.asyncio()
+async def test_get_location(location_data: dict[str, Any]) -> None:
     """Test with valid location data."""
     session = aiohttp.ClientSession()
 
@@ -74,8 +75,10 @@ async def test_get_location(location_data):
     assert accuweather.requests_remaining == 23
 
 
-@pytest.mark.asyncio
-async def test_get_current_conditions(location_data, current_condition_data):
+@pytest.mark.asyncio()
+async def test_get_current_conditions(
+    location_data: dict[str, Any], current_condition_data: dict[str, Any]
+) -> None:
     """Test with valid current condition data."""
     session = aiohttp.ClientSession()
 
@@ -112,8 +115,10 @@ async def test_get_current_conditions(location_data, current_condition_data):
     assert accuweather.requests_remaining == 23
 
 
-@pytest.mark.asyncio
-async def test_get_daily_forecast(location_data, daily_forecast_data):
+@pytest.mark.asyncio()
+async def test_get_daily_forecast(
+    location_data: dict[str, Any], daily_forecast_data: dict[str, Any]
+) -> None:
     """Test with valid daily forecast data."""
     session = aiohttp.ClientSession()
 
@@ -151,8 +156,10 @@ async def test_get_daily_forecast(location_data, daily_forecast_data):
     assert accuweather.requests_remaining == 23
 
 
-@pytest.mark.asyncio
-async def test_get_hourly_forecast(location_data, hourly_forecast_data):
+@pytest.mark.asyncio()
+async def test_get_hourly_forecast(
+    location_data: dict[str, Any], hourly_forecast_data: list[dict[str, Any]]
+) -> None:
     """Test with valid hourly forecast data."""
     session = aiohttp.ClientSession()
 
@@ -187,8 +194,8 @@ async def test_get_hourly_forecast(location_data, hourly_forecast_data):
     assert accuweather.requests_remaining == 23
 
 
-@pytest.mark.asyncio
-async def test_invalid_api_key_1():
+@pytest.mark.asyncio()
+async def test_invalid_api_key_1() -> None:
     """Test with invalid API key."""
     async with ClientSession() as session:
         with pytest.raises(
@@ -200,8 +207,8 @@ async def test_invalid_api_key_1():
             )
 
 
-@pytest.mark.asyncio
-async def test_invalid_api_key_2():
+@pytest.mark.asyncio()
+async def test_invalid_api_key_2() -> None:
     """Test with invalid API key."""
     session = aiohttp.ClientSession()
 
@@ -217,8 +224,8 @@ async def test_invalid_api_key_2():
     await session.close()
 
 
-@pytest.mark.asyncio
-async def test_invalid_coordinates_1():
+@pytest.mark.asyncio()
+async def test_invalid_coordinates_1() -> None:
     """Test with invalid coordinates."""
     async with ClientSession() as session:
         with pytest.raises(
@@ -227,8 +234,8 @@ async def test_invalid_coordinates_1():
             AccuWeather(VALID_API_KEY, session, latitude=55.55, longitude="78.00")
 
 
-@pytest.mark.asyncio
-async def test_invalid_coordinates_2():
+@pytest.mark.asyncio()
+async def test_invalid_coordinates_2() -> None:
     """Test with invalid coordinates."""
     async with ClientSession() as session:
         with pytest.raises(
@@ -237,8 +244,8 @@ async def test_invalid_coordinates_2():
             AccuWeather(VALID_API_KEY, session, latitude=199.99, longitude=90.0)
 
 
-@pytest.mark.asyncio
-async def test_api_error():
+@pytest.mark.asyncio()
+async def test_api_error() -> None:
     """Test with API error."""
     payload = {
         "Code": "ServiceError",
@@ -264,8 +271,8 @@ async def test_api_error():
     await session.close()
 
 
-@pytest.mark.asyncio
-async def test_requests_exceeded_error():
+@pytest.mark.asyncio()
+async def test_requests_exceeded_error() -> None:
     """Test with requests exceeded error."""
     payload = {
         "Code": "ServiceUnavailable",
