@@ -41,7 +41,7 @@ _LOGGER = logging.getLogger(__name__)
 class AccuWeather:
     """Main class to perform AccuWeather API requests."""
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         api_key: str,
         session: ClientSession,
