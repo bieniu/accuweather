@@ -25,28 +25,28 @@ VALID_API_KEY = "32-character-string-1234567890qw"
 
 
 @pytest.fixture()
-def location_data() -> dict[str, Any]:
+def location_data() -> Any:
     """Location data fixture."""
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
 @pytest.fixture()
-def current_condition_data() -> dict[str, Any]:
+def current_condition_data() -> Any:
     """Weather current condition data fixture."""
     with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
 @pytest.fixture()
-def daily_forecast_data() -> dict[str, Any]:
+def daily_forecast_data() -> Any:
     """Daily forecast data fixture."""
     with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
 @pytest.fixture()
-def hourly_forecast_data() -> list[dict[str, Any]]:
+def hourly_forecast_data() -> Any:
     """Hourly forecast data fixture."""
     with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
