@@ -19,7 +19,7 @@ setup(
     license="Apache-2.0 License",
     packages=["accuweather"],
     package_data={"accuweather": ["py.typed"]},
-    python_requires=">=3.10",
+    python_requires=">=3.11",
     install_requires=["aiohttp>=3.7.0", "orjson"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -27,7 +27,6 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3 :: Only",
