@@ -1,4 +1,5 @@
 """Constants for AccuWeather library."""
+
 from __future__ import annotations
 
 ATTR_CURRENT_CONDITIONS: str = "currentconditions"
