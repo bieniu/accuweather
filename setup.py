@@ -6,7 +6,7 @@ from setuptools import setup
 
 PROJECT_DIR = Path(__file__).parent.resolve()
 README_FILE = PROJECT_DIR / "README.md"
-VERSION = "2.1.1"
+VERSION = "3.0.0"
 
 setup(
     name="accuweather",
