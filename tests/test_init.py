@@ -4,10 +4,10 @@ from http import HTTPStatus
 from typing import Any
 
 import aiohttp
-import orjson
 import pytest
 from aiohttp import ClientSession
 from aioresponses import aioresponses
+from syrupy import SnapshotAssertion
 
 from accuweather import (
     AccuWeather,
@@ -23,34 +23,6 @@ LATITUDE = 52.0677904
 LOCATION_KEY = "268068"
 LONGITUDE = 19.4795644
 VALID_API_KEY = "32-character-string-1234567890qw"
-
-
-@pytest.fixture()
-def location_data() -> Any:
-    """Location data fixture."""
-    with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
-        return orjson.loads(file.read())
-
-
-@pytest.fixture()
-def current_condition_data() -> Any:
-    """Weather current condition data fixture."""
-    with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
-        return orjson.loads(file.read())
-
-
-@pytest.fixture()
-def daily_forecast_data() -> Any:
-    """Daily forecast data fixture."""
-    with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
-        return orjson.loads(file.read())
-
-
-@pytest.fixture()
-def hourly_forecast_data() -> Any:
-    """Hourly forecast data fixture."""
-    with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
-        return orjson.loads(file.read())
 
 
 @pytest.mark.asyncio()
@@ -78,7 +50,9 @@ async def test_get_location(location_data: dict[str, Any]) -> None:
 
 @pytest.mark.asyncio()
 async def test_get_current_conditions(
-    location_data: dict[str, Any], current_condition_data: dict[str, Any]
+    location_data: dict[str, Any],
+    current_condition_data: dict[str, Any],
+    snapshot: SnapshotAssertion,
 ) -> None:
     """Test with valid current condition data."""
     session = aiohttp.ClientSession()
@@ -101,24 +75,16 @@ async def test_get_current_conditions(
 
     await session.close()
 
-    assert current_conditions["WeatherIcon"] == 7
-    assert current_conditions["WeatherText"] == "Cloudy"
-    assert current_conditions["HasPrecipitation"] is False
-    assert current_conditions["PrecipitationType"] is None
-    assert current_conditions["Temperature"]["Metric"]["Value"] == 13.4
-    assert current_conditions["Temperature"]["Metric"]["Unit"] == "C"
-    assert current_conditions["Temperature"]["Imperial"]["Value"] == 56
-    assert current_conditions["Temperature"]["Imperial"]["Unit"] == "F"
-    assert current_conditions["UVIndex"] == 2
-    assert current_conditions["UVIndexText"] == "low"
-    assert current_conditions["PressureTendency"]["LocalizedText"] == "steady"
+    assert current_conditions == snapshot
 
     assert accuweather.requests_remaining == 23
 
 
 @pytest.mark.asyncio()
 async def test_get_daily_forecast(
-    location_data: dict[str, Any], daily_forecast_data: dict[str, Any]
+    location_data: dict[str, Any],
+    daily_forecast_data: dict[str, Any],
+    snapshot: SnapshotAssertion,
 ) -> None:
     """Test with valid daily forecast data."""
     session = aiohttp.ClientSession()
@@ -142,24 +108,16 @@ async def test_get_daily_forecast(
 
     await session.close()
 
-    assert forecast[0]["IconDay"] == 18
-    assert forecast[0]["IconPhraseDay"] == "rain"
-    assert forecast[0]["PrecipitationProbabilityDay"] == 91
-    assert forecast[0]["WindDay"]["Speed"]["Value"] == 16.7
-    assert forecast[0]["TemperatureMax"]["Value"] == 16.2
-    assert forecast[0]["TemperatureMax"]["Unit"] == "C"
-    assert forecast[0]["UVIndex"]["Category"] == "low"
-    assert forecast[0]["PrecipitationTypeDay"] == "rain"
-    assert forecast[0]["PrecipitationIntensityDay"] == "light"
-    assert forecast[0]["ShortPhraseDay"] == "Cooler with periods of rain"
-    assert forecast[0]["LongPhraseDay"] == "Cooler with periods of rain"
-    assert forecast[0]["AirQuality"]["Category"] == "unhealthy"
+    assert forecast == snapshot
+
     assert accuweather.requests_remaining == 23
 
 
 @pytest.mark.asyncio()
 async def test_get_hourly_forecast(
-    location_data: dict[str, Any], hourly_forecast_data: list[dict[str, Any]]
+    location_data: dict[str, Any],
+    hourly_forecast_data: list[dict[str, Any]],
+    snapshot: SnapshotAssertion,
 ) -> None:
     """Test with valid hourly forecast data."""
     session = aiohttp.ClientSession()
@@ -183,15 +141,8 @@ async def test_get_hourly_forecast(
 
     await session.close()
 
-    assert forecast[0]["WeatherIcon"] == 18
-    assert forecast[0]["IconPhrase"] == "rain"
-    assert forecast[0]["HasPrecipitation"] is True
-    assert forecast[0]["UVIndex"] == 2
-    assert forecast[0]["UVIndexText"] == "low"
-    assert forecast[0]["PrecipitationType"] == "rain"
-    assert forecast[0]["PrecipitationIntensity"] == "light"
-    assert forecast[0]["Temperature"]["Value"] == 14.7
-    assert forecast[0]["Temperature"]["Unit"] == "C"
+    assert forecast == snapshot
+
     assert accuweather.requests_remaining == 23
 
 
