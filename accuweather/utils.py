@@ -16,22 +16,17 @@ from .const import (
 
 def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
     """Return True if coordinates are valid."""
-    if (
+    return (
         isinstance(latitude, int | float)
         and isinstance(longitude, int | float)
         and abs(latitude) <= MAX_LATITUDE
         and abs(longitude) <= MAX_LONGITUDE
-    ):
-        return True
-    return False
+    )
 
 
 def valid_api_key(api_key: str) -> bool:
     """Return True if API key is valid."""
-    if isinstance(api_key, str) and len(api_key) == MAX_API_KEY_LENGTH:
-        return True
-
-    return False
+    return isinstance(api_key, str) and len(api_key) == MAX_API_KEY_LENGTH
 
 
 def construct_url(arg: str, **kwargs: str) -> str:
