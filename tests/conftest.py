@@ -10,35 +10,35 @@ from syrupy.extensions.amber import AmberSnapshotExtension
 from syrupy.location import PyTestLocation
 
 
-@pytest.fixture()
+@pytest.fixture
 def location_data() -> dict[str, Any]:
     """Location data fixture."""
     with open("tests/fixtures/location_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
-@pytest.fixture()
+@pytest.fixture
 def current_condition_data() -> dict[str, Any]:
     """Weather current condition data fixture."""
     with open("tests/fixtures/current_condition_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
-@pytest.fixture()
+@pytest.fixture
 def daily_forecast_data() -> dict[str, Any]:
     """Daily forecast data fixture."""
     with open("tests/fixtures/daily_forecast_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
-@pytest.fixture()
+@pytest.fixture
 def hourly_forecast_data() -> list[dict[str, Any]]:
     """Hourly forecast data fixture."""
     with open("tests/fixtures/hourly_forecast_data.json", encoding="utf-8") as file:
         return orjson.loads(file.read())
 
 
-@pytest.fixture()
+@pytest.fixture
 def snapshot(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     """Return snapshot assertion fixture."""
     return snapshot.use_extension(SnapshotExtension)
