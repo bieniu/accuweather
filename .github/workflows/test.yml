@@ -12,9 +12,8 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.11"
           - "3.12"
-          - "3.13.0-beta.3"
+          - "3.13"
 
     steps:
       - name: Check out repository
