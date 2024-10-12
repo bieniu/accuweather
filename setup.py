@@ -6,7 +6,7 @@ from setuptools import setup
 
 PROJECT_DIR = Path(__file__).parent.resolve()
 README_FILE = PROJECT_DIR / "README.md"
-VERSION = "3.0.0"
+VERSION = "4.0.0"
 
 setup(
     name="accuweather",
@@ -20,16 +20,16 @@ setup(
     license="Apache-2.0 License",
     packages=["accuweather"],
     package_data={"accuweather": ["py.typed"]},
-    python_requires=">=3.11",
-    install_requires=["aiohttp>=3.7.0", "orjson"],
+    python_requires=">=3.12",
+    install_requires=["aiohttp>=3.9.4", "orjson"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3 :: Only",
         "Typing :: Typed",
     ],
