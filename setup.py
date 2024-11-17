@@ -17,7 +17,7 @@ setup(
     long_description_content_type="text/markdown",
     include_package_data=True,
     url="https://github.com/bieniu/accuweather",
-    license="Apache-2.0 License",
+    license="Apache-2.0",
     packages=["accuweather"],
     package_data={"accuweather": ["py.typed"]},
     python_requires=">=3.12",
