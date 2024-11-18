@@ -23,6 +23,9 @@ categories:
   - title: ":white_check_mark: Tests"
     label: "tests"
 
+  - title: ":memo: Documentation"
+    label: "documentation"
+
   - title: ":arrow_up: Dependency Updates"
     label: "dependencies"
     collapse-after: 1
