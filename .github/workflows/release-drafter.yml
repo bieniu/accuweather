@@ -18,9 +18,8 @@ jobs:
       - name: Find Version
         id: version
         run: |
-          declare -i newpost
-          version=$(python setup.py --version)
-          echo Version from setup.py: $version
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          echo Version from pyproject.toml: $version
           echo "::set-output name=version::$version"
 
       - name: Run Release Drafter
