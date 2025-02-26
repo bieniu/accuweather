@@ -61,8 +61,6 @@ target-version = "py313"
 lint.select = ["ALL"]
 
 lint.ignore = [
-    "ANN101",   # Missing type annotation for `self` in method
-    "ANN102",   # Missing type annotation for `cls` in classmethod
     "COM812",   # Trailing comma missing
     "D203",     # 1 blank line required before class docstring
     "D213",     # Multi-line docstring summary should start at the second line
@@ -71,7 +69,7 @@ lint.ignore = [
     "ISC001",   # Single line implicit string concatenation
     "PLR0913",  # Too many arguments to function call
     "PTH123",   # `open()` should be replaced by `Path.open()`
-    "TCH002",   # Move third-party import into a type-checking block
+    "TC002",   # Move third-party import into a type-checking block
     "TRY003",   # Avoid specifying long messages outside the exception class
     "ANN401",   # Dynamically typed expressions (typing.Any) are disallowed
     "FBT001",   # Boolean-typed positional argument in function definition
