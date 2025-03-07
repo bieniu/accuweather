@@ -71,7 +71,9 @@ async def test_get_current_conditions(
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        current_conditions = await accuweather.async_get_current_conditions()
+        current_conditions = await accuweather.async_get_current_conditions(
+            language="en"
+        )
 
     await session.close()
 
@@ -104,7 +106,7 @@ async def test_get_daily_forecast(
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        forecast = await accuweather.async_get_daily_forecast()
+        forecast = await accuweather.async_get_daily_forecast(language="en")
 
     await session.close()
 
@@ -137,7 +139,7 @@ async def test_get_hourly_forecast(
         accuweather = AccuWeather(
             VALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
         )
-        forecast = await accuweather.async_get_hourly_forecast()
+        forecast = await accuweather.async_get_hourly_forecast(language="en")
 
     await session.close()
 
