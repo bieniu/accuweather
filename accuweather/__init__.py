@@ -108,8 +108,13 @@ class AccuWeather:
         self._location_key = data["Key"]
         self._location_name = data["LocalizedName"]
 
-    async def async_get_current_conditions(self) -> dict[str, Any]:
+    async def async_get_current_conditions(
+        self, language: str | None = None
+    ) -> dict[str, Any]:
         """Retrieve current conditions data from AccuWeather."""
+        if language:
+            language = LANGUAGE_MAP.get(language, "en-us")
+
         if not self._location_key:
             await self.async_get_location()
 
@@ -120,15 +125,18 @@ class AccuWeather:
             ATTR_CURRENT_CONDITIONS,
             api_key=self._api_key,
             location_key=self._location_key,
-            language=self.language,
+            language=language or self.language,
         )
         data = await self._async_get_data(url)
         return parse_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
 
     async def async_get_daily_forecast(
-        self, days: int = 5, metric: bool = True
+        self, days: int = 5, metric: bool = True, language: str | None = None
     ) -> list[dict[str, Any]]:
         """Retrieve daily forecast data from AccuWeather."""
+        if language:
+            language = LANGUAGE_MAP.get(language, "en-us")
+
         if not self._location_key:
             await self.async_get_location()
 
@@ -141,15 +149,18 @@ class AccuWeather:
             location_key=self._location_key,
             days=str(days),
             metric=str(metric).lower(),
-            language=self.language,
+            language=language or self.language,
         )
         data = await self._async_get_data(url)
         return parse_daily_forecast(data, REMOVE_FROM_FORECAST)
 
     async def async_get_hourly_forecast(
-        self, hours: int = 12, metric: bool = True
+        self, hours: int = 12, metric: bool = True, language: str | None = None
     ) -> list[dict[str, Any]]:
         """Retrieve hourly forecast data from AccuWeather."""
+        if language:
+            language = LANGUAGE_MAP.get(language, "en-us")
+
         if not self._location_key:
             await self.async_get_location()
 
@@ -162,7 +173,7 @@ class AccuWeather:
             location_key=self._location_key,
             hours=str(hours),
             metric=str(metric).lower(),
-            language=self.language,
+            language=language or self.language,
         )
         data = await self._async_get_data(url)
         return parse_hourly_forecast(data, REMOVE_FROM_FORECAST)
