@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name        = "accuweather"
-version     = "4.1.0"
+version     = "4.2.0"
 license     = {text = "Apache-2.0"}
 description = "Python wrapper for getting weather data from AccuWeather API."
 readme      = "README.md"
@@ -33,7 +33,7 @@ Homepage = "https://github.com/bieniu/accuweather"
 include = ["accuweather*"]
 
 [tool.pytest.ini_options]
-asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "session"
 
 [tool.mypy]
 python_version = "3.13"
