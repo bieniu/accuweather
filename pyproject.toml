@@ -66,7 +66,6 @@ lint.ignore = [
     "D213",     # Multi-line docstring summary should start at the second line
     "EM101",    # Exception must not use a string literal, assign to variable first
     "EM102",    # Exception must not use an f-string literal, assign to variable first
-    "ISC001",   # Single line implicit string concatenation
     "PLR0913",  # Too many arguments to function call
     "PTH123",   # `open()` should be replaced by `Path.open()`
     "TC002",   # Move third-party import into a type-checking block
