@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Fetch data",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "example.py",
             "console": "integratedTerminal"
