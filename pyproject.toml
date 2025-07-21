@@ -30,7 +30,7 @@ test = [
   "aioresponses==0.7.8",
   "coverage==7.9.2",
   "mypy==1.16.1",
-  "pytest-asyncio==1.0.0",
+  "pytest-asyncio==1.1.0",
   "pytest-cov==6.2.1",
   "pytest-error-for-skips==2.0.2",
   "pytest-timeout==2.4.0",
