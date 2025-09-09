@@ -6,7 +6,6 @@ from typing import Any
 
 from .const import (
     ENDPOINT,
-    MAX_API_KEY_LENGTH,
     MAX_LATITUDE,
     MAX_LONGITUDE,
     TEMPERATURES,
@@ -22,11 +21,6 @@ def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
         and abs(latitude) <= MAX_LATITUDE
         and abs(longitude) <= MAX_LONGITUDE
     )
-
-
-def valid_api_key(api_key: str) -> bool:
-    """Return True if API key is valid."""
-    return isinstance(api_key, str) and len(api_key) == MAX_API_KEY_LENGTH
 
 
 def construct_url(arg: str, **kwargs: str) -> str:
