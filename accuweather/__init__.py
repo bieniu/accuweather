@@ -31,7 +31,6 @@ from .utils import (
     parse_current_condition,
     parse_daily_forecast,
     parse_hourly_forecast,
-    valid_api_key,
     valid_coordinates,
 )
 
@@ -51,10 +50,6 @@ class AccuWeather:
         language: str = "en",
     ) -> None:
         """Initialize."""
-        if not valid_api_key(api_key):
-            raise InvalidApiKeyError(
-                "Your API Key must be a 32-character hexadecimal string"
-            )
         if not location_key and not valid_coordinates(latitude, longitude):
             raise InvalidCoordinatesError("Your coordinates are invalid")
 

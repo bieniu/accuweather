@@ -18,7 +18,6 @@ from accuweather import (
 )
 
 HEADERS = {"RateLimit-Remaining": "23"}
-INVALID_API_KEY = "abcdef"
 LATITUDE = 52.0677904
 LOCATION_KEY = "268068"
 LONGITUDE = 19.4795644
@@ -146,19 +145,6 @@ async def test_get_hourly_forecast(
     assert forecast == snapshot
 
     assert accuweather.requests_remaining == 23
-
-
-@pytest.mark.asyncio
-async def test_invalid_api_key_1() -> None:
-    """Test with invalid API key."""
-    async with ClientSession() as session:
-        with pytest.raises(
-            InvalidApiKeyError,
-            match="Your API Key must be a 32-character hexadecimal string",
-        ):
-            AccuWeather(
-                INVALID_API_KEY, session, latitude=LATITUDE, longitude=LONGITUDE
-            )
 
 
 @pytest.mark.asyncio

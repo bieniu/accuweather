@@ -7,7 +7,6 @@ ATTR_FORECAST_DAILY: str = "forecasts"
 ATTR_FORECAST_HOURLY: str = "forecasts_hourly"
 ATTR_GEOPOSITION: str = "geoposition"
 
-MAX_API_KEY_LENGTH = 32
 MAX_LATITUDE = 90
 MAX_LONGITUDE = 180
 
