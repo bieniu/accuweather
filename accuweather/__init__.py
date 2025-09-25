@@ -65,7 +65,10 @@ class AccuWeather:
     async def _async_get_data(self, url: str) -> Any:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
-            if resp.status == HTTPStatus.UNAUTHORIZED.value:
+            if resp.status in (
+                HTTPStatus.UNAUTHORIZED.value,
+                HTTPStatus.FORBIDDEN.value,
+            ):
                 raise InvalidApiKeyError("Invalid API key")
 
             if resp.status != HTTPStatus.OK.value:
@@ -73,7 +76,7 @@ class AccuWeather:
                     error_text = orjson.loads(await resp.text())
                 except orjson.JSONDecodeError as exc:
                     raise ApiError(f"Can't decode API response: {exc}") from exc
-                if error_text["Message"] == REQUESTS_EXCEEDED:
+                if error_text.get("Message") == REQUESTS_EXCEEDED:
                     raise RequestsExceededError(
                         "The allowed number of requests has been exceeded"
                     )
