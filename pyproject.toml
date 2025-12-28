@@ -125,7 +125,7 @@ deps =
   .[test]
 
 [testenv:lint]
-basepython = python3
+basepython = python3.13
 depends = py313
 ignore_errors = True
 skip_install = True
@@ -135,7 +135,7 @@ commands =
   ruff format --check .
 
 [testenv:typing]
-basepython = python3
+basepython = python3.13
 depends = py313
 ignore_errors = True
 skip_install = True
@@ -144,7 +144,7 @@ commands =
   mypy accuweather
 
 [testenv:coverage]
-basepython = python3
+basepython = python3.13
 depends = py313
 skip_install = True
 usedevelop = False
