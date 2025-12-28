@@ -14,12 +14,12 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3 :: Only",
     "Typing :: Typed",
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies    = [
     "aiohttp>=3.9.4",
     "orjson>=3.8.1",
@@ -52,7 +52,7 @@ include = ["accuweather*"]
 asyncio_default_fixture_loop_scope = "session"
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 show_error_codes = true
 follow_imports = "silent"
 ignore_missing_imports = true
@@ -72,7 +72,7 @@ warn_unused_ignores = true
 warn_unreachable = true
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 
 lint.select = ["ALL"]
 
@@ -110,13 +110,13 @@ source = ["accuweather"]
 legacy_tox_ini = """
 
 [tox]
-envlist = py312, py313, lint, typing, coverage
+envlist = py313, py314, lint, typing, coverage
 skip_missing_interpreters = True
 
 [gh-actions]
 python =
-  3.12: py312, lint, typing, coverage
-  3.13: py313
+  3.13: py313, lint, typing, coverage
+  3.14: py314
 
 [testenv]
 commands =
@@ -125,8 +125,8 @@ deps =
   .[test]
 
 [testenv:lint]
-basepython = python3
-depends = py312
+basepython = python3.13
+depends = py313
 ignore_errors = True
 skip_install = True
 usedevelop = False
@@ -135,8 +135,8 @@ commands =
   ruff format --check .
 
 [testenv:typing]
-basepython = python3
-depends = py312
+basepython = python3.13
+depends = py313
 ignore_errors = True
 skip_install = True
 usedevelop = False
@@ -144,8 +144,8 @@ commands =
   mypy accuweather
 
 [testenv:coverage]
-basepython = python3
-depends = py312
+basepython = python3.13
+depends = py313
 skip_install = True
 usedevelop = False
 commands =
