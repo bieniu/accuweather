@@ -4,8 +4,20 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      dev:
+        patterns:
+          - "aioresponses"
+          - "prek"
+          - "pytest-asyncio"
+          - "pytest-cov"
+          - "pytest-error-for-skips"
+          - "pytest-timeout"
+          - "pytest"
+          - "ruff"
+          - "syrupy"
+          - "ty"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      

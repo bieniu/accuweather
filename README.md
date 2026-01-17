@@ -1,3 +1,5 @@
+[![CI](https://img.shields.io/github/actions/workflow/status/bieniu/accuweather/ci.yml?branch=master&label=CI&logo=github&style=popout)](https://github.com/bieniu/accuweather/actions/workflows/ci.yml?query=branch%3Amaster)
+[![codecov](https://codecov.io/github/bieniu/accuweather/graph/badge.svg?token=EI8AHIHARV)](https://codecov.io/github/bieniu/accuweather)
 [![GitHub Release][releases-shield]][releases]
 [![PyPI][pypi-releases-shield]][pypi-releases]
 [![PyPI - Downloads][pypi-downloads]][pypi-statistics]
@@ -75,6 +77,18 @@ async def main():
 loop = asyncio.new_event_loop()
 loop.run_until_complete(main())
 loop.close()
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## How to create a dev environment
+
+```bash
+git clone https://github.com/bieniu/accuweather.git
+cd accuweather
+./scripts/setup-local-env.sh
 ```
 
 [releases]: https://github.com/bieniu/accuweather/releases
