@@ -17,6 +17,9 @@ updates:
           - "ruff"
           - "syrupy"
           - "ty"
+    ignore:
+      - dependency-name: "aiohttp"
+      - dependency-name: "orjson"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
