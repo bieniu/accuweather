@@ -40,7 +40,7 @@ jobs:
         run: uv run ty check accuweather
 
       - name: Run prek
-        if: ${{ matrix.python-version == "3.14" }}
+        if: ${{ matrix.python-version == '3.14' }}
         run: |
           uv run prek run \
             end-of-file-fixer \
@@ -76,7 +76,7 @@ jobs:
         run: uv run pytest --timeout=30 --cov --cov-branch --cov-report=xml --error-for-skips
 
       - name: Upload coverage reports to Codecov
-        if: ${{ matrix.python-version == "3.14" }}
+        if: ${{ matrix.python-version == '3.14' }}
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
