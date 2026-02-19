@@ -27,3 +27,5 @@ updates:
       interval: "weekly"
   - package-ecosystem: "pre-commit"
     directory: "/"
+    schedule:
+      interval: "weekly"
