@@ -2,9 +2,6 @@ version: 2
 enable-beta-ecosystems: true
 
 multi-ecosystem-groups:
-  ci:
-    schedule:
-      interval: "weekly"
   dev:
     schedule:
       interval: "weekly"
@@ -21,8 +18,11 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
-    multi-ecosystem-group: "ci"
-    patterns: ["*"]
+    schedule:
+      interval: "weekly"
+    groups:
+      ci:
+        patterns: ["*"]
 
   - package-ecosystem: "pre-commit"
     directory: "/"
