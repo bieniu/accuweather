@@ -1,7 +1,5 @@
 """Python wrapper for getting weather data from AccueWeather API."""
 
-from __future__ import annotations
-
 import logging
 from http import HTTPStatus
 from typing import TYPE_CHECKING, Any
