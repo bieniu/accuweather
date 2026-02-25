@@ -25,7 +25,7 @@ def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
     )
 
 
-def construct_url(arg: str, **kwargs: str) -> URL:
+def construct_url(arg: str, **kwargs: dict[str, str]) -> URL:
     """Construct AccuWeather API URL."""
     path_template, query_template = URLS[arg]
     path = path_template.format(**kwargs)
