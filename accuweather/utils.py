@@ -34,6 +34,13 @@ def construct_url(arg: str, **kwargs: str) -> URL:
     return ENDPOINT / path % query
 
 
+def clean_url(url: URL) -> URL:
+    """Remove API key from URL for safe logging."""
+    return url.with_query(
+        {key: "REDACTED" if key == "apikey" else val for key, val in url.query.items()}
+    )
+
+
 def parse_current_condition(
     data: dict[str, Any], to_remove: tuple[str, ...]
 ) -> dict[str, Any]:

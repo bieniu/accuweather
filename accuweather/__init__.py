@@ -28,6 +28,7 @@ from .exceptions import (
     RequestsExceededError,
 )
 from .utils import (
+    clean_url,
     construct_url,
     parse_current_condition,
     parse_daily_forecast,
@@ -83,7 +84,9 @@ class AccuWeather:
                     )
                 raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
 
-            _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
+            _LOGGER.debug(
+                "Data retrieved from %s, status: %s", clean_url(url), resp.status
+            )
             data = await resp.json()
 
         if resp.headers["RateLimit-Remaining"].isdigit():
