@@ -31,7 +31,7 @@ async def test_get_location(location_data: dict[str, Any]) -> None:
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -63,7 +63,7 @@ async def test_get_current_conditions(
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -97,7 +97,7 @@ async def test_get_daily_forecast(
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -130,7 +130,7 @@ async def test_get_hourly_forecast(
             headers=HEADERS,
         )
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=location_data,
             headers=HEADERS,
         )
@@ -171,7 +171,7 @@ async def test_invalid_coordinates_1() -> None:
         with pytest.raises(
             InvalidCoordinatesError, match="Your coordinates are invalid"
         ):
-            AccuWeather(VALID_API_KEY, session, latitude=55.55, longitude="78.00")
+            AccuWeather(VALID_API_KEY, session, latitude=55.55, longitude="78.00")  # ty: ignore[invalid-argument-type]
 
 
 @pytest.mark.asyncio
@@ -196,7 +196,7 @@ async def test_api_error() -> None:
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=payload,
             status=404,
         )
@@ -223,7 +223,7 @@ async def test_requests_exceeded_error() -> None:
 
     with aioresponses() as session_mock:
         session_mock.get(
-            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%252C19.4795644&language=en-us",
+            "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=payload,
             status=503,
         )

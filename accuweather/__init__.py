@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 import orjson
 from aiohttp import ClientSession
+from yarl import URL
 
 from .const import (
     ATTR_CURRENT_CONDITIONS,
@@ -62,7 +63,7 @@ class AccuWeather:
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
 
-    async def _async_get_data(self, url: str) -> Any:
+    async def _async_get_data(self, url: URL) -> Any:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status in (
@@ -88,7 +89,7 @@ class AccuWeather:
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 
-        if "hourly" in url:
+        if "hourly" in url.path:
             return data
 
         return data if isinstance(data, dict) else data[0]

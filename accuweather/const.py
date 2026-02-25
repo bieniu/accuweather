@@ -1,6 +1,6 @@
 """Constants for AccuWeather library."""
 
-from __future__ import annotations
+from yarl import URL
 
 ATTR_CURRENT_CONDITIONS: str = "currentconditions"
 ATTR_FORECAST_DAILY: str = "forecasts"
@@ -10,7 +10,7 @@ ATTR_GEOPOSITION: str = "geoposition"
 MAX_LATITUDE = 90
 MAX_LONGITUDE = 180
 
-ENDPOINT: str = "https://dataservice.accuweather.com/"
+ENDPOINT: URL = URL("https://dataservice.accuweather.com/")
 HTTP_HEADERS: dict[str, str] = {"Content-Encoding": "gzip"}
 REQUESTS_EXCEEDED: str = "The allowed number of requests has been exceeded."
 
@@ -34,22 +34,32 @@ TEMPERATURES: tuple[str, ...] = (
     "RealFeelTemperature",
     "RealFeelTemperatureShade",
 )
-URLS: dict[str, str] = {
+URLS: dict[str, tuple[str, dict[str, str]]] = {
     ATTR_GEOPOSITION: (
-        "locations/v1/cities/geoposition/search?apikey={api_key}"
-        "&q={lat}%2C{lon}&language={language}"
+        "locations/v1/cities/geoposition/search",
+        {"apikey": "{api_key}", "q": "{lat},{lon}", "language": "{language}"},
     ),
     ATTR_CURRENT_CONDITIONS: (
-        "currentconditions/v1/{location_key}?apikey={api_key}"
-        "&details=true&language={language}"
+        "currentconditions/v1/{location_key}",
+        {"apikey": "{api_key}", "details": "true", "language": "{language}"},
     ),
     ATTR_FORECAST_DAILY: (
-        "forecasts/v1/daily/{days}day/{location_key}?apikey={api_key}"
-        "&details=true&metric={metric}&language={language}"
+        "forecasts/v1/daily/{days}day/{location_key}",
+        {
+            "apikey": "{api_key}",
+            "details": "true",
+            "metric": "{metric}",
+            "language": "{language}",
+        },
     ),
     ATTR_FORECAST_HOURLY: (
-        "forecasts/v1/hourly/{hours}hour/{location_key}?apikey={api_key}"
-        "&details=true&metric={metric}&language={language}"
+        "forecasts/v1/hourly/{hours}hour/{location_key}",
+        {
+            "apikey": "{api_key}",
+            "details": "true",
+            "metric": "{metric}",
+            "language": "{language}",
+        },
     ),
 }
 LANGUAGE_MAP: dict[str, str] = {

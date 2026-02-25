@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from yarl import URL
+
 from .const import (
     ENDPOINT,
     MAX_LATITUDE,
@@ -23,9 +25,13 @@ def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
     )
 
 
-def construct_url(arg: str, **kwargs: str) -> str:
+def construct_url(arg: str, **kwargs: str) -> URL:
     """Construct AccuWeather API URL."""
-    return ENDPOINT + URLS[arg].format(**kwargs)
+    path_template, query_template = URLS[arg]
+    path = path_template.format(**kwargs)
+    query = {key: val.format(**kwargs) for key, val in query_template.items()}
+
+    return ENDPOINT / path % query
 
 
 def parse_current_condition(
