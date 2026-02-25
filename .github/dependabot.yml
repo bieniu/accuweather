@@ -19,6 +19,7 @@ updates:
     ignore:
       - dependency-name: "aiohttp"
       - dependency-name: "orjson"
+      - dependency-name: "yarl"
 
   - package-ecosystem: "github-actions"
     directory: "/"

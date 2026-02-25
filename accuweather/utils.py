@@ -1,8 +1,8 @@
 """Utils for AccuWeather."""
 
-from __future__ import annotations
-
 from typing import Any
+
+from yarl import URL
 
 from .const import (
     ENDPOINT,
@@ -23,9 +23,24 @@ def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
     )
 
 
-def construct_url(arg: str, **kwargs: str) -> str:
+def construct_url(arg: str, **kwargs: Any) -> URL:
     """Construct AccuWeather API URL."""
-    return ENDPOINT + URLS[arg].format(**kwargs)
+    path_template = URLS[arg]
+    path = path_template.format(**kwargs)
+    query = {
+        key: ("true" if val else "false") if isinstance(val, bool) else str(val)
+        for key, val in kwargs.items()
+        if key not in ("location_key", "hours", "days")
+    }
+
+    return ENDPOINT / path % query
+
+
+def clean_url(url: URL) -> URL:
+    """Remove API key from URL for safe logging."""
+    return url.with_query(
+        {key: "REDACTED" if key == "apikey" else val for key, val in url.query.items()}
+    )
 
 
 def parse_current_condition(

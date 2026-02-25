@@ -1,13 +1,12 @@
 """Python wrapper for getting weather data from AccueWeather API."""
 
-from __future__ import annotations
-
 import logging
 from http import HTTPStatus
 from typing import TYPE_CHECKING, Any
 
 import orjson
 from aiohttp import ClientSession
+from yarl import URL
 
 from .const import (
     ATTR_CURRENT_CONDITIONS,
@@ -27,6 +26,7 @@ from .exceptions import (
     RequestsExceededError,
 )
 from .utils import (
+    clean_url,
     construct_url,
     parse_current_condition,
     parse_daily_forecast,
@@ -62,7 +62,7 @@ class AccuWeather:
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
 
-    async def _async_get_data(self, url: str) -> Any:
+    async def _async_get_data(self, url: URL) -> Any:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
             if resp.status in (
@@ -82,13 +82,15 @@ class AccuWeather:
                     )
                 raise ApiError(f"Invalid response from AccuWeather API: {resp.status}")
 
-            _LOGGER.debug("Data retrieved from %s, status: %s", url, resp.status)
+            _LOGGER.debug(
+                "Data retrieved from %s, status: %s", clean_url(url), resp.status
+            )
             data = await resp.json()
 
         if resp.headers["RateLimit-Remaining"].isdigit():
             self._requests_remaining = int(resp.headers["RateLimit-Remaining"])
 
-        if "hourly" in url:
+        if "hourly" in url.path:
             return data
 
         return data if isinstance(data, dict) else data[0]
@@ -97,9 +99,8 @@ class AccuWeather:
         """Retrieve location data from AccuWeather."""
         url = construct_url(
             ATTR_GEOPOSITION,
-            api_key=self._api_key,
-            lat=str(self.latitude),
-            lon=str(self.longitude),
+            apikey=self._api_key,
+            q=f"{self.latitude},{self.longitude}",
             language=self.language,
         )
         data = await self._async_get_data(url)
@@ -121,9 +122,10 @@ class AccuWeather:
 
         url = construct_url(
             ATTR_CURRENT_CONDITIONS,
-            api_key=self._api_key,
+            apikey=self._api_key,
             location_key=self._location_key,
             language=language or self.language,
+            details=True,
         )
         data = await self._async_get_data(url)
         return parse_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
@@ -143,11 +145,12 @@ class AccuWeather:
 
         url = construct_url(
             ATTR_FORECAST_DAILY,
-            api_key=self._api_key,
+            apikey=self._api_key,
             location_key=self._location_key,
-            days=str(days),
-            metric=str(metric).lower(),
+            days=days,
+            metric=metric,
             language=language or self.language,
+            details=True,
         )
         data = await self._async_get_data(url)
         return parse_daily_forecast(data, REMOVE_FROM_FORECAST)
@@ -167,11 +170,12 @@ class AccuWeather:
 
         url = construct_url(
             ATTR_FORECAST_HOURLY,
-            api_key=self._api_key,
+            apikey=self._api_key,
             location_key=self._location_key,
-            hours=str(hours),
-            metric=str(metric).lower(),
+            hours=hours,
+            metric=metric,
             language=language or self.language,
+            details=True,
         )
         data = await self._async_get_data(url)
         return parse_hourly_forecast(data, REMOVE_FROM_FORECAST)
