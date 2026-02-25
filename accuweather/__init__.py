@@ -101,9 +101,8 @@ class AccuWeather:
         """Retrieve location data from AccuWeather."""
         url = construct_url(
             ATTR_GEOPOSITION,
-            api_key=self._api_key,
-            lat=str(self.latitude),
-            lon=str(self.longitude),
+            apikey=self._api_key,
+            q=f"{self.latitude},{self.longitude}",
             language=self.language,
         )
         data = await self._async_get_data(url)
@@ -125,9 +124,10 @@ class AccuWeather:
 
         url = construct_url(
             ATTR_CURRENT_CONDITIONS,
-            api_key=self._api_key,
+            apikey=self._api_key,
             location_key=self._location_key,
             language=language or self.language,
+            details=True,
         )
         data = await self._async_get_data(url)
         return parse_current_condition(data, REMOVE_FROM_CURRENT_CONDITION)
@@ -147,11 +147,12 @@ class AccuWeather:
 
         url = construct_url(
             ATTR_FORECAST_DAILY,
-            api_key=self._api_key,
+            apikey=self._api_key,
             location_key=self._location_key,
-            days=str(days),
-            metric=str(metric).lower(),
+            days=days,
+            metric=metric,
             language=language or self.language,
+            details=True,
         )
         data = await self._async_get_data(url)
         return parse_daily_forecast(data, REMOVE_FROM_FORECAST)
@@ -171,11 +172,12 @@ class AccuWeather:
 
         url = construct_url(
             ATTR_FORECAST_HOURLY,
-            api_key=self._api_key,
+            apikey=self._api_key,
             location_key=self._location_key,
-            hours=str(hours),
-            metric=str(metric).lower(),
+            hours=hours,
+            metric=metric,
             language=language or self.language,
+            details=True,
         )
         data = await self._async_get_data(url)
         return parse_hourly_forecast(data, REMOVE_FROM_FORECAST)

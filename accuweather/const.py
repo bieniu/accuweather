@@ -34,33 +34,11 @@ TEMPERATURES: tuple[str, ...] = (
     "RealFeelTemperature",
     "RealFeelTemperatureShade",
 )
-URLS: dict[str, tuple[str, dict[str, str]]] = {
-    ATTR_GEOPOSITION: (
-        "locations/v1/cities/geoposition/search",
-        {"apikey": "{api_key}", "q": "{lat},{lon}", "language": "{language}"},
-    ),
-    ATTR_CURRENT_CONDITIONS: (
-        "currentconditions/v1/{location_key}",
-        {"apikey": "{api_key}", "details": "true", "language": "{language}"},
-    ),
-    ATTR_FORECAST_DAILY: (
-        "forecasts/v1/daily/{days}day/{location_key}",
-        {
-            "apikey": "{api_key}",
-            "details": "true",
-            "metric": "{metric}",
-            "language": "{language}",
-        },
-    ),
-    ATTR_FORECAST_HOURLY: (
-        "forecasts/v1/hourly/{hours}hour/{location_key}",
-        {
-            "apikey": "{api_key}",
-            "details": "true",
-            "metric": "{metric}",
-            "language": "{language}",
-        },
-    ),
+URLS: dict[str, str] = {
+    ATTR_GEOPOSITION: "locations/v1/cities/geoposition/search",
+    ATTR_CURRENT_CONDITIONS: "currentconditions/v1/{location_key}",
+    ATTR_FORECAST_DAILY: "forecasts/v1/daily/{days}day/{location_key}",
+    ATTR_FORECAST_HOURLY: "forecasts/v1/hourly/{hours}hour/{location_key}",
 }
 LANGUAGE_MAP: dict[str, str] = {
     "ar": "ar-sa",

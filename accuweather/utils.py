@@ -25,11 +25,15 @@ def valid_coordinates(latitude: float | None, longitude: float | None) -> bool:
     )
 
 
-def construct_url(arg: str, **kwargs: dict[str, str]) -> URL:
+def construct_url(arg: str, **kwargs: Any) -> URL:
     """Construct AccuWeather API URL."""
-    path_template, query_template = URLS[arg]
+    path_template = URLS[arg]
     path = path_template.format(**kwargs)
-    query = {key: val.format(**kwargs) for key, val in query_template.items()}
+    query = {
+        key: ("true" if val else "false") if isinstance(val, bool) else str(val)
+        for key, val in kwargs.items()
+        if key not in ("location_key", "hours", "days")
+    }
 
     return ENDPOINT / path % query
 
