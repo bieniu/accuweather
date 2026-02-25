@@ -62,16 +62,29 @@ class AccuWeather:
         self._location_name: str | None = None
         self._requests_remaining: int | None = None
 
+    def _resolve_language(self, language: str | None) -> str:
+        """Resolve language code to AccuWeather format."""
+        if language:
+            return LANGUAGE_MAP.get(language, "en-us")
+        return self.language
+
+    async def _ensure_location_key(self) -> str:
+        """Ensure location key is available, fetching it if necessary."""
+        if not self._location_key:
+            await self.async_get_location()
+
+        if TYPE_CHECKING:
+            assert self._location_key is not None
+
+        return self._location_key
+
     async def _async_get_data(self, url: URL) -> Any:
         """Retrieve data from AccuWeather API."""
         async with self._session.get(url, headers=HTTP_HEADERS) as resp:
-            if resp.status in (
-                HTTPStatus.UNAUTHORIZED.value,
-                HTTPStatus.FORBIDDEN.value,
-            ):
+            if resp.status in (HTTPStatus.UNAUTHORIZED, HTTPStatus.FORBIDDEN):
                 raise InvalidApiKeyError("Invalid API key")
 
-            if resp.status != HTTPStatus.OK.value:
+            if resp.status != HTTPStatus.OK:
                 try:
                     error_text = orjson.loads(await resp.text())
                 except orjson.JSONDecodeError as exc:
@@ -111,20 +124,14 @@ class AccuWeather:
         self, language: str | None = None
     ) -> dict[str, Any]:
         """Retrieve current conditions data from AccuWeather."""
-        if language:
-            language = LANGUAGE_MAP.get(language, "en-us")
-
-        if not self._location_key:
-            await self.async_get_location()
-
-        if TYPE_CHECKING:
-            assert self._location_key is not None
+        resolved_language = self._resolve_language(language)
+        location_key = await self._ensure_location_key()
 
         url = construct_url(
             ATTR_CURRENT_CONDITIONS,
             apikey=self._api_key,
-            location_key=self._location_key,
-            language=language or self.language,
+            location_key=location_key,
+            language=resolved_language,
             details=True,
         )
         data = await self._async_get_data(url)
@@ -134,22 +141,16 @@ class AccuWeather:
         self, days: int = 5, metric: bool = True, language: str | None = None
     ) -> list[dict[str, Any]]:
         """Retrieve daily forecast data from AccuWeather."""
-        if language:
-            language = LANGUAGE_MAP.get(language, "en-us")
-
-        if not self._location_key:
-            await self.async_get_location()
-
-        if TYPE_CHECKING:
-            assert self._location_key is not None
+        resolved_language = self._resolve_language(language)
+        location_key = await self._ensure_location_key()
 
         url = construct_url(
             ATTR_FORECAST_DAILY,
             apikey=self._api_key,
-            location_key=self._location_key,
+            location_key=location_key,
             days=days,
             metric=metric,
-            language=language or self.language,
+            language=resolved_language,
             details=True,
         )
         data = await self._async_get_data(url)
@@ -159,22 +160,16 @@ class AccuWeather:
         self, hours: int = 12, metric: bool = True, language: str | None = None
     ) -> list[dict[str, Any]]:
         """Retrieve hourly forecast data from AccuWeather."""
-        if language:
-            language = LANGUAGE_MAP.get(language, "en-us")
-
-        if not self._location_key:
-            await self.async_get_location()
-
-        if TYPE_CHECKING:
-            assert self._location_key is not None
+        resolved_language = self._resolve_language(language)
+        location_key = await self._ensure_location_key()
 
         url = construct_url(
             ATTR_FORECAST_HOURLY,
             apikey=self._api_key,
-            location_key=self._location_key,
+            location_key=location_key,
             hours=hours,
             metric=metric,
-            language=language or self.language,
+            language=resolved_language,
             details=True,
         )
         data = await self._async_get_data(url)
