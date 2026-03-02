@@ -67,6 +67,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -79,7 +81,7 @@ jobs:
         run: uv sync --group test
 
       - name: Run tests
-        run: uv run pytest --timeout=30 --cov --cov-branch --cov-report=xml --error-for-skips
+        run: uv run pytest --timeout=30 --cov=accuweather --cov-report=xml --error-for-skips
 
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.python-version == '3.14' }}
