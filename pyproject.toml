@@ -28,9 +28,9 @@ dependencies    = [
 
 [dependency-groups]
 dev = [
-  "prek==0.3.3",
-  "ruff==0.15.2",
-  "ty==0.0.18",
+  "prek==0.3.4",
+  "ruff==0.15.4",
+  "ty==0.0.19",
 ]
 test = [
   "aioresponses==0.7.8",
