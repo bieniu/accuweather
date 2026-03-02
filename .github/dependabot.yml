@@ -1,16 +1,23 @@
 version: 2
 enable-beta-ecosystems: true
 
-multi-ecosystem-groups:
-  dev:
-    schedule:
-      interval: "weekly"
-
 updates:
   - package-ecosystem: "uv"
     directory: "/"
-    multi-ecosystem-group: "dev"
-    patterns: ["*"]
+    schedule:
+      interval: "weekly"
+    groups:
+      dev:
+        patterns:
+          - "prek"
+          - "ruff"
+          - "ty"
+      test:
+        patterns:
+          - "aioresponses"
+          - "pytest"
+          - "pytest-*"
+          - "syrupy"
     ignore:
       - dependency-name: "aiohttp"
       - dependency-name: "orjson"
@@ -26,5 +33,8 @@ updates:
 
   - package-ecosystem: "pre-commit"
     directory: "/"
-    multi-ecosystem-group: "dev"
-    patterns: ["*"]
+    schedule:
+      interval: "weekly"
+    groups:
+      pre-commit:
+        patterns: ["*"]
