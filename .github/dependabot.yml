@@ -14,7 +14,7 @@ updates:
           - "ty"
       test:
         patterns:
-          - "aioresponses"
+          - "aiointercept"
           - "pytest"
           - "pytest-*"
           - "syrupy"
