@@ -6,7 +6,7 @@ from typing import Any
 import aiohttp
 import pytest
 from aiohttp import ClientSession
-from aioresponses import aioresponses
+from aiointercept import aiointercept
 from syrupy import SnapshotAssertion
 
 from accuweather import (
@@ -29,7 +29,7 @@ async def test_get_location(location_data: dict[str, Any]) -> None:
     """Test with valid location data."""
     session = aiohttp.ClientSession()
 
-    with aioresponses() as session_mock:
+    async with aiointercept(mock_external_urls=True) as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=location_data,
@@ -56,7 +56,7 @@ async def test_get_current_conditions(
     """Test with valid current condition data."""
     session = aiohttp.ClientSession()
 
-    with aioresponses() as session_mock:
+    async with aiointercept(mock_external_urls=True) as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true&language=en-us",
             payload=current_condition_data,
@@ -90,7 +90,7 @@ async def test_get_daily_forecast(
     """Test with valid daily forecast data."""
     session = aiohttp.ClientSession()
 
-    with aioresponses() as session_mock:
+    async with aiointercept(mock_external_urls=True) as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/forecasts/v1/daily/5day/268068?apikey=32-character-string-1234567890qw&details=true&metric=true&language=en-us",
             payload=daily_forecast_data,
@@ -123,7 +123,7 @@ async def test_get_hourly_forecast(
     """Test with valid hourly forecast data."""
     session = aiohttp.ClientSession()
 
-    with aioresponses() as session_mock:
+    async with aiointercept(mock_external_urls=True) as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/268068?apikey=32-character-string-1234567890qw&details=true&metric=true&language=en-us",
             payload=hourly_forecast_data,
@@ -152,7 +152,7 @@ async def test_invalid_api_key_2() -> None:
     """Test with invalid API key."""
     session = aiohttp.ClientSession()
 
-    with aioresponses() as session_mock:
+    async with aiointercept(mock_external_urls=True) as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/currentconditions/v1/268068?apikey=32-character-string-1234567890qw&details=true&language=en-us",
             status=HTTPStatus.UNAUTHORIZED.value,
@@ -194,7 +194,7 @@ async def test_api_error() -> None:
 
     session = aiohttp.ClientSession()
 
-    with aioresponses() as session_mock:
+    async with aiointercept(mock_external_urls=True) as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=payload,
@@ -221,7 +221,7 @@ async def test_requests_exceeded_error() -> None:
 
     session = aiohttp.ClientSession()
 
-    with aioresponses() as session_mock:
+    async with aiointercept(mock_external_urls=True) as session_mock:
         session_mock.get(
             "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=32-character-string-1234567890qw&q=52.0677904%2C19.4795644&language=en-us",
             payload=payload,
