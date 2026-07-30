@@ -20,6 +20,7 @@ To generate API key go to https://developer.accuweather.com/subscriptions and af
 ## How to use package
 ```python
 """Example of usage."""
+
 import asyncio
 import logging
 
