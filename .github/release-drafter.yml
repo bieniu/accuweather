@@ -49,6 +49,6 @@ categories:
     semver-increment: "patch"
 
 template: |
-  ## What's Changed
+  ## What's changed
 
   $CHANGES
