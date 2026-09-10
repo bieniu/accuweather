@@ -33,7 +33,7 @@ dev = [
   "ty==0.0.78",
 ]
 test = [
-  "aiointercept==0.1.9",
+  "aiointercept==0.1.10",
   "pytest-asyncio==1.4.0",
   "pytest-cov==7.1.0",
   "pytest-error-for-skips==2.0.2",
