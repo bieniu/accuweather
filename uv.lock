@@ -42,7 +42,7 @@ dev = [
     { name = "ty", specifier = "==0.0.84" },
 ]
 test = [
-    { name = "aiointercept", specifier = "==0.1.10" },
+    { name = "aiointercept", specifier = "==0.1.11" },
     { name = "pytest", specifier = "==9.1.1" },
     { name = "pytest-asyncio", specifier = "==1.4.0" },
     { name = "pytest-cov", specifier = "==7.1.0" },
@@ -143,16 +143,16 @@ wheels = [
 
 [[package]]
 name = "aiointercept"
-version = "0.1.10"
+version = "0.1.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "multidict" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6d/dd/da393ac24bfc44a49b1aa8d0dc01672ea8cde744f3118e3c4cceffbe9898/aiointercept-0.1.10.tar.gz", hash = "sha256:360129466937d3f12d07451a6685a59dee4823c4aa5e28ddb0ef3202e9ed1627", size = 174106, upload-time = "2026-09-01T14:35:04.774Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/97/66/a1ed18341108a3831f962ec73eee34980acdcc0bc73b9ff182e0316b6981/aiointercept-0.1.11.tar.gz", hash = "sha256:acf3197ae0ac69fa5fb161ebc886978cca51af4b7ddb7650845f8920f4bc6509", size = 174603, upload-time = "2026-09-25T21:04:16.544Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/03/8d/920952902c6df0c8a8fa4abac63620c028e54aa2a4cebc3b524a29747205/aiointercept-0.1.10-py3-none-any.whl", hash = "sha256:7b87ffacd995c9beb6b990549130f56a646b81fb5b7c8cb7775989ba5ae3a69b", size = 19574, upload-time = "2026-09-01T14:35:03.224Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/c9/a0eb8854ab39fb0fa803abca1b89a6e4b0d3db09bbeb534d59a7f760007d/aiointercept-0.1.11-py3-none-any.whl", hash = "sha256:e9e7a245fbf6f8a814401420f66cc6bd5d6a3a10377b75802995d317638e8ae4", size = 19722, upload-time = "2026-09-25T21:04:15.339Z" },
 ]
 
 [[package]]
