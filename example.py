@@ -54,6 +54,5 @@ async def main() -> None:
             print(f"Forecast hourly: {forecast_hourly}")
 
 
-loop = asyncio.new_event_loop()
-loop.run_until_complete(main())
-loop.close()
+if __name__ == "__main__":
+    asyncio.run(main())
