@@ -14,15 +14,15 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Programming Language :: Python :: 3 :: Only",
     "Typing :: Typed",
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies    = [
-    "aiohttp>=3.14.1",
-    "orjson>=3.11.6",
+    "aiohttp>=3.14.5",
+    "orjson>=3.13.0",
     "yarl",
 ]
 
@@ -53,7 +53,7 @@ include = ["accuweather*"]
 asyncio_default_fixture_loop_scope = "session"
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 
 lint.select = ["ALL"]
 
@@ -88,4 +88,4 @@ max-complexity = 25
 
 
 [tool.ty.environment]
-python-version = "3.13"
+python-version = "3.14"
