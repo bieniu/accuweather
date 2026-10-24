@@ -22,7 +22,7 @@ tests/
 ```
 
 ## Python and environment
-- Requires Python >=3.13, package manager is `uv`
+- Requires Python >=3.14, package manager is `uv`
 - Setup: `./scripts/setup-local-env.sh` (creates `.venv`, runs `uv sync --all-groups` + `prek install`)
 - All config in `pyproject.toml` (no `ruff.toml`, `setup.cfg`, etc.)
 
