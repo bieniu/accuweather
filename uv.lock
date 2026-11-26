@@ -48,7 +48,7 @@ test = [
     { name = "pytest-cov", specifier = "==7.1.0" },
     { name = "pytest-error-for-skips", specifier = "==2.0.2" },
     { name = "pytest-timeout", specifier = "==2.4.0" },
-    { name = "syrupy", specifier = "==7.0.1" },
+    { name = "syrupy", specifier = "==7.0.3" },
 ]
 
 [[package]]
@@ -547,14 +547,14 @@ wheels = [
 
 [[package]]
 name = "syrupy"
-version = "7.0.1"
+version = "7.0.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pytest" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/84/a5/8c7a369e4476f6d311d2a46b2e11d3a3f62b7c435e8904c71014c0678d52/syrupy-7.0.1.tar.gz", hash = "sha256:90450e89d06a09b40ae028c6a3a7c51a6d0fc97bb275dcfd7e6eddddcb469d69", size = 122297, upload-time = "2026-11-14T21:11:09.421Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/99/01/37beb5207de6b94d65feadb611b8b52c535d5de3f090e6775c0da5324072/syrupy-7.0.3.tar.gz", hash = "sha256:91f8b02111c3094a9a6a7eb80b6807f35a298f9d3c3d3cbf27d4e2c4c3ff8b1e", size = 123374, upload-time = "2026-11-21T16:07:03.001Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a4/b9/2e2e6696f095881ade3136001a89fed8bbb97fa556ff8d454ae9c0f7c83f/syrupy-7.0.1-py3-none-any.whl", hash = "sha256:a34b0486259d666d5341df324754b3b438b2b12603620e1e8db607af6506d079", size = 68915, upload-time = "2026-11-14T21:11:08.141Z" },
+    { url = "https://files.pythonhosted.org/packages/98/e0/83f27009f6c99a6b61d99c2d311cab080f43917bdad5d0bf974edf754b70/syrupy-7.0.3-py3-none-any.whl", hash = "sha256:020b4688b46887accb7365fdef7983e6a157f1e6984d1e00571d3d40cfebce51", size = 69112, upload-time = "2026-11-21T16:07:01.582Z" },
 ]
 
 [[package]]
